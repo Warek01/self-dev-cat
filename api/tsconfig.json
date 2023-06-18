@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": [
+      "./src/Types"
+    ],
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "allowUmdGlobalAccess": false,
+    "allowUnusedLabels": false,
+    "allowJs": true,
+    "disableSizeLimit": true,
+    "watch": false,
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitUseStrict": false,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
+    "noStrictGenericChecks": false,
+    "useUnknownInCatchVariables": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  }
+}
