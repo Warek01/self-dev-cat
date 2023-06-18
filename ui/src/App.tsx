@@ -1,18 +1,25 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Provider as ReduxProvider } from 'react-redux'
 
 import { pagesConfig } from './lib/constants/pages/pagesConfig.tsx'
-import { store } from './lib/stores/store.ts'
+import { useAppDispatch } from './lib/hooks/useAppDispatch.ts'
+import { useAppSelector } from './lib/hooks/useAppSelector.ts'
+import { fetchUser } from './lib/slices/user/user.slice.ts';
+import { store } from './lib/stores/store.ts';
 
 const App: FC = () => {
+  const dispatch = useAppDispatch()
+  const userData = useAppSelector((state) => state.user)
+
+  useEffect(() => {
+    store.dispatch(fetchUser(userData.accessToken!))
+  }, [])
+
+  console.log(userData)
+
   const router = createBrowserRouter(pagesConfig)
 
-  return (
-    <ReduxProvider store={store}>
-      <RouterProvider router={router} />
-    </ReduxProvider>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App
