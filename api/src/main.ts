@@ -19,6 +19,8 @@ async function bootstrap(): Promise<void> {
     bodyParser: true,
   })
 
+  app.enableCors()
+
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('api', app, swaggerDocument)
 

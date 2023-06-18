@@ -20,7 +20,8 @@
     "dev": "concurrently 'yarn run dev:api' 'yarn run dev:ui'",
     "format:api": "prettier -w ./api/src/",
     "format:ui": "prettier -w ./ui/src/",
-    "format": "prettier -w ./ui/src/ ./api/src/"
+    "format": "prettier -w ./ui/src/ ./api/src/",
+    "sb": "yarn workspace ui run storybook"
   },
   "workspaces": [
     "api",
