@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { plainToInstance } from 'class-transformer'
 import { Repository } from 'typeorm'
 
+import { UserDto } from '@/User/Dtos'
 import { Log, User } from '@/Entities'
 
 @Injectable()
@@ -68,13 +70,13 @@ export class LogService {
   }
 
   public auth = {
-    login: async (user: User, date: Date = new Date()): Promise<void> => {
+    login: async (user: UserDto, date: Date = new Date()): Promise<void> => {
       const log = await this._logRepo.create()
 
       log.date = date
       log.type = 'login'
       log.description = `${user.username} logged in`
-      log.user = user
+      log.user = plainToInstance(User, user)
       log.username = user.username
 
       await this._logRepo.save(log)

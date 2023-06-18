@@ -1,11 +1,10 @@
 import { UserDto } from '@/User/Dtos';
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt'
 
 import type { JwtResponse } from '@/Types/Jwt'
 import { UserService } from '@/User/user.service'
-import { User } from '@/Entities'
 import { EncryptionService } from '@/Encryption/encryption.service'
 import { LogService } from '@/Log/log.service'
 
@@ -22,7 +21,7 @@ export class AuthService {
   public async validateUser(
     username: string,
     password: string,
-  ): Promise<Omit<UserDto, 'password'> | null> {
+  ): Promise<UserDto | null> {
     const user = await this._userService.findOneByUsername(username)
 
     if (
@@ -30,15 +29,21 @@ export class AuthService {
       (await this._encryptionService.compare(password, user.password))
     ) {
       const { password, ...result } = user
-      return result
+      return result as UserDto
     }
 
     return null
   }
 
-  login(user: Omit<User, 'password'>): JwtResponse {
+  async login(username: string): Promise<JwtResponse> {
+    const user = await this._userService.findOneByUsername(username)
+
+    if (!user) {
+      throw new UnauthorizedException()
+    }
+
     const payload = { username: user.username, sub: user.id }
-    this._logService.auth.login(user as User)
+    await this._logService.auth.login(user)
 
     return {
       access_token: this._jwtService.sign(payload, {

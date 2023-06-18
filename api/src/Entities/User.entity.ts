@@ -5,7 +5,7 @@ import { Base } from './Helpers'
 
 @Entity()
 export class User extends Base {
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   username: string
 
   @Column({ type: 'varchar', nullable: false })
@@ -14,7 +14,7 @@ export class User extends Base {
   @Column({ type: 'varchar', nullable: true })
   realName?: string
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   email: string
 
   @OneToMany(() => UsefulResource, (usefulResource) => usefulResource.user, {

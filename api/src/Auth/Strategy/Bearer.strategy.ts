@@ -1,7 +1,6 @@
-import { UserDto } from '@/User/Dtos'
 import { ConfigService } from '@nestjs/config'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 
 import { AuthService } from '@/Auth/auth.service'
@@ -19,16 +18,10 @@ export class BearerStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(
-    username: string,
-    password: string,
-  ): Promise<Omit<UserDto, 'password'> | null> {
-    const user = await this._authService.validateUser(username, password)
-
-    if (!user) {
-      throw new UnauthorizedException()
-    }
-
-    return user
+  async validate(payload: { sub: number; username: string }): Promise<{
+    userId: number
+    username: string
+  }> {
+    return { userId: payload.sub, username: payload.username }
   }
 }

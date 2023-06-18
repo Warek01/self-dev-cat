@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   forwardRef,
   Inject,
@@ -9,9 +10,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { Repository } from 'typeorm'
-import { string } from 'yup'
 
-import { CreateUserDto, UserDto } from '@/User/Dtos'
+import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
 import { FriendRequest, User } from '@/Entities'
 import { EncryptionService } from '@/Encryption/encryption.service'
 import { LogService } from '@/Log/log.service'
@@ -63,64 +63,53 @@ export class UserService {
   }
 
   public async findOneByUsername(username: string): Promise<UserDto | null> {
-    const user = await this._userRepo.findOne({
-      where: {
-        username,
-      },
-    })
+    const user = await this._userRepo.findOneBy({ username })
 
     return plainToInstance(UserDto, user)
   }
 
-  public async changePassword(
-    email: string,
-    newPass: string,
-  ): Promise<UserDto | null> {
-    await string().min(5).max(255).required().validate(newPass)
+  public async updateUser(username: string, dto: UpdateUserDto): Promise<UserDto> {
+    const user = await this.findOneByUsername(username)
 
-    const user = await this.findOneByEmail(email)
-
-    if (user) {
-      user.password = await this._encryptionService.encrypt(newPass)
-      await this._userRepo.save(plainToInstance(User, user))
-      this._logService.user.changeData(user.username, user.email, 'password')
+    if (!user) {
+      throw new NotFoundException()
     }
 
-    return plainToInstance(UserDto, user)
+    user.realName = dto.realName ?? user.realName
+
+    if (dto.password) {
+      user.password = await this._encryptionService.encrypt(dto.password)
+    }
+
+    if (dto.username) {
+      if (await this.isUsernameTaken(dto.username)) {
+        throw new BadRequestException(
+          `Username ${dto.username} is already taken.`,
+        )
+      }
+
+      user.username = dto.username
+    }
+
+    if (dto.email) {
+      if (await this.isEmailTaken(dto.email)) {
+        throw new BadRequestException(`Email ${dto.email} is already taken.`)
+      }
+
+      user.email = dto.email
+    }
+
+    await this._userRepo.save(plainToInstance(User, user))
+
+    return user
   }
 
-  public async changeUsername(
-    email: string,
-    newUsername: string,
-  ): Promise<UserDto | null> {
-    await string().min(1).max(255).required().validate(newUsername)
-
-    const user = await this.findOneByEmail(email)
-
-    if (user) {
-      user.username = newUsername
-      await this._userRepo.save(plainToInstance(User, user))
-      this._logService.user.changeData(user.username, user.email, 'username')
-    }
-
-    return plainToInstance(UserDto, user)
+  public async isUsernameTaken(username: string): Promise<boolean> {
+    return (await this._userRepo.countBy({ username })) > 0
   }
 
-  public async changeRealName(
-    email: string,
-    newName: string,
-  ): Promise<UserDto | null> {
-    await string().min(1).max(255).required().validate(newName)
-
-    const user = await this.findOneByEmail(email)
-
-    if (user !== null) {
-      user.realName = newName
-      await this._userRepo.save(plainToInstance(User, user))
-      this._logService.user.changeData(user.username, user.email, 'real_name')
-    }
-
-    return plainToInstance(UserDto, user)
+  public async isEmailTaken(email: string): Promise<boolean> {
+    return (await this._userRepo.countBy({ email })) > 0
   }
 
   public async delete(username: string): Promise<void> {

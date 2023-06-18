@@ -1,5 +1,3 @@
-import { BasicAuthGuard } from '@/Auth/Guard/BasicAuth.guard';
-import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard';
 import {
   Body,
   Controller,
@@ -7,7 +5,6 @@ import {
   forwardRef,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Inject,
   NotFoundException,
@@ -32,8 +29,14 @@ import { RequestResponse } from '@/Constans'
 import { User } from '@/Entities'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
-import { ChangeUsernameDto, CreateUserDto, UserDto } from '@/User/Dtos'
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  UserDto,
+} from '@/User/Dtos'
 import { UserService } from '@/User/user.service'
+import { BasicAuthGuard } from '@/Auth/Guard/BasicAuth.guard'
+import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 
 @ApiTags('User')
 @Controller('user')
@@ -59,12 +62,11 @@ export class UserController {
   @Get()
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.OK)
-  // TODO: Create dto for returning data without password or other sensitive information
   public async getUserData(
     @Req() req: RequestWithUser,
   ): Promise<UserDto | null> {
     try {
-      return await this._userService.findOneByEmail(req.user.email)
+      return await this._userService.findOneByUsername(req.user.username)
     } catch {
       throw new NotFoundException()
     }
@@ -74,73 +76,30 @@ export class UserController {
   @ApiBearerAuth()
   @ApiOkResponse()
   @Delete()
-  @UseGuards(BasicAuthGuard)
+  @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Req() req: RequestWithUser): Promise<RequestResponse> {
-    await this._userService.delete(req.user.email)
+    await this._userService.delete(req.user.username)
     return RequestResponse.SUCCESS
   }
 
-  @ApiOperation({ description: 'Change password' })
+  @ApiOperation({ description: 'Modify current user' })
   @ApiBearerAuth()
   @ApiOkResponse()
-  @Patch('password')
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async changePassword(
+  @UseGuards(BearerAuthGuard)
+  @Patch()
+  @HttpCode(HttpStatus.OK)
+  async patchUser(
     @Req() req: RequestWithUser,
-    @Body() body: { password: string },
-  ): Promise<RequestResponse> {
-    try {
-      await this._userService.changePassword(req.user.email, body.password)
-      return RequestResponse.APPLIED
-    } catch {
-      throw new HttpException(
-        RequestResponse.NOT_MODIFIED,
-        HttpStatus.NOT_MODIFIED,
-      )
-    }
-  }
-
-  @ApiOperation({ description: 'Change real name' })
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @Patch('real-name')
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async changeRealName(
-    @Req() req: RequestWithUser,
-    @Body() body: { name: string },
-  ): Promise<RequestResponse> {
-    try {
-      await this._userService.changeRealName(req.user.email, body.name)
-      return RequestResponse.APPLIED
-    } catch {
-      throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED)
-    }
-  }
-
-  @ApiOperation({ description: 'Change username' })
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @Patch('username')
-  @UseGuards(BasicAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async changeUsername(
-    @Req() req: RequestWithUser,
-    @Body() body: ChangeUsernameDto,
-  ): Promise<RequestResponse> {
-    try {
-      await this._userService.changeUsername(req.user.email, body.username)
-      return RequestResponse.APPLIED
-    } catch {
-      throw new HttpException('Not modified', HttpStatus.NOT_MODIFIED)
-    }
+    @Body() patchUserDto: UpdateUserDto,
+  ): Promise<UserDto> {
+    console.log(req.user)
+    return this._userService.updateUser(req.user.username, patchUserDto)
   }
 
   @ApiBearerAuth()
   @Patch('add-friend')
-  @UseGuards(BasicAuthGuard)
+  @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async addFriend(
     @Req() req: RequestWithUser,
@@ -151,7 +110,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @Patch('remove-friend')
-  @UseGuards(BasicAuthGuard)
+  @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async removeFriend(): Promise<void> {
     throw new NotImplementedException()
@@ -165,6 +124,6 @@ export class UserController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.OK)
   async login(@Req() req: RequestWithUser): Promise<JwtResponse> {
-    return this._authService.login(req.user)
+    return this._authService.login(req.user.username)
   }
 }
