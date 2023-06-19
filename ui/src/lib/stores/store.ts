@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import layoutReducer from '../slices/layout/layout.slice.ts'
-import userReducer from '../slices/user/user.slice.ts'
+import userReducer from '../slices/currentUser/currentUser.slice.ts'
 
 const reducer = {
   layout: layoutReducer,
