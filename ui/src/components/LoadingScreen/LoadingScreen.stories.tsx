@@ -14,3 +14,6 @@ const Template: StoryFn<typeof LoadingScreen> = (args) => (
 )
 
 export const Default = Template.bind({})
+Default.args = {
+  visible: true,
+}
