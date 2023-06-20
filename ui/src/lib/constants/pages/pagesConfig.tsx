@@ -1,8 +1,8 @@
 import { RouteObject } from 'react-router-dom'
-import { AuthPrivateRoute } from '../../../protected-routes'
-import Test from '../../../components/Test/Test.tsx'
 
+import LoginForm from '../../../forms/LoginForm/LoginForm.tsx'
 import { Home } from '../../../pages'
+import { AuthPrivateRoute } from '../../../protected-routes'
 import { AppRoute } from '../enums/AppRoute.ts'
 
 export const pagesConfig: RouteObject[] = [
@@ -12,10 +12,10 @@ export const pagesConfig: RouteObject[] = [
   },
   {
     path: AppRoute.USERS,
-    element: (
-      <AuthPrivateRoute>
-        Users page
-      </AuthPrivateRoute>
-    ),
+    element: <AuthPrivateRoute component={() => 'Users'} />,
+  },
+  {
+    path: AppRoute.LOGIN,
+    element: <AuthPrivateRoute inverse to={-1} component={LoginForm} />,
   },
 ]

@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { LayoutSliceProps } from './layout.slice.types';
+import type { LayoutSliceProps } from './layout.slice.types'
 
 const initialState: LayoutSliceProps = {
   sidebarOpened: false,
-  theme: localStorage.getItem('theme') as 'light' | 'dark' ?? 'light',
+  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light',
 }
 
 export const layoutSlice = createSlice({
@@ -19,6 +19,7 @@ export const layoutSlice = createSlice({
     },
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light'
+      localStorage.setItem('theme', state.theme)
     },
   },
 })
