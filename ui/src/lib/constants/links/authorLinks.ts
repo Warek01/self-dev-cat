@@ -1,9 +1,13 @@
-import { IconLink } from '../../types/IconLink';
+import icons from '../../../icons'
+import { repeat } from '../../helpers/repeat.ts'
+import { IconLink } from '../../types/IconLink'
 
-export const authorLinks: IconLink = [
+// TODO: change to actual links
+export const authorLinks: IconLink[] = repeat<IconLink>(
   {
     href: '#',
     alt: '',
-    Icon:
-  }
-]
+    Icon: icons.Instagram,
+  },
+  6,
+)

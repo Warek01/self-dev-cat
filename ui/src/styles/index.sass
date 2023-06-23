@@ -2,3 +2,65 @@
 @import 'tailwindcss/components.css'
 @import 'tailwindcss/variants.css'
 @import 'tailwindcss/utilities.css'
+
+@layer base
+  *
+    @apply duration-100 text-black dark:text-dark-white
+
+  svg
+    @apply dark:fill-dark-white
+
+  a
+    @apply dark:text-link-blue text-link-blue duration-100
+
+  button, a.button
+    @apply duration-150 hover:bg-black/20 dark:hover:bg-white/20
+
+  input
+    transition: outline 0s linear
+    @apply outline-none focus-within:outline-none
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active
+    transition: background-color 999999s linear
+
+@layer components
+  .default-headings
+    h1
+      font-size: 2em
+
+    h2
+      font-size: 1.5em
+
+    h3
+      font-size: 1.17em
+
+    h4
+      font-size: 1em
+
+    h5
+      font-size: 0.83em
+
+    h6
+      font-size: 0.67em
+
+  .default-lists
+    list-style-type: disc
+    list-style-position: inside
+
+    ol
+      list-style-type: decimal
+      list-style-position: inside
+
+    ul, ol ul
+      list-style-type: circle
+      list-style-position: inside
+      margin-left: 15px
+
+    ol ol, ul ol
+      list-style-type: lower-latin
+      list-style-position: inside
+      margin-left: 15px
+

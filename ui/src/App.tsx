@@ -1,14 +1,18 @@
 import { FC, useEffect } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 
-import { pagesConfig } from './lib/constants/pages/pagesConfig.tsx'
+import { Header, SideMenu } from './components'
 import { useAppDispatch } from './lib/hooks/useAppDispatch.ts'
 import { useAppSelector } from './lib/hooks/useAppSelector.ts'
-import { fetchCurrentUser, selectAccessToken } from './lib/slices/currentUser/currentUser.slice.ts'
+import useBreakpointCallback from './lib/hooks/useBreakpointCallback.ts'
+import {
+  fetchCurrentUser,
+  selectAccessToken, selectCurrentUser,
+} from './lib/slices/currentUser/currentUser.slice.ts';
+import { setIsMobile } from './lib/slices/layout/layout.slice.ts'
 
 const App: FC = () => {
   const dispatch = useAppDispatch()
-  const userData = useAppSelector((state) => state.user)
   const accessToken = useAppSelector(selectAccessToken)
 
   useEffect(() => {
@@ -17,9 +21,20 @@ const App: FC = () => {
     }
   }, [])
 
-  const router = createBrowserRouter(pagesConfig)
+  useBreakpointCallback({
+    Lg: {
+      callback: ({ matches }) => dispatch(setIsMobile(matches)),
+      initCall: true,
+    },
+  })
 
-  return <RouterProvider router={router} />
+  return (
+    <main className="relative w-screen max-h-screen min-h-screen overflow-auto max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36">
+      <Header />
+      <Outlet />
+      <SideMenu />
+    </main>
+  )
 }
 
 export default App

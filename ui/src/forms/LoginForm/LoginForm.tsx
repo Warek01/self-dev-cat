@@ -30,6 +30,9 @@ const LoginForm: FC = () => {
   )
 
   const handleLogin = useCallback(async () => {
+    // TODO: implement login
+    localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndhcmVrIiwic3ViIjoyLCJpYXQiOjE2ODc1MzA0NjQsImV4cCI6MTY4ODEzNTI2NH0.1epiT3KOUXevHARTVzKkSE1P2Yquz60P4Ibpe6_fiHE')
+
     let loginSuccess = true
 
     const email = loginRefs.email.current?.value ?? ''
@@ -48,8 +51,6 @@ const LoginForm: FC = () => {
     if (!loginSuccess) {
       return
     }
-
-    console.log('Login')
 
     // loginSuccess = await auth.login(email, password)
     //

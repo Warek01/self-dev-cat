@@ -1,9 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import type { LayoutSliceProps } from './layout.slice.types'
 
 const initialState: LayoutSliceProps = {
-  sidebarOpened: false,
+  isSideMenuOpened: false,
+  isMobile: false,
   theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light',
 }
 
@@ -11,11 +12,11 @@ export const layoutSlice = createSlice({
   name: 'layout',
   initialState,
   reducers: {
-    openSidebar: (state) => {
-      state.sidebarOpened = false
+    setSideMenuOpened: (state, action: PayloadAction<boolean>) => {
+      state.isSideMenuOpened = action.payload
     },
-    closeSidebar: (state) => {
-      state.sidebarOpened = true
+    setIsMobile: (state, action: PayloadAction<boolean>) => {
+      state.isMobile = action.payload
     },
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light'
@@ -24,5 +25,6 @@ export const layoutSlice = createSlice({
   },
 })
 
-export const { openSidebar, closeSidebar, toggleTheme } = layoutSlice.actions
+export const { toggleTheme, setSideMenuOpened, setIsMobile } =
+  layoutSlice.actions
 export default layoutSlice.reducer

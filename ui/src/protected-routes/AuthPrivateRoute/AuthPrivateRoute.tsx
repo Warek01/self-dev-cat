@@ -2,8 +2,8 @@ import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { LoadingScreen } from '../../components'
-import { FetchStatus } from '../../lib/constants/enums/FetchStatus.ts'
 import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import { FetchStatus } from '../../lib/constants/enums/FetchStatus.ts'
 import { xor } from '../../lib/helpers/xor.ts'
 import { useAppSelector } from '../../lib/hooks/useAppSelector.ts'
 import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice.ts'
@@ -21,18 +21,21 @@ const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({
 
   useEffect(() => {
     const condition =
-      [FetchStatus.ERROR, FetchStatus.REJECTED].includes(currentUser.status) ||
-      ([FetchStatus.FULFILLED].includes(currentUser.status) && !currentUser)
+      currentUser.status !== FetchStatus.PENDING &&
+      ([FetchStatus.ERROR, FetchStatus.REJECTED].includes(currentUser.status) ||
+        !currentUser.user)
 
     if (xor(inverse, condition)) {
       navigate(to)
     }
   }, [currentUser])
 
-  return currentUser.status !== FetchStatus.FULFILLED ? (
-    <LoadingScreen />
-  ) : (
+  return [FetchStatus.FULFILLED, FetchStatus.IDLE].includes(
+    currentUser.status,
+  ) ? (
     <Component />
+  ) : (
+    <LoadingScreen />
   )
 }
 
