@@ -5,7 +5,7 @@ export interface AuthPrivateRouteProps {
   /** Will redirect if is authenticated */
   inverse?: boolean
   /** Path to redirect to */
-  to?: AppRoute | string | -1
+  to?: AppRoute | string
   /** Component to render */
   component: FC
 }

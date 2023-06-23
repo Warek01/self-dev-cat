@@ -1,6 +1,4 @@
-import { FC, SVGProps } from 'react';
-
-const Close: FC<SVGProps<SVGSVGElement>> = (props) => (
+const Close: IconComponent = (props) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"

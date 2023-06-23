@@ -16,6 +16,6 @@ export const pagesConfig: RouteObject[] = [
   },
   {
     path: AppRoute.LOGIN,
-    element: <AuthPrivateRoute inverse to={-1} component={LoginForm} />,
+    element: <AuthPrivateRoute inverse component={LoginForm} />,
   },
 ]

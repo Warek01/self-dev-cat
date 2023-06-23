@@ -25,7 +25,7 @@ const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({
       ([FetchStatus.FULFILLED].includes(currentUser.status) && !currentUser)
 
     if (xor(inverse, condition)) {
-      navigate(to as string)
+      navigate(to)
     }
   }, [currentUser])
 
