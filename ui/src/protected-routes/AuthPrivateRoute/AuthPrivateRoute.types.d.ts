@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import type { AppRoute } from '../../lib/enums/AppRoute.ts'
 
 export interface AuthPrivateRouteProps {
   /** Will redirect if is authenticated */

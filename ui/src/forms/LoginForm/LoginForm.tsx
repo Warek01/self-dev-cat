@@ -13,7 +13,7 @@ import { TextInput } from '../../components'
 
 import icons from '../../icons'
 import { login } from '../../lib/auth/login.ts'
-import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
 import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
 

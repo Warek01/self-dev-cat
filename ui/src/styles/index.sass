@@ -7,14 +7,12 @@
   *
     @apply duration-100 text-black dark:text-dark-white
 
-  svg
+  // Svg that do not have explicit fill prop
+  svg:not([fill])
     @apply dark:fill-dark-white
 
   a
     @apply dark:text-link-blue text-link-blue duration-100
-
-  button, a.button
-    @apply duration-150 hover:bg-black/20 dark:hover:bg-white/20
 
   input
     transition: outline 0s linear

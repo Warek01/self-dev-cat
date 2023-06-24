@@ -6,6 +6,7 @@ import LoadingScreen from './LoadingScreen/LoadingScreen.tsx'
 import Modal from './Modal/Modal.tsx'
 import SideMenu from './SideMenu/SideMenu.tsx'
 import TextInput from './TextInput/TextInput.tsx'
+import Button from './Button/Button.tsx'
 
 export {
   Modal,
@@ -16,4 +17,5 @@ export {
   SideMenu,
   IconLink,
   Header,
+  Button,
 }

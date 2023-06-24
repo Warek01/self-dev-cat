@@ -10,7 +10,7 @@ import {
 import { useNavigate, Link } from 'react-router-dom'
 import { TextInput } from '../../components'
 
-import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { isEmail } from '../../lib/helpers/isEmail.ts'
 import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
 import icons from '../../icons'

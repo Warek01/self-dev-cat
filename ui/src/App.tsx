@@ -45,8 +45,11 @@ const App: FC = () => {
   })
 
   return (
-    <div id="layout" className="overflow-x-hidden text-black dark:text-dark-white bg-white dark:bg-dark-black">
-      <main className="relative w-screen max-h-screen min-h-screen  max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36">
+    <div
+      id="layout"
+      className="overflow-x-hidden text-black dark:text-dark-white bg-white dark:bg-dark-black"
+    >
+      <main className="relative w-screen max-h-screen min-h-screen max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36 flex flex-col">
         <ToastContainer {...toastDefaultProps} theme={theme} />
         <Header />
         <Outlet />

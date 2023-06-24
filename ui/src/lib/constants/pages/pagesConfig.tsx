@@ -3,9 +3,11 @@ import { RouteObject } from 'react-router-dom'
 import App from '../../../App.tsx'
 import HomePage from '../../../pages/Home/HomePage.tsx'
 import LoginPage from '../../../pages/Login/LoginPage.tsx'
+import NotFoundPage from '../../../pages/NotFound/NotFoundPage.tsx'
 import RegisterPage from '../../../pages/Register/RegisterPage.tsx'
+import UserPage from '../../../pages/Users/:username/UserPage.tsx'
 import { AuthPrivateRoute } from '../../../protected-routes'
-import { AppRoute } from '../enums/AppRoute.ts'
+import { AppRoute } from '../../enums/AppRoute.ts'
 
 export const pagesConfig: RouteObject[] = [
   {
@@ -22,9 +24,8 @@ export const pagesConfig: RouteObject[] = [
         element: <AuthPrivateRoute component={HomePage} />,
       },
       {
-        path: AppRoute.USERS,
-        // TODO: add Users component
-        element: <AuthPrivateRoute component={() => 'Users'} />,
+        path: AppRoute.USER,
+        element: <AuthPrivateRoute component={UserPage} />,
         children: [],
       },
       {
@@ -42,6 +43,10 @@ export const pagesConfig: RouteObject[] = [
             component={RegisterPage}
           />
         ),
+      },
+      {
+        path: AppRoute.ANY,
+        element: <NotFoundPage />,
       },
     ],
   },

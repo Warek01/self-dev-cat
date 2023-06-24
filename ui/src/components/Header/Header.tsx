@@ -1,8 +1,8 @@
-import { FC, memo } from 'react';
+import { FC, memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import icons from '../../icons'
-import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
 import { useAppSelector } from '../../lib/hooks/useAppSelector.ts'
 import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice.ts'
@@ -11,6 +11,7 @@ import {
   setSideMenuOpened,
   toggleTheme,
 } from '../../lib/slices/layout/layout.slice.ts'
+import { Button } from '../index.ts'
 
 const Header: FC = () => {
   const dispatch = useAppDispatch()
@@ -41,32 +42,18 @@ const Header: FC = () => {
         <span className="inline-block md:hidden">Self-Dev</span>
       </Link>
       <div className="flex items-center justify-end gap-2 md:gap-6 lg:gap-12">
-        <Link
+        <Button
+          type="link"
           to={`${AppRoute.USERS}/${user?.username}`}
-          className="button p-2 rounded-lg"
-        >
-          <icons.User width={25} height={25} />
-        </Link>
-        <button
+          Icon={icons.User}
+          iconSize={24}
+        />
+        <Button
+          iconSize={24}
+          Icon={theme === 'dark' ? icons.Moon : icons.Sun}
           onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-lg"
-        >
-          {theme === 'dark' ? (
-            <icons.Moon width={25} height={25} />
-          ) : (
-            <icons.Sun width={25} height={25} />
-          )}
-        </button>
-        <button onClick={handleMenuOpen} className="p-2 rounded-lg">
-          <icons.Menu width={25} height={25} />
-        </button>
-        {/*// <ul className="flex flex-row gap-12 text-17">*/}
-        {/*// {headerLinks.map((link) => (*/}
-        {/*//     <Link href={link.href} key={link.text}>*/}
-        {/*//       {link.text}*/}
-        {/*//     </Link>*/}
-        {/*//   ))}*/}
-        {/*// </ul>*/}
+        />
+        <Button iconSize={24} Icon={icons.Menu} onClick={handleMenuOpen} />
       </div>
     </header>
   )

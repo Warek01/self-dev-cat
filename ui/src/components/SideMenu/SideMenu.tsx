@@ -3,7 +3,7 @@ import { FC, memo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import icons from '../../icons'
-import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
+import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { authorLinks } from '../../lib/constants/links/authorLinks.ts'
 import { headerLinks } from '../../lib/constants/links/headerLinks.ts'
 import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
