@@ -1,7 +1,7 @@
 import { FC, memo } from 'react'
 
-const Home: FC = () => {
+const HomePage: FC = () => {
   return <main>Home</main>
 }
 
-export default memo(Home)
+export default memo(HomePage)

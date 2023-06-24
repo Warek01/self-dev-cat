@@ -28,7 +28,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           autoComplete={autoComplete ? 'true' : 'false'}
           className={`
           bg-black/5 dark:bg-dark-white/5 rounded-full shadow-lg 
-          py-2 px-4 focus:outline-none
+          py-2 px-4 focus:outline-none text-black dark:text-dark-white
           ${className}
         `}
         />

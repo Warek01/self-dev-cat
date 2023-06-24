@@ -11,8 +11,8 @@ import './styles/index.sass'
 const theme = store.getState().layout.theme
 
 theme === 'dark'
-  ? document.documentElement.classList.add('dark')
-  : document.documentElement.classList.remove('dark')
+  ? document.body.classList.add('dark')
+  : document.body.classList.remove('dark')
 
 const router = createBrowserRouter(pagesConfig)
 

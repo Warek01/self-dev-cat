@@ -2,7 +2,6 @@ import { FC, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { async } from 'rxjs'
 
 import { Header, SideMenu } from './components'
 import { fetchCurrentUser } from './lib/auth/fetchCurrentUser.ts'
@@ -34,8 +33,8 @@ const App: FC = () => {
 
   useEffect(() => {
     theme === 'dark'
-      ? document.documentElement.classList.add('dark')
-      : document.documentElement.classList.remove('dark')
+      ? document.body.classList.add('dark')
+      : document.body.classList.remove('dark')
   }, [theme])
 
   useBreakpointCallback({
@@ -46,12 +45,14 @@ const App: FC = () => {
   })
 
   return (
-    <main className="relative w-screen max-h-screen min-h-screen overflow-hidden max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36">
-      <ToastContainer {...toastDefaultProps} theme={theme} />
-      <Header />
-      <Outlet />
-      <SideMenu />
-    </main>
+    <div id="layout" className="overflow-x-hidden text-black dark:text-dark-white bg-white dark:bg-dark-black">
+      <main className="relative w-screen max-h-screen min-h-screen  max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36">
+        <ToastContainer {...toastDefaultProps} theme={theme} />
+        <Header />
+        <Outlet />
+        <SideMenu />
+      </main>
+    </div>
   )
 }
 

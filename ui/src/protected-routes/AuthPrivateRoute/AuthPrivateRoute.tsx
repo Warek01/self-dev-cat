@@ -21,9 +21,8 @@ const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({
 
   useEffect(() => {
     const condition =
-      currentUser.status !== FetchStatus.PENDING &&
-      ([FetchStatus.ERROR, FetchStatus.REJECTED].includes(currentUser.status) ||
-        !currentUser.accessToken)
+      ![FetchStatus.FULFILLED].includes(currentUser.status) &&
+      !currentUser.accessToken
 
     if (xor(inverse, condition)) {
       navigate(to)

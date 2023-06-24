@@ -50,7 +50,7 @@ const LoginForm: FC = () => {
 
     const { error, unauthorized } = await login({ username, password })
     if (error) {
-      toast('Login failed')
+      toast('Login failed', { type: 'error' })
     }
 
     if (unauthorized) {

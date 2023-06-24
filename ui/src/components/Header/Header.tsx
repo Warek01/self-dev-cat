@@ -1,4 +1,4 @@
-import { FC, memo, useEffect } from 'react';
+import { FC, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom'
 
 import icons from '../../icons'
@@ -11,7 +11,6 @@ import {
   setSideMenuOpened,
   toggleTheme,
 } from '../../lib/slices/layout/layout.slice.ts'
-import { disabledForPaths } from '../SideMenu/SideMenu.constants.ts'
 
 const Header: FC = () => {
   const dispatch = useAppDispatch()
@@ -22,10 +21,6 @@ const Header: FC = () => {
 
   const handleMenuOpen = () => {
     dispatch(setSideMenuOpened(true))
-  }
-
-  if (disabledForPaths.includes(location.pathname)) {
-    return null
   }
 
   return (
