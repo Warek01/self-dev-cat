@@ -8,40 +8,36 @@ import {
   useState,
 } from 'react'
 import { Link } from 'react-router-dom'
-
-import icons from '../../icons';
+import { toast } from 'react-toastify'
 import { TextInput } from '../../components'
+
+import icons from '../../icons'
+import { login } from '../../lib/auth/login.ts'
 import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
-import { isEmail } from '../../lib/helpers/isEmail.ts'
+import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
 import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
 
 const MIN_PASSWORD_LENGTH = 6
 
 const LoginForm: FC = () => {
-  const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
+
+  const [isInvalidUsername, setIsInvalidUsername] = useState<boolean>(false)
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false)
 
   const loginRefs = useMemo(
     () => ({
-      email: createRef<HTMLInputElement>(),
+      username: createRef<HTMLInputElement>(),
       password: createRef<HTMLInputElement>(),
     }),
     [],
   )
 
   const handleLogin = useCallback(async () => {
-    // TODO: implement login
-    localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndhcmVrIiwic3ViIjoyLCJpYXQiOjE2ODc1MzA0NjQsImV4cCI6MTY4ODEzNTI2NH0.1epiT3KOUXevHARTVzKkSE1P2Yquz60P4Ibpe6_fiHE')
-
     let loginSuccess = true
 
-    const email = loginRefs.email.current?.value ?? ''
+    const username = loginRefs.username.current?.value ?? ''
     const password = loginRefs.password.current?.value ?? ''
-
-    if (!isEmail(email)) {
-      setIsInvalidEmail(true)
-      loginSuccess = false
-    }
 
     if (password.length < MIN_PASSWORD_LENGTH) {
       setIsInvalidPassword(true)
@@ -52,17 +48,22 @@ const LoginForm: FC = () => {
       return
     }
 
-    // loginSuccess = await auth.login(email, password)
-    //
-    // if (loginSuccess) {
-    //   await router.push(AppRoute.Home)
-    // }
+    const { error, unauthorized } = await login({ username, password })
+    if (error) {
+      toast('Login failed')
+    }
+
+    if (unauthorized) {
+      setIsInvalidPassword(true)
+      setIsInvalidUsername(true)
+      toast('Wrong username or password', { type: 'error' })
+    }
   }, [])
 
   useGlobalListener('keydown', (event: KeyboardEvent) => {
     if (
       event.key === 'Enter' &&
-      (document.activeElement === loginRefs.email.current ||
+      (document.activeElement === loginRefs.username.current ||
         document.activeElement === loginRefs.password.current)
     ) {
       handleLogin()
@@ -78,14 +79,14 @@ const LoginForm: FC = () => {
         <icons.User width={48} height={48} />
       </div>
       <TextInput
-        name="Email"
-        placeholder="Email"
+        name="Username"
+        placeholder="Username"
         className="w-full sm:w-xs md:w-sm lg:w-md"
         autoComplete
-        ref={loginRefs.email}
-        onChange={() => setIsInvalidEmail(false)}
-        invalid={isInvalidEmail}
-        invalidText="Invalid Email."
+        ref={loginRefs.username}
+        onChange={() => setIsInvalidUsername(false)}
+        invalid={isInvalidUsername}
+        invalidText="Invalid Username."
       />
       <TextInput
         password

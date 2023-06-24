@@ -1,16 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { currentUserClient } from '../../clients/currentUserClient.ts'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import { FetchStatus } from '../../constants/enums/FetchStatus.ts'
-import { RootState } from '../../stores/store.ts'
-
+import type { RootState } from '../../stores/store.ts'
+import { User } from '../../types/User'
 import type { CurrentUserSliceProps } from './currentUser.slice.types'
-
-export const fetchCurrentUser = createAsyncThunk(
-  'currentUser/fetchData',
-  async (accessToken: string) => {
-    return currentUserClient.getData(accessToken)
-  },
-)
 
 const initialState: CurrentUserSliceProps = {
   user: null,
@@ -34,28 +27,25 @@ export const currentUserSlice = createSlice({
         status: FetchStatus.IDLE,
       }
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchCurrentUser.pending, (state, action) => {
-        state.status = FetchStatus.PENDING
-      })
-      .addCase(fetchCurrentUser.rejected, (state, action) => {
-        state.status = FetchStatus.REJECTED
-        state.error = action.error
-      })
-      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
-        state.status = FetchStatus.FULFILLED
-        if (action.payload) {
-          state.user = action.payload
-        } else {
-          state.status = FetchStatus.ERROR
-        }
-      })
+    setToken: (state, action: PayloadAction<string | null>) => {
+      const token = action.payload
+
+      state.accessToken = token
+      token
+        ? localStorage.setItem('access_token', token)
+        : localStorage.removeItem('access_token')
+    },
+    setStatus: (state, action: PayloadAction<FetchStatus>) => {
+      state.status = action.payload
+    },
+    setUser: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload
+    },
   },
 })
 
-export const { signOut } = currentUserSlice.actions
+export const { signOut, setToken, setStatus, setUser } =
+  currentUserSlice.actions
 export default currentUserSlice.reducer
 
 export const selectAccessToken = (state: RootState) => state.user.accessToken

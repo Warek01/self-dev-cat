@@ -3,5 +3,5 @@ export const bearer = (token: string) => ({
 })
 
 export const basic = (username: string, password: string) => ({
-  Authorization: `Basic ${btoa(username)}:${btoa(password)}`,
+  Authorization: `Basic ${btoa(`${username}:${password}`)}`,
 })

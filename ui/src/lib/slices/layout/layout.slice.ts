@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../../stores/store.ts'
 
 import type { LayoutSliceProps } from './layout.slice.types'
 
@@ -28,3 +29,5 @@ export const layoutSlice = createSlice({
 export const { toggleTheme, setSideMenuOpened, setIsMobile } =
   layoutSlice.actions
 export default layoutSlice.reducer
+
+export const selectTheme = (state: RootState) => state.layout.theme

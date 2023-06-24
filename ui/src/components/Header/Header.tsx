@@ -1,13 +1,16 @@
-import { FC, memo } from 'react'
+import { FC, memo, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom'
-import theme from 'tailwindcss/defaultTheme'
 
 import icons from '../../icons'
 import { AppRoute } from '../../lib/constants/enums/AppRoute.ts'
 import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
 import { useAppSelector } from '../../lib/hooks/useAppSelector.ts'
 import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice.ts'
-import { setSideMenuOpened } from '../../lib/slices/layout/layout.slice.ts'
+import {
+  selectTheme,
+  setSideMenuOpened,
+  toggleTheme,
+} from '../../lib/slices/layout/layout.slice.ts'
 import { disabledForPaths } from '../SideMenu/SideMenu.constants.ts'
 
 const Header: FC = () => {
@@ -15,6 +18,7 @@ const Header: FC = () => {
   const location = useLocation()
 
   const { user } = useAppSelector(selectCurrentUser)
+  const theme = useAppSelector(selectTheme)
 
   const handleMenuOpen = () => {
     dispatch(setSideMenuOpened(true))
@@ -48,8 +52,11 @@ const Header: FC = () => {
         >
           <icons.User width={25} height={25} />
         </Link>
-        <button onClick={() => theme.toggle()} className="p-2 rounded-lg">
-          {theme.isDark ? (
+        <button
+          onClick={() => dispatch(toggleTheme())}
+          className="p-2 rounded-lg"
+        >
+          {theme === 'dark' ? (
             <icons.Moon width={25} height={25} />
           ) : (
             <icons.Sun width={25} height={25} />

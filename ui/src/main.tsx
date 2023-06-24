@@ -8,6 +8,12 @@ import { store } from './lib/stores/store.ts'
 
 import './styles/index.sass'
 
+const theme = store.getState().layout.theme
+
+theme === 'dark'
+  ? document.documentElement.classList.add('dark')
+  : document.documentElement.classList.remove('dark')
+
 const router = createBrowserRouter(pagesConfig)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

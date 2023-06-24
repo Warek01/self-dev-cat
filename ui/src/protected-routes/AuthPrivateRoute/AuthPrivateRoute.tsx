@@ -23,20 +23,18 @@ const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({
     const condition =
       currentUser.status !== FetchStatus.PENDING &&
       ([FetchStatus.ERROR, FetchStatus.REJECTED].includes(currentUser.status) ||
-        !currentUser.user)
+        !currentUser.accessToken)
 
     if (xor(inverse, condition)) {
       navigate(to)
     }
   }, [currentUser])
 
-  return [FetchStatus.FULFILLED, FetchStatus.IDLE].includes(
-    currentUser.status,
-  ) ? (
-    <Component />
-  ) : (
-    <LoadingScreen />
-  )
+  if (currentUser.status === FetchStatus.PENDING) {
+    return <LoadingScreen />
+  }
+
+  return <Component />
 }
 
 export default AuthPrivateRoute
