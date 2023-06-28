@@ -12,7 +12,7 @@ export const currentUserClient = {
   login: async (username: string, password: string): Promise<string> => {
     const request = await firstValueFrom(
       ajax<JwtResponse>({
-        url: `${URL}/user/login`,
+        url: `${URL}/login`,
         method: 'GET',
         headers: headers.basic(username, password),
       }),
@@ -33,9 +33,9 @@ export const currentUserClient = {
     return request.response
   },
 
-  register: async (body: RegisterBody): Promise<User> => {
+  register: async (body: RegisterBody): Promise<JwtResponse> => {
     const request = await firstValueFrom(
-      ajax<User>({
+      ajax<JwtResponse>({
         url: `${URL}/create`,
         method: 'POST',
         body

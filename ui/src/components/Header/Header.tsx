@@ -2,6 +2,7 @@ import { FC, memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import icons from '../../icons'
+import { unprotectedPages } from '../../lib/constants/pages/unprotectedPages.ts'
 import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
 import { useAppSelector } from '../../lib/hooks/useAppSelector.ts'
@@ -16,6 +17,8 @@ import { Button } from '../index.ts'
 const Header: FC = () => {
   const dispatch = useAppDispatch()
   const location = useLocation()
+
+  const isUnprotectedLocation = unprotectedPages.includes(location.pathname)
 
   const { user } = useAppSelector(selectCurrentUser)
   const theme = useAppSelector(selectTheme)
@@ -47,13 +50,19 @@ const Header: FC = () => {
           to={`${AppRoute.USERS}/${user?.username}`}
           Icon={icons.User}
           iconSize={24}
+          disabled={isUnprotectedLocation}
         />
         <Button
           iconSize={24}
           Icon={theme === 'dark' ? icons.Moon : icons.Sun}
           onClick={() => dispatch(toggleTheme())}
         />
-        <Button iconSize={24} Icon={icons.Menu} onClick={handleMenuOpen} />
+        <Button
+          iconSize={24}
+          Icon={icons.Menu}
+          onClick={handleMenuOpen}
+          disabled={isUnprotectedLocation}
+        />
       </div>
     </header>
   )

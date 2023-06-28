@@ -17,7 +17,9 @@ export default {
         'pink-bg': '#F9E6F0',
         'link-blue': '#3498db',
         'dark-black': '#2C3333',
+        'dark-black-lighter': '#363d3d',
         'dark-white': '#E3F6FF',
+        'disabled': '#636e72'
       },
       spacing: {
         xs: '20rem',

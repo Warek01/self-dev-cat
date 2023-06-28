@@ -9,10 +9,11 @@ export interface ButtonProps {
   Icon?: IconComponent
   text?: string
   iconPosition?: 'left' | 'right'
-  iconFill?: string
   iconSize?: number
   to?: string
   withHover?: boolean
   circle?: boolean
   uppercase?: boolean
+  disabled?: boolean
+  iconClassName?: string
 }

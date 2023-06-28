@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -9,12 +9,14 @@ import { toastDefaultProps } from './lib/constants/toastDefaultProps.ts'
 import { useAppDispatch } from './lib/hooks/useAppDispatch.ts'
 import { useAppSelector } from './lib/hooks/useAppSelector.ts'
 import useBreakpointCallback from './lib/hooks/useBreakpointCallback.ts'
-import { selectAccessToken } from './lib/slices/currentUser/currentUser.slice.ts'
-import { selectTheme, setIsMobile } from './lib/slices/layout/layout.slice.ts'
+import * as currentUserSlice from './lib/slices/currentUser/currentUser.slice.ts';
+import { selectTheme, setIsMobile } from './lib/slices/layout/layout.slice.ts';
 
 const App: FC = () => {
+  const navigate = useNavigate()
+
   const dispatch = useAppDispatch()
-  const accessToken = useAppSelector(selectAccessToken)
+  const accessToken = useAppSelector(currentUserSlice.selectAccessToken)
   const theme = useAppSelector(selectTheme)
 
   useEffect(() => {
@@ -23,13 +25,14 @@ const App: FC = () => {
         const result = await fetchCurrentUser(accessToken)
 
         if (result.unauthorized) {
-          toast('Credentials expired', { type: 'info' })
+          toast('Credentials expired or account was deleted', { type: 'info' })
+          dispatch(currentUserSlice.setToken(null))
         } else if (result.error) {
           toast('Something went wrong', { type: 'error' })
         }
       }
     })()
-  }, [])
+  }, [accessToken])
 
   useEffect(() => {
     theme === 'dark'

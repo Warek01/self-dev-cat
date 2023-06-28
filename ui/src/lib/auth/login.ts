@@ -16,9 +16,6 @@ export async function login({
     store.dispatch(currentUserSlice.setStatus(FetchStatus.PENDING))
     const token = await currentUserClient.login(username, password)
     store.dispatch(currentUserSlice.setToken(token))
-    const userData = await currentUserClient.getData(token)
-    store.dispatch(currentUserSlice.setUser(userData))
-    store.dispatch(currentUserSlice.setStatus(FetchStatus.FULFILLED))
 
     return {}
   } catch (err) {

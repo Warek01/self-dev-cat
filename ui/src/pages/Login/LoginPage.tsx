@@ -4,7 +4,7 @@ import LoginForm from '../../forms/LoginForm/LoginForm.tsx'
 
 const LoginPage: FC = () => {
   return (
-    <main>
+    <main className="flex-1 flex items-center justify-center">
       <LoginForm />
     </main>
   )

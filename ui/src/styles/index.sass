@@ -7,8 +7,8 @@
   *
     @apply duration-100 text-black dark:text-dark-white
 
-  // Svg that do not have explicit fill prop
-  svg:not([fill])
+  // Svg that do not have explicit fill prop or className
+  svg:not([fill]):not([class*=fill-])
     @apply dark:fill-dark-white
 
   a

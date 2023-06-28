@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { TextInput } from '../../components'
+import { Button, TextInput } from '../../components'
 
 import icons from '../../icons'
 import { login } from '../../lib/auth/login.ts'
@@ -72,7 +72,7 @@ const LoginForm: FC = () => {
 
   return (
     <main
-      className="mx-auto max-w-3xl flex flex-col gap-6 items-center my-auto
+      className="max-w-3xl flex flex-col gap-6 items-center w-full
       dark:bg-dark-white/5 rounded-xl p-12 shadow-xl"
     >
       <div className="p-4 bg-black/5 dark:bg-dark-white/5 rounded-full mb-6 shadow-xl">
@@ -99,12 +99,11 @@ const LoginForm: FC = () => {
         invalid={isInvalidPassword}
         invalidText={`Password is shorter than ${MIN_PASSWORD_LENGTH} characters.`}
       />
-      <button
+      <Button
+        text="Log in"
         onClick={handleLogin}
         className="py-2 px-4 rounded-md mt-8 shadow-lg hover:shadow-xl hover:bg-black/10"
-      >
-        Log in
-      </button>
+      />
       <Link to={AppRoute.REGISTER}>Register</Link>
     </main>
   )

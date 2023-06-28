@@ -7,15 +7,15 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { TextInput } from '../../components'
+import { Button, TextInput } from '../../components'
+import icons from '../../icons'
 import { register } from '../../lib/auth/register.ts'
 
 import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { isEmail } from '../../lib/helpers/isEmail.ts'
 import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
-import icons from '../../icons'
 
 const MIN_PASSWORD_LENGTH = 6
 
@@ -93,8 +93,8 @@ const RegisterForm: FC = () => {
 
   return (
     <main
-      className="mx-auto max-w-3xl flex flex-col gap-6 items-center my-auto
-     dark:bg-dark-white/5 rounded-xl p-12 shadow-xl"
+      className="max-w-3xl flex flex-col gap-6 items-center w-full
+      dark:bg-dark-white/5 rounded-xl p-12 shadow-xl"
     >
       <div className="p-4 bg-black/5 dark:bg-dark-white/5 rounded-full mb-6 shadow-xl">
         <icons.User width={48} height={48} />
@@ -143,12 +143,11 @@ const RegisterForm: FC = () => {
         invalid={!validInputs.passwordConfirm}
         invalidText="Passwords do not match."
       />
-      <button
+      <Button
+        text="Create account"
         onClick={handleRegistration}
         className="py-2 px-4 rounded-md mt-8 shadow-lg hover:bg-transparent hover:shadow-xl dark:hover:bg-dark-white/10"
-      >
-        Create account
-      </button>
+      />
       <Link to={AppRoute.LOGIN}>Have an account?</Link>
     </main>
   )
