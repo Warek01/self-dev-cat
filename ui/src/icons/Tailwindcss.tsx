@@ -1,8 +1,5 @@
 const Tailwindcss: IconComponent = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" {...props}>
     <defs>
       <linearGradient
         x1="0"
@@ -12,14 +9,8 @@ const Tailwindcss: IconComponent = (props) => (
         x2="64"
         gradientUnits="userSpaceOnUse"
       >
-        <stop
-          stopColor="#2383ae"
-          offset="0%"
-        />
-        <stop
-          stopColor="#6dd7b9"
-          offset="100%"
-        />
+        <stop stopColor="#2383ae" offset="0%" />
+        <stop stopColor="#6dd7b9" offset="100%" />
       </linearGradient>
     </defs>
     <path

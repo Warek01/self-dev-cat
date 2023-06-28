@@ -16,7 +16,7 @@ const meta: Meta<typeof TextInput> = {
     autoComplete: true,
     placeholder: 'Placeholder',
     invalidText: 'Invalid Text',
-    name: 'Test'
+    name: 'Test',
   },
 }
 

@@ -3,5 +3,5 @@ export enum RequestResponse {
   CREATED = 'Created',
   ERROR = 'Error',
   APPLIED = 'Applied',
-  NOT_MODIFIED = 'Not modified'
+  NOT_MODIFIED = 'Not modified',
 }

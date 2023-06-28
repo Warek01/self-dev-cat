@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm'
+import { MessageGroup } from '@/Entities/MessageGroup.entity'
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm'
 
 import { UsefulResource, FriendRequest } from './index'
 import { Base } from './Helpers'
@@ -17,6 +18,9 @@ export class User extends Base {
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string
 
+  @Column({ type: 'varchar', nullable: true })
+  avatarFileName?: string
+
   @OneToMany(() => UsefulResource, (usefulResource) => usefulResource.user, {
     nullable: true,
   })
@@ -25,6 +29,13 @@ export class User extends Base {
   @OneToMany(() => FriendRequest, (req) => req.from, { nullable: true })
   friendRequests: FriendRequest[]
 
-  @ManyToMany(() => User, (user) => user.friends, { nullable: true })
+  @ManyToMany(() => User, (user) => user.friends, { onDelete: 'CASCADE' })
+  @JoinTable()
   friends: User[]
+
+  @ManyToMany(() => MessageGroup, (messageGroup) => messageGroup.users, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable()
+  messageGroups: MessageGroup[]
 }

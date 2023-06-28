@@ -1,24 +1,13 @@
-import { Global, Module } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { TypeOrmModule } from '@nestjs/typeorm'
-
-import { EncryptionService } from '@/Encryption/encryption.service'
-import { UserController } from '@/User/user.controller'
-import { LogService } from '@/Log/log.service'
-import { AuthService } from '@/Auth/auth.service'
 import { FriendRequest, Log, User } from '@/Entities'
+import { UserController } from '@/User/user.controller'
 import { UserService } from '@/User/user.service'
+import { Global, Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([User, FriendRequest, Log])],
-  providers: [
-    UserService,
-    EncryptionService,
-    LogService,
-    AuthService,
-    JwtService,
-  ],
+  providers: [UserService],
   exports: [UserService],
   controllers: [UserController],
 })

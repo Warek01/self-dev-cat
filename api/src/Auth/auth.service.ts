@@ -1,6 +1,6 @@
-import { UserDto } from '@/User/Dtos';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { UserDto } from '@/User/Dtos'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
 import type { JwtResponse } from '@/Types/Jwt'
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly _encryptionService: EncryptionService,
     private readonly _jwtService: JwtService,
     private readonly _logService: LogService,
-    private readonly _configService: ConfigService
+    private readonly _configService: ConfigService,
   ) {}
 
   public async validateUser(
@@ -47,7 +47,7 @@ export class AuthService {
 
     return {
       access_token: this._jwtService.sign(payload, {
-        secret:  this._configService.get('jwt.secret'),
+        secret: this._configService.get('jwt.secret'),
         expiresIn: this._configService.get('jwt.expiresIn'),
       }),
     }

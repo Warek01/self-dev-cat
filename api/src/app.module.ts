@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { FriendRequestModule } from '@/FriendRequest/FriendRequest.module';
+import { MessageGroupModule } from '@/MessageGroup/MessageGroup.module';
 import { UsefulResourcesModule } from '@/UsefulResources/usefulResources.module'
 import { AppController } from './app.controller'
 import { UserModule } from '@/User/user.module'
@@ -9,7 +11,7 @@ import { EncryptionModule } from '@/Encryption/encryption.module'
 import { LogModule } from '@/Log/log.module'
 import { AuthModule } from '@/Auth/auth.module'
 import { BlogModule } from '@/Blog/blog.module'
-import { FriendRequestModule } from './friend-request/friend-request.module'
+import { MessageModule } from '@/Message/message.module';
 import config from '@/Config/Debug'
 
 @Module({
@@ -30,7 +32,7 @@ import config from '@/Config/Debug'
         password: configService.get<string>('db.password'),
         synchronize: configService.get<boolean>('db.synchronize'),
         schema: configService.get<string>('db.schema'),
-        entities: configService.get<any[]>('db.entities')
+        entities: configService.get<any[]>('db.entities'),
       }),
     }),
     LogModule,
@@ -40,6 +42,8 @@ import config from '@/Config/Debug'
     BlogModule,
     UsefulResourcesModule,
     FriendRequestModule,
+    MessageModule,
+    MessageGroupModule,
   ],
   controllers: [AppController],
   providers: [],

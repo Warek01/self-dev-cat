@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, ManyToOne } from 'typeorm'
 
+import { FriendRequestStatus } from '@/FriendRequest/enums/FriendRequestStatus'
+import { Base } from './Helpers'
 import { User } from './index'
-import { Base } from './Helpers';
 
 @Entity()
 export class FriendRequest extends Base {
@@ -14,6 +15,11 @@ export class FriendRequest extends Base {
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
   to: User
 
-  @Column({ type: 'varchar', default: 'pending', nullable: false })
-  status: 'accepted' | 'rejected' | 'pending'
+  @Column({
+    type: 'enum',
+    enum: FriendRequestStatus,
+    default: FriendRequestStatus.PENDING,
+    nullable: false,
+  })
+  status: FriendRequestStatus
 }

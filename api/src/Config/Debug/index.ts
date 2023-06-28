@@ -18,6 +18,6 @@ export default (): IConfig => ({
   },
   jwt: {
     expiresIn: '7d',
-    secret: process.env.JWT_SECRET
-  }
+    secret: process.env.JWT_SECRET,
+  },
 })

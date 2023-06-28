@@ -2,7 +2,7 @@ import { AjaxError } from 'rxjs/ajax'
 
 import { currentUserClient } from '../clients/currentUserClient.ts'
 import { FetchStatus } from '../enums/FetchStatus.ts'
-import { setToken, setUser } from '../slices/currentUser/currentUser.slice.ts';
+import { setToken, setUser } from '../slices/currentUser/currentUser.slice.ts'
 import * as currentUserSlice from '../slices/currentUser/currentUser.slice.ts'
 import { store } from '../stores/store.ts'
 import { AuthResult } from '../types/AuthResult'

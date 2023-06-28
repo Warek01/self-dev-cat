@@ -1,4 +1,4 @@
-import { UserDto } from '@/User/Dtos';
+import { UserDto } from '@/User/Dtos'
 import { BasicStrategy as BasicPassportStrategy } from 'passport-http'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'

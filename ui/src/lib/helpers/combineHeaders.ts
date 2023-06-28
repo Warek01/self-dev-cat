@@ -1,7 +1,7 @@
 export function combineObjects(...objects: object[]): object {
   const combined: object = {}
 
-  objects.forEach(obj => {
+  objects.forEach((obj) => {
     Object.assign(combined, obj)
   })
 

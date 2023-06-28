@@ -9,11 +9,7 @@ const meta: Meta<typeof LoginForm> = {
 
 export default meta
 
-const Template: StoryFn<typeof LoginForm> = (args) => (
-  <LoginForm {...args} />
-)
+const Template: StoryFn<typeof LoginForm> = (args) => <LoginForm {...args} />
 
 export const Default = Template.bind({})
-Default.args = {
-
-}
+Default.args = {}

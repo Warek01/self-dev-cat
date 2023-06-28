@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler } from 'react'
 
 interface TextInputProps {
   name: string

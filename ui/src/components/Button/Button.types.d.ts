@@ -1,6 +1,6 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react'
 
-export type ButtonType = 'default' | 'link';
+export type ButtonType = 'default' | 'link'
 
 export interface ButtonProps {
   type?: ButtonType

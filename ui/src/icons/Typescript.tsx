@@ -1,9 +1,5 @@
 const Typescript: IconComponent = (props) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
     <title>file_type_typescript_official</title>
     <polygon points="2 16 2 30 16 30 30 30 30 16 30 2 16 2 2 2 2 16" />
     <path

@@ -4,8 +4,8 @@ import { PassportModule } from '@nestjs/passport'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { BasicStrategy } from '@/Auth/Strategy/Basic.strategy';
-import { BearerStrategy } from '@/Auth/Strategy/Bearer.strategy';
+import { BasicStrategy } from '@/Auth/Strategy/Basic.strategy'
+import { BearerStrategy } from '@/Auth/Strategy/Bearer.strategy'
 import { AuthService } from './auth.service'
 import { EncryptionService } from '@/Encryption/encryption.service'
 import { LogService } from '@/Log/log.service'

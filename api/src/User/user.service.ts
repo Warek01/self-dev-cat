@@ -1,3 +1,9 @@
+import { AuthService } from '@/Auth/auth.service'
+import { EncryptionService } from '@/Encryption/encryption.service'
+import { FriendRequest, User } from '@/Entities'
+import { LogService } from '@/Log/log.service'
+import { JwtResponse } from '@/Types/Jwt'
+import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
 import {
   BadRequestException,
   ConflictException,
@@ -11,11 +17,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { Repository } from 'typeorm'
 
-import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
-import { FriendRequest, User } from '@/Entities'
-import { EncryptionService } from '@/Encryption/encryption.service'
-import { LogService } from '@/Log/log.service'
-
 @Injectable()
 export class UserService {
   constructor(
@@ -26,9 +27,11 @@ export class UserService {
     private _encryptionService: EncryptionService,
     @Inject(forwardRef(() => LogService))
     private _logService: LogService,
+    @Inject(forwardRef(() => AuthService))
+    private _authService: AuthService,
   ) {}
 
-  public async create(data: CreateUserDto): Promise<UserDto> {
+  public async register(data: CreateUserDto): Promise<JwtResponse> {
     if (
       (await this.findOneByEmail(data.email)) ||
       (await this.findOneByUsername(data.username))
@@ -49,7 +52,7 @@ export class UserService {
     await this._userRepo.save(user)
     this._logService.user.new(user.username, user.email)
 
-    return plainToInstance(UserDto, user)
+    return this._authService.login(data.username)
   }
 
   public async findOneByEmail(email: string): Promise<UserDto | null> {
@@ -68,7 +71,10 @@ export class UserService {
     return plainToInstance(UserDto, user)
   }
 
-  public async updateUser(username: string, dto: UpdateUserDto): Promise<UserDto> {
+  public async updateUser(
+    username: string,
+    dto: UpdateUserDto,
+  ): Promise<UserDto> {
     const user = await this.findOneByUsername(username)
 
     if (!user) {
@@ -155,7 +161,6 @@ export class UserService {
     const request = this._friendRequestRepo.create()
     request.from = plainToInstance(User, user)
     request.to = plainToInstance(User, friend)
-    request.status = 'pending'
 
     await this._friendRequestRepo.save(request)
     await this._logService.user.addFriend(user.username, friend.username)

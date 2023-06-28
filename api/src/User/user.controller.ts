@@ -29,11 +29,7 @@ import { RequestResponse } from '@/Constans'
 import { User } from '@/Entities'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  UserDto,
-} from '@/User/Dtos'
+import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
 import { UserService } from '@/User/user.service'
 import { BasicAuthGuard } from '@/Auth/Guard/BasicAuth.guard'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
@@ -52,8 +48,8 @@ export class UserController {
   @ApiCreatedResponse()
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async postUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    return await this._userService.create(createUserDto)
+  async postUser(@Body() createUserDto: CreateUserDto): Promise<JwtResponse> {
+    return await this._userService.register(createUserDto)
   }
 
   @ApiBearerAuth()
@@ -93,7 +89,6 @@ export class UserController {
     @Req() req: RequestWithUser,
     @Body() patchUserDto: UpdateUserDto,
   ): Promise<UserDto> {
-    console.log(req.user)
     return this._userService.updateUser(req.user.username, patchUserDto)
   }
 

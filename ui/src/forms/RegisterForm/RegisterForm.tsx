@@ -8,7 +8,9 @@ import {
   useState,
 } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { TextInput } from '../../components'
+import { register } from '../../lib/auth/register.ts'
 
 import { AppRoute } from '../../lib/enums/AppRoute.ts'
 import { isEmail } from '../../lib/helpers/isEmail.ts'
@@ -66,11 +68,15 @@ const RegisterForm: FC = () => {
       return
     }
 
-    // regSuccess = await auth.register(email, password, username)
-    //
-    // if (regSuccess) {
-    //   await router.push(AppRoute.Home)
-    // }
+    const status = await register({
+      username,
+      password,
+      email,
+    })
+
+    if (status.error) {
+      toast(status.error.toString(), { type: 'error' })
+    }
   }, [])
 
   useGlobalListener('keydown', (event: KeyboardEvent) => {
