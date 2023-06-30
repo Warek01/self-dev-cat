@@ -1,10 +1,11 @@
-import { RouteObject } from 'react-router-dom'
+import { Outlet, RouteObject } from 'react-router-dom';
 
 import App from '../../../App.tsx'
 import HomePage from '../../../pages/Home/HomePage.tsx'
 import LoginPage from '../../../pages/Login/LoginPage.tsx'
 import NotFoundPage from '../../../pages/NotFound/NotFoundPage.tsx'
 import RegisterPage from '../../../pages/Register/RegisterPage.tsx'
+import FriendRequestsPage from '../../../pages/Users/:username/FriendRequests/FriendRequestsPage.tsx'
 import UserPage from '../../../pages/Users/:username/UserPage.tsx'
 import { AuthPrivateRoute } from '../../../protected-routes'
 import { AppRoute } from '../../enums/AppRoute.ts'
@@ -25,8 +26,17 @@ export const pagesConfig: RouteObject[] = [
       },
       {
         path: AppRoute.USER,
-        element: <AuthPrivateRoute component={UserPage} />,
-        children: [],
+        element: <AuthPrivateRoute component={() => <Outlet />} />,
+        children: [
+          {
+            path: AppRoute.USER_PROFILE,
+            element: <AuthPrivateRoute component={UserPage} />,
+          },
+          {
+            path: AppRoute.USER_FRIEND_REQUESTS,
+            element: <AuthPrivateRoute component={FriendRequestsPage} />,
+          },
+        ],
       },
       {
         path: AppRoute.LOGIN,

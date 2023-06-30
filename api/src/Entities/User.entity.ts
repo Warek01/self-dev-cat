@@ -1,10 +1,11 @@
-import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm'
 
+import { MessageGroup } from '@/Entities/MessageGroup.entity'
+import { UserRole } from '@/User/enums/UserRole'
 import { UsefulResource, FriendRequest } from './index'
 import { Base } from './Helpers'
 
-@Entity()
+@Entity({ name: 'users' })
 export class User extends Base {
   @Column({ type: 'varchar', nullable: false, unique: true })
   username: string
@@ -21,12 +22,10 @@ export class User extends Base {
   @Column({ type: 'varchar', nullable: true })
   avatarFileName?: string
 
-  @OneToMany(() => UsefulResource, (usefulResource) => usefulResource.user, {
-    nullable: true,
-  })
+  @OneToMany(() => UsefulResource, (usefulResource) => usefulResource.user)
   usefulResources: UsefulResource[]
 
-  @OneToMany(() => FriendRequest, (req) => req.from, { nullable: true })
+  @OneToMany(() => FriendRequest, (req) => req.from)
   friendRequests: FriendRequest[]
 
   @ManyToMany(() => User, (user) => user.friends, { onDelete: 'CASCADE' })
@@ -38,4 +37,12 @@ export class User extends Base {
   })
   @JoinTable()
   messageGroups: MessageGroup[]
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.DEFAULT,
+    nullable: false,
+  })
+  role: UserRole
 }
