@@ -15,10 +15,12 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-import { Repository } from 'typeorm'
+import { FindOptionsRelations, Repository } from 'typeorm'
 
 @Injectable()
 export class UserService {
+  public readonly onlineUserIds: Record<number, NodeJS.TimeOut> = {}
+
   constructor(
     @InjectRepository(User) private _userRepo: Repository<User>,
     @InjectRepository(FriendRequest)
@@ -164,6 +166,40 @@ export class UserService {
 
     await this._friendRequestRepo.save(request)
     await this._logService.user.addFriend(user.username, friend.username)
+  }
+
+  public async getUser(
+    id: number,
+    relations: FindOptionsRelations<User> = {},
+  ): Promise<UserDto | null> {
+    const user: User | null = await this._userRepo.findOne({
+      where: { id },
+      relations,
+    })
+
+    if (!user) {
+      return null
+    }
+
+    return plainToInstance(UserDto, user)
+  }
+
+  public async getUserOrThrow(id: number): Promise<UserDto> {
+    const user: UserDto | null = await this.getUser(id)
+
+    if (!user) {
+      throw new NotFoundException(`user ${id} not found`)
+    }
+
+    return user
+  }
+
+  public setIsOnline(id: number): void {
+    clearTimeout(this.onlineUserIds[id])
+
+    this.onlineUserIds[id] = setTimeout(() => {
+      delete this.onlineUserIds[id]
+    }, 30_000)
   }
 
   public async removeFriend(): Promise<void> {}

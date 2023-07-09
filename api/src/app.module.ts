@@ -14,6 +14,7 @@ import { AuthModule } from '@/Auth/auth.module'
 import { BlogModule } from '@/Blog/blog.module'
 import { MessageModule } from '@/Message/message.module'
 import config from '@/Config/Debug'
+import { ChatModule } from '@/Chat/chat.module'
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import config from '@/Config/Debug'
     FriendRequestModule,
     MessageModule,
     MessageGroupModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [],
