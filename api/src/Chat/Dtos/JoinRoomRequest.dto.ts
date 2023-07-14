@@ -2,7 +2,7 @@ import { IsInt } from 'class-validator'
 
 export class JoinRoomRequestDto {
   @IsInt()
-  roomId: number
+  groupId: number
 
   @IsInt()
   userId: number

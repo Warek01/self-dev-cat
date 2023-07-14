@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm'
 
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
-import { UserRole } from '@/User/enums/UserRole'
+import { UserRole } from '@/User/Enums/UserRole'
 import { UsefulResource, FriendRequest } from './index'
 import { Base } from './Helpers'
 

@@ -1,8 +1,9 @@
+import { Global, Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
+
 import { FriendRequest, Log, User } from '@/Entities'
 import { UserController } from '@/User/user.controller'
 import { UserService } from '@/User/user.service'
-import { Global, Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
 
 @Global()
 @Module({

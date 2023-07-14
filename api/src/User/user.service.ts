@@ -3,7 +3,13 @@ import { EncryptionService } from '@/Encryption/encryption.service'
 import { FriendRequest, User } from '@/Entities'
 import { LogService } from '@/Log/log.service'
 import { JwtResponse } from '@/Types/Jwt'
-import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
+import {
+  CreateUserDto,
+  PingUsersStatusRequestDto,
+  PingUsersStatusResponseDto,
+  UpdateUserDto,
+  UserDto,
+} from '@/User/Dtos'
 import {
   BadRequestException,
   ConflictException,
@@ -16,10 +22,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { FindOptionsRelations, Repository } from 'typeorm'
+import { Socket } from 'socket.io'
+import { WsResponse } from '@nestjs/websockets'
+import { OnlineStatusIdMap } from '@/User/Types/OnlineStatusIdMap'
+import { UserWsEvent } from '@/User/Enums/UserWsEvent'
 
 @Injectable()
 export class UserService {
-  public readonly onlineUserIds: Record<number, NodeJS.TimeOut> = {}
+  public readonly onlineUserIds: Record<number, NodeJS.Timeout> = {}
 
   constructor(
     @InjectRepository(User) private _userRepo: Repository<User>,
@@ -184,8 +194,11 @@ export class UserService {
     return plainToInstance(UserDto, user)
   }
 
-  public async getUserOrThrow(id: number): Promise<UserDto> {
-    const user: UserDto | null = await this.getUser(id)
+  public async getUserOrThrow(
+    id: number,
+    relations: FindOptionsRelations<User> = {},
+  ): Promise<UserDto> {
+    const user: UserDto | null = await this.getUser(id, relations)
 
     if (!user) {
       throw new NotFoundException(`user ${id} not found`)
@@ -194,13 +207,33 @@ export class UserService {
     return user
   }
 
-  public setIsOnline(id: number): void {
+  public async removeFriend(): Promise<void> {}
+
+  public pingUserStatus(
+    dto: PingUsersStatusRequestDto,
+  ): WsResponse<PingUsersStatusResponseDto> {
+    const statuses: OnlineStatusIdMap[] = []
+
+    dto.ids.forEach((id: number): void => {
+      statuses.push({
+        id,
+        online: !!this.onlineUserIds[id] ?? false,
+      })
+    })
+
+    return {
+      event: UserWsEvent.PING_ONLINE_STATUS,
+      data: plainToInstance(PingUsersStatusResponseDto, {
+        data: statuses,
+      } as PingUsersStatusResponseDto),
+    }
+  }
+
+  private _setIsOnline(id: number): void {
     clearTimeout(this.onlineUserIds[id])
 
     this.onlineUserIds[id] = setTimeout(() => {
       delete this.onlineUserIds[id]
     }, 30_000)
   }
-
-  public async removeFriend(): Promise<void> {}
 }

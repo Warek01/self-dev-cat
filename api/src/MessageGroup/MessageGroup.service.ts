@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindOptionsRelations, Repository } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
@@ -22,7 +22,7 @@ export class MessageGroupService {
     })
 
     if (!rootUser) {
-      throw new NotFoundException(`user ${rootUserId} not found`)
+      throw new Error(`user ${rootUserId} not found`)
     }
 
     const room: MessageGroup = this._messageGroupRepo.create()
@@ -50,11 +50,14 @@ export class MessageGroupService {
     return plainToInstance(MessageGroupDto, group)
   }
 
-  public async getGroupOrThrow(id: number): Promise<MessageGroupDto> {
-    const group: MessageGroupDto | null = await this.getGroup(id)
+  public async getGroupOrThrow(
+    id: number,
+    relations: FindOptionsRelations<MessageGroup> = {},
+  ): Promise<MessageGroupDto> {
+    const group: MessageGroupDto | null = await this.getGroup(id, relations)
 
     if (!group) {
-      throw new NotFoundException(`group ${id} does not exist`)
+      throw new Error(`group ${id} does not exist`)
     }
 
     return group
