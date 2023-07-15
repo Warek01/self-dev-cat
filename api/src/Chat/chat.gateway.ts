@@ -19,6 +19,9 @@ import { ChatWsEvent } from '@/Chat/Enums/ChatWsEvent'
 @WebSocketGateway({
   namespace: 'chat',
   transports: ['websocket'],
+  cors: {
+    origin: '*',
+  },
 })
 export class ChatGateway {
   constructor(private readonly _chatService: ChatService) {}

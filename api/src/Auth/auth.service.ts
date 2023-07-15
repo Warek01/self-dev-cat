@@ -1,20 +1,26 @@
 import { UserDto } from '@/User/Dtos'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
 import type { JwtResponse } from '@/Types/Jwt'
 import { UserService } from '@/User/user.service'
 import { EncryptionService } from '@/Encryption/encryption.service'
-import { LogService } from '@/Log/log.service'
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UserService))
     private readonly _userService: UserService,
+    @Inject(forwardRef(() => EncryptionService))
     private readonly _encryptionService: EncryptionService,
+    @Inject(forwardRef(() => JwtService))
     private readonly _jwtService: JwtService,
-    private readonly _logService: LogService,
     private readonly _configService: ConfigService,
   ) {}
 
@@ -43,7 +49,6 @@ export class AuthService {
     }
 
     const payload = { username: user.username, sub: user.id }
-    await this._logService.auth.login(user)
 
     return {
       access_token: this._jwtService.sign(payload, {

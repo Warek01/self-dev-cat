@@ -1,8 +1,10 @@
 import type { Request } from 'express'
 
 export interface RequestWithUser extends Request {
-  user: {
-    userId: number
-    username: string
-  }
+  user: UserCredentials
+}
+
+export interface UserCredentials {
+  userId: number
+  username: string
 }

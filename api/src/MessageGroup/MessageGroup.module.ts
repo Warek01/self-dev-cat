@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { MessageGroupController } from './MessageGroup.controller'
 import { MessageGroupService } from './MessageGroup.service'
-import { UserModule } from '@/User/user.module'
-import { User, MessageGroup } from '@/Entities'
+import {MessageGroup, User} from '@/Entities'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MessageGroup, User]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([MessageGroup, User])
+  ],
   providers: [MessageGroupService],
   controllers: [MessageGroupController],
   exports: [MessageGroupService],

@@ -1,6 +1,6 @@
 import icons from '../../../icons'
 import { repeat } from '../../helpers/repeat.ts'
-import { IconLink } from '../../types/IconLink'
+import { IconLink } from '../../types/IconLink.ts'
 
 // TODO: change to actual links
 export const authorLinks: IconLink[] = repeat<IconLink>(

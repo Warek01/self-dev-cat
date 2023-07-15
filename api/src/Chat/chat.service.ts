@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { Socket } from 'socket.io'
 import { plainToInstance } from 'class-transformer'
 import { WsResponse } from '@nestjs/websockets'
@@ -20,8 +20,11 @@ import { MessageDto } from '@/Message/Dtos'
 @Injectable()
 export class ChatService {
   constructor(
+    @Inject(forwardRef(() => MessageGroupService))
     private readonly _messageGroupService: MessageGroupService,
+    @Inject(forwardRef(() => UserService))
     private readonly _userService: UserService,
+    @Inject(forwardRef(() => MessageService))
     private readonly _messageService: MessageService,
   ) {}
 

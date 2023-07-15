@@ -9,7 +9,6 @@ import { UsefulResourcesModule } from '@/UsefulResources/usefulResources.module'
 import { AppController } from './app.controller'
 import { UserModule } from '@/User/user.module'
 import { EncryptionModule } from '@/Encryption/encryption.module'
-import { LogModule } from '@/Log/log.module'
 import { AuthModule } from '@/Auth/auth.module'
 import { BlogModule } from '@/Blog/blog.module'
 import { MessageModule } from '@/Message/message.module'
@@ -38,10 +37,9 @@ import { ChatModule } from '@/Chat/chat.module'
         namingStrategy: new SnakeNamingStrategy(),
       }),
     }),
-    LogModule,
+    AuthModule,
     UserModule,
     EncryptionModule,
-    AuthModule,
     BlogModule,
     UsefulResourcesModule,
     FriendRequestModule,

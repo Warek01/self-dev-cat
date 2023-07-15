@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { forwardRef, Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindOptionsRelations, Repository } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer'
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { User } from '@/Entities'
 import { MessageGroupDto } from '@/MessageGroup/Dtos'
+import { UserService } from '@/User/user.service'
 
 @Injectable()
 export class MessageGroupService {
@@ -14,6 +15,8 @@ export class MessageGroupService {
     private readonly _messageGroupRepo: Repository<MessageGroup>,
     @InjectRepository(User)
     private readonly _usersRepo: Repository<User>,
+    @Inject(forwardRef(() => UserService))
+    private readonly _userService: UserService,
   ) {}
 
   public async createGroup(rootUserId: number): Promise<MessageGroupDto> {
@@ -61,5 +64,21 @@ export class MessageGroupService {
     }
 
     return group
+  }
+
+  public async containsUser(groupId: number, userId: number): Promise<boolean> {
+    const group: MessageGroupDto = await this.getGroupOrThrow(groupId, {
+      users: true,
+    })
+
+    const count = await this._messageGroupRepo
+      .createQueryBuilder('group')
+      .innerJoinAndSelect('users', 'user')
+      .where('user.id = :userId', { userId })
+      .getCount()
+
+    console.log(count)
+
+    return group.users.map((user) => user.id).includes(userId)
   }
 }

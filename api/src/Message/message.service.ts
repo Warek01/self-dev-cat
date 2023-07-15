@@ -1,25 +1,38 @@
-import { Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 
 import { Message, MessageGroup, User } from '@/Entities'
 import { MessageGroupService } from '@/MessageGroup/MessageGroup.service'
-import { CreateMessageDto, MessageDto } from '@/Message/Dtos'
+import {
+  CreateMessageDto,
+  MessageDto,
+  RequestMessagesDto,
+  ResponseMessagesDto,
+} from '@/Message/Dtos'
 import { UserService } from '@/User/user.service'
 import { MessageGroupDto } from '@/MessageGroup/Dtos'
 import { UserDto } from '@/User/Dtos'
+import { UserCredentials } from '@/Types/RequestWithUser'
 
 @Injectable()
 export class MessageService {
   constructor(
     @InjectRepository(Message)
     private readonly _messageRepo: Repository<Message>,
+    @Inject(forwardRef(() => MessageGroupService))
     private readonly _messageGroupService: MessageGroupService,
+    @Inject(forwardRef(() => UserService))
     private readonly _userService: UserService,
   ) {}
 
-  async createMessage(dto: CreateMessageDto): Promise<MessageDto> {
+  public async createMessage(dto: CreateMessageDto): Promise<MessageDto> {
     const { groupId, userId, content } = dto
 
     const message: Message = this._messageRepo.create()
@@ -34,5 +47,36 @@ export class MessageService {
     const res: Message = await this._messageRepo.save(message)
 
     return plainToInstance(MessageDto, res)
+  }
+
+  public async getAll(
+    user: UserCredentials,
+    dto: RequestMessagesDto,
+  ): Promise<ResponseMessagesDto> {
+    const { groupId, skip, limit } = dto
+
+    if (!(await this._messageGroupService.containsUser(groupId, user.userId))) {
+      throw new BadRequestException('group does not include user')
+    }
+
+    const [items, count] = await this._messageRepo.findAndCount({
+      skip,
+      take: limit,
+      where: {
+        group: {
+          id: groupId,
+        },
+      },
+      relations: {
+        user: true,
+        replies: true,
+        repliesTo: true,
+      },
+    })
+
+    return {
+      count,
+      items: items.map((item) => plainToInstance(MessageDto, item)),
+    }
   }
 }

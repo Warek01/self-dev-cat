@@ -1,15 +1,3 @@
-import { AuthService } from '@/Auth/auth.service'
-import { EncryptionService } from '@/Encryption/encryption.service'
-import { FriendRequest, User } from '@/Entities'
-import { LogService } from '@/Log/log.service'
-import { JwtResponse } from '@/Types/Jwt'
-import {
-  CreateUserDto,
-  PingUsersStatusRequestDto,
-  PingUsersStatusResponseDto,
-  UpdateUserDto,
-  UserDto,
-} from '@/User/Dtos'
 import {
   BadRequestException,
   ConflictException,
@@ -22,8 +10,19 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 import { FindOptionsRelations, Repository } from 'typeorm'
-import { Socket } from 'socket.io'
 import { WsResponse } from '@nestjs/websockets'
+
+import { AuthService } from '@/Auth/auth.service'
+import { EncryptionService } from '@/Encryption/encryption.service'
+import { FriendRequest, User } from '@/Entities'
+import { JwtResponse } from '@/Types/Jwt'
+import {
+  CreateUserDto,
+  PingUsersStatusRequestDto,
+  PingUsersStatusResponseDto,
+  UpdateUserDto,
+  UserDto,
+} from '@/User/Dtos'
 import { OnlineStatusIdMap } from '@/User/Types/OnlineStatusIdMap'
 import { UserWsEvent } from '@/User/Enums/UserWsEvent'
 
@@ -32,15 +31,14 @@ export class UserService {
   public readonly onlineUserIds: Record<number, NodeJS.Timeout> = {}
 
   constructor(
-    @InjectRepository(User) private _userRepo: Repository<User>,
+    @InjectRepository(User)
+    private readonly _userRepo: Repository<User>,
     @InjectRepository(FriendRequest)
-    private _friendRequestRepo: Repository<FriendRequest>,
+    private readonly _friendRequestRepo: Repository<FriendRequest>,
     @Inject(forwardRef(() => EncryptionService))
-    private _encryptionService: EncryptionService,
-    @Inject(forwardRef(() => LogService))
-    private _logService: LogService,
+    private readonly _encryptionService: EncryptionService,
     @Inject(forwardRef(() => AuthService))
-    private _authService: AuthService,
+    private readonly _authService: AuthService,
   ) {}
 
   public async register(data: CreateUserDto): Promise<JwtResponse> {
@@ -55,14 +53,13 @@ export class UserService {
       throw new NotAcceptableException('Username already taken.')
     }
 
-    const user = await this._userRepo.create()
+    const user: User = await this._userRepo.create()
     user.email = data.email
     user.password = await this._encryptionService.encrypt(data.password)
     user.username = data.username
     user.realName = data.realName || user.realName
 
     await this._userRepo.save(user)
-    this._logService.user.new(user.username, user.email)
 
     return this._authService.login(data.username)
   }
@@ -140,8 +137,6 @@ export class UserService {
     await this._userRepo.delete({
       username,
     })
-
-    this._logService.user.delete(user.username, user.email)
   }
 
   public async addFriend(
@@ -174,8 +169,7 @@ export class UserService {
     request.from = plainToInstance(User, user)
     request.to = plainToInstance(User, friend)
 
-    await this._friendRequestRepo.save(request)
-    await this._logService.user.addFriend(user.username, friend.username)
+    this._friendRequestRepo.save(request)
   }
 
   public async getUser(

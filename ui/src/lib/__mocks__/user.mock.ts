@@ -1,4 +1,4 @@
-import type { User } from '../types/User'
+import type { User } from '../types/User.ts'
 
 export const userMock: User = {
   id: 12345,

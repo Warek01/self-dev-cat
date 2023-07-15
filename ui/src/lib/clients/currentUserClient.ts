@@ -2,9 +2,9 @@ import { firstValueFrom } from 'rxjs'
 import { ajax } from 'rxjs/ajax'
 
 import * as headers from '../helpers/authHeaders.ts'
-import type { JwtResponse } from '../types/JwtResponse'
-import type { RegisterBody } from '../types/RegisterBody';
-import type { User } from '../types/User'
+import type { JwtResponse } from '../types/JwtResponse.ts'
+import type { RegisterBody } from '../types/RegisterBody.ts';
+import type { User } from '../types/User.ts'
 
 const URL = 'http://localhost:3000/user'
 

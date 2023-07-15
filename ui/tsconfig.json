@@ -1,11 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "incremental": true,
+    "composite": true,
+    "checkJs": false,
+    "allowJs": true,
+    "disableReferencedProjectLoad": true,
+    "disableSizeLimit": true,
+    "newLine": "lf",
+    "emitBOM": false,
+    "listEmittedFiles": false,
+    "watch": false,
+    "removeComments": true,
+    "moduleDetection": "auto",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -16,13 +31,39 @@
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxFactory": "React.createElement",
+    "jsxFragmentFactory": "React.Fragment",
+    "jsxImportSource": "react",
+    "reactNamespace": "React",
 
     /* Linting */
     "strict": true,
+    "alwaysStrict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "noStrictGenericChecks": false,
+    "allowUnusedLabels": true,
+    "allowUnreachableCode": false,
+    "noEmitHelpers": false,
+    "noEmitOnError": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "useUnknownInCatchVariables": true,
+    "noPropertyAccessFromIndexSignature": false
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
