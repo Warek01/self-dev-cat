@@ -10,9 +10,9 @@ import UserPage from '../../../pages/Users/:username/UserPage.tsx'
 import { AuthPrivateRoute } from '../../../protected-routes'
 import { AppRoute } from '../../enums/AppRoute.ts'
 import ChatPage from '../../../pages/Chat/ChatPage.tsx'
-import { ChatSelect } from '../../../components'
-import GroupChatPage from '../../../pages/Chat/:groupId/GroupChat.tsx'
 import GroupChatInfoPage from "../../../pages/Chat/:groupId/Info/GroupChatInfoPage.tsx";
+import ChatMessageAreaEmpty from "../../../ChatMessageAreaEmpty/ChatMessageAreaEmpty.tsx";
+import ChatMessageArea from "../../../components/ChatMessageArea/ChatMessageArea.tsx";
 
 export const pagesConfig: RouteObject[] = [
   {
@@ -70,11 +70,11 @@ export const pagesConfig: RouteObject[] = [
         children: [
           {
             index: true,
-            Component: ChatSelect,
+            Component: ChatMessageAreaEmpty,
           },
           {
             path: AppRoute.CHAT_GROUP,
-            Component: GroupChatPage,
+            Component: ChatMessageArea,
           },
           {
             path: AppRoute.CHAT_GROUP_INFO,

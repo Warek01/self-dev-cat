@@ -1,8 +1,17 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 import {
+  MessageGroupDto,
   RequestMessageGroupsDto,
   ResponseMessageGroupsDto,
 } from '@/MessageGroup/Dtos'
@@ -25,5 +34,16 @@ export class MessageGroupController {
     @Query() filter: RequestMessageGroupsDto,
   ): Promise<ResponseMessageGroupsDto> {
     return this._messageGroupService.getAll(req.user, filter)
+  }
+
+  @ApiOperation({ description: 'Get information about group' })
+  @ApiBearerAuth()
+  @UseGuards(BearerAuthGuard)
+  @Get(':id')
+  find(
+    @Req() req: RequestWithUser,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<MessageGroupDto> {
+    return this._messageGroupService.find(req.user, id)
   }
 }

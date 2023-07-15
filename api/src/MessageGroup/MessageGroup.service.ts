@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindOptionsRelations, Repository } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
@@ -100,19 +105,35 @@ export class MessageGroupService {
         createdAt: true,
         users: {
           id: true,
-          username: true
+          username: true,
         },
         rootUser: {
           id: true,
           username: true,
         },
-        name: true
-      }
+        name: true,
+      },
     })
 
     return {
       count,
       items: items.map((item) => plainToInstance(MessageGroupDto, item)),
     }
+  }
+
+  public async find(
+    user: UserCredentials,
+    id: number,
+  ): Promise<MessageGroupDto> {
+    if (!(await this.containsUser(id, user.userId))) {
+      throw new BadRequestException('user not in current group')
+    }
+
+    const group: MessageGroupDto = await this.getGroupOrThrow(id, {
+      users: true,
+      rootUser: true,
+    })
+
+    return plainToInstance(MessageGroupDto, group)
   }
 }

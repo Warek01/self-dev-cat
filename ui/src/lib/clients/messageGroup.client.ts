@@ -28,4 +28,16 @@ export const messageGroupClient = {
 
     return request.response
   },
+
+  find: async (id: number, accessToken: string): Promise<MessageGroup> => {
+    const request: AjaxResponse<MessageGroup> = await firstValueFrom(
+      ajax<MessageGroup>({
+        url: `${URL}/${id}`,
+        method: 'GET',
+        headers: headers.bearer(accessToken),
+      }),
+    )
+
+    return request.response
+  },
 }

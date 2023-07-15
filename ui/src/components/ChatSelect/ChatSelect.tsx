@@ -1,11 +1,11 @@
-import { FC, useContext, useEffect, useState } from 'react'
+import { FC, memo, useContext, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { ChatContext } from '../../containers/ChatContainer/ChatContainer.context.ts'
 import type { ApiFindResponse } from '../../lib/types/Api.ts'
 import type { MessageGroup } from '../../lib/types/MessageGroup.ts'
-import { Link } from 'react-router-dom'
-import { AppRoute } from '../../lib/enums/AppRoute.ts'
-import { toast } from 'react-toastify'
+import { Button } from '../index.ts'
 
 const ChatSelect: FC = () => {
   const { requestMessageGroups } = useContext(ChatContext)
@@ -27,13 +27,16 @@ const ChatSelect: FC = () => {
     })()
   }, [])
 
+  // TODO: implement resize
   return (
-    <main>
-      {messageGroups.map((group) => (
-        <Link to={group.id.toString()}>{group.name}</Link>
-      ))}
+    <main className="flex flex-1 max-w-[20%] pr-4 border-r border-black dark:border-dark-white">
+      <ul className="flex flex-1 flex-col justify-start gap-4">
+        {messageGroups.map((group) => (
+          <Button type="link" to={group.id.toString()} text={group.name} />
+        ))}
+      </ul>
     </main>
   )
 }
 
-export default ChatSelect
+export default memo(ChatSelect)
