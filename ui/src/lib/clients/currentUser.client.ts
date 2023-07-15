@@ -6,7 +6,7 @@ import type { JwtResponse } from '../types/JwtResponse.ts'
 import type { RegisterBody } from '../types/RegisterBody.ts';
 import type { User } from '../types/User.ts'
 
-const URL = 'http://localhost:3000/user'
+const URL = `${import.meta.env.VITE_API_URL}/user`
 
 export const currentUserClient = {
   login: async (username: string, password: string): Promise<string> => {

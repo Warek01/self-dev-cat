@@ -1,6 +1,6 @@
 import { AjaxError } from 'rxjs/ajax'
 
-import { currentUserClient } from '../clients/currentUserClient.ts'
+import { currentUserClient } from '../clients/currentUser.client.ts'
 import { FetchStatus } from '../enums/FetchStatus.ts'
 import * as currentUserSlice from '../slices/currentUser/currentUser.slice.ts'
 import { store } from '../stores/store.ts'

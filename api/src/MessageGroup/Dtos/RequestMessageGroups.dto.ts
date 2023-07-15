@@ -1,15 +1,8 @@
-import { IsInt, IsOptional } from 'class-validator'
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
+import { IsInt, IsOptional } from 'class-validator'
 
-export class RequestMessagesDto {
-  @ApiProperty({
-    type: Number,
-  })
-  @Transform(({ value }) => parseInt(value))
-  @IsInt()
-  groupId: number
-
+export class RequestMessageGroupsDto {
   @ApiPropertyOptional({
     type: Number,
     default: 0,

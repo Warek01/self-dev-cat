@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { Exclude, Type } from 'class-transformer'
 import { IsArray, IsEmail, IsString } from 'class-validator'
 
 import { BaseDto } from '@/Dtos'

@@ -67,10 +67,28 @@ export class MessageService {
           id: groupId,
         },
       },
+      cache: true,
+      order: {
+        createdAt: 'DESC',
+      },
       relations: {
+        group: true,
         user: true,
         replies: true,
         repliesTo: true,
+      },
+      select: {
+        user: {
+          id: true,
+        },
+        id: true,
+        content: true,
+        repliesTo: {
+          id: true,
+        },
+        createdAt: true,
+        fileNames: true,
+        type: true,
       },
     })
 

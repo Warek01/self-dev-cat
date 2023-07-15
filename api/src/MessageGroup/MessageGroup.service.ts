@@ -5,8 +5,13 @@ import { plainToInstance } from 'class-transformer'
 
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { User } from '@/Entities'
-import { MessageGroupDto } from '@/MessageGroup/Dtos'
+import {
+  MessageGroupDto,
+  RequestMessageGroupsDto,
+  ResponseMessageGroupsDto,
+} from '@/MessageGroup/Dtos'
 import { UserService } from '@/User/user.service'
+import { UserCredentials } from '@/Types/RequestWithUser'
 
 @Injectable()
 export class MessageGroupService {
@@ -71,14 +76,43 @@ export class MessageGroupService {
       users: true,
     })
 
-    const count = await this._messageGroupRepo
-      .createQueryBuilder('group')
-      .innerJoinAndSelect('users', 'user')
-      .where('user.id = :userId', { userId })
-      .getCount()
-
-    console.log(count)
-
     return group.users.map((user) => user.id).includes(userId)
+  }
+
+  public async getAll(
+    user: UserCredentials,
+    filter: RequestMessageGroupsDto,
+  ): Promise<ResponseMessageGroupsDto> {
+    const [items, count] = await this._messageGroupRepo.findAndCount({
+      skip: filter.skip,
+      take: filter.limit,
+      cache: true,
+      where: {
+        users: {
+          id: user.userId,
+        },
+      },
+      relations: {
+        users: true,
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        users: {
+          id: true,
+          username: true
+        },
+        rootUser: {
+          id: true,
+          username: true,
+        },
+        name: true
+      }
+    })
+
+    return {
+      count,
+      items: items.map((item) => plainToInstance(MessageGroupDto, item)),
+    }
   }
 }

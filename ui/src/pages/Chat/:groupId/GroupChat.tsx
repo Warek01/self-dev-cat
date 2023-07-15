@@ -4,6 +4,7 @@ import {
   MutableRefObject,
   useCallback,
   useContext,
+  useEffect,
   useRef,
 } from 'react'
 import { useParams } from 'react-router-dom'
@@ -12,6 +13,9 @@ import { ChatContext } from '../../../containers/ChatContainer/ChatContainer.con
 import { Button, TextInput } from '../../../components'
 import { useAppSelector } from '../../../lib/hooks/useAppSelector.ts'
 import { selectCurrentUser } from '../../../lib/slices/currentUser/currentUser.slice.ts'
+import { ApiFindResponse } from '../../../lib/types/Api.ts'
+import { Message } from '../../../lib/types/Message.ts'
+import { toast } from 'react-toastify'
 
 const GroupChatPage: FC = () => {
   const params = useParams()
@@ -25,15 +29,36 @@ const GroupChatPage: FC = () => {
       return
     }
 
-    const content: string = textInputRef.current.value
-    textInputRef.current.value = ''
+    try {
+      const content: string = textInputRef.current.value
+      textInputRef.current.value = ''
 
-    await sendMessage({
-      content,
-      userId: user.id,
-      groupId: parseInt(params['groupId']!),
-    })
+      await sendMessage({
+        content,
+        userId: user.id,
+        groupId: parseInt(params['groupId']!),
+      })
+    } catch (err) {
+      console.error(err)
+      toast('Failed to send message', { type: 'error' })
+    }
   }, [user])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const messages: ApiFindResponse<Message> = await requestMessages(
+          parseInt(params['groupId']!),
+          0,
+          25,
+        )
+        console.log(messages)
+      } catch (err) {
+        console.error(err)
+        toast('Error loading messages', { type: 'error' })
+      }
+    })()
+  }, [])
 
   return (
     <main>
