@@ -10,7 +10,7 @@ export const Backdrop: FC<PropsWithChildren<BackdropProps>> = ({
   return (
     <Modal>
       <main
-        className={`absolute w-screen h-screen max-w-screen max-h-screen flex items-center justify-center bg-black/20 duration-300 ${
+        className={`absolute z-50 w-screen h-screen max-w-screen max-h-screen flex items-center justify-center bg-[#000]/50 duration-300 ${
           visible ? 'opacity-100' : 'opacity-0'
         }`}
       >

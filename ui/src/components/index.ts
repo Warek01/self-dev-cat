@@ -7,7 +7,7 @@ import Modal from './Modal/Modal.tsx'
 import SideMenu from './SideMenu/SideMenu.tsx'
 import TextInput from './TextInput/TextInput.tsx'
 import Button from './Button/Button.tsx'
-import ChatSelect from './ChatSelect/ChatSelect.tsx'
+import Chip from './Chip/Chip.tsx'
 
 export {
   Modal,
@@ -19,5 +19,5 @@ export {
   IconLink,
   Header,
   Button,
-  ChatSelect,
+  Chip
 }

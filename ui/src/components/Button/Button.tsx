@@ -1,4 +1,3 @@
-import { Wrapper } from '@storybook/blocks'
 import { FC, PropsWithChildren } from 'react'
 import { Link } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
@@ -19,10 +18,14 @@ const Button: FC<ButtonProps> = ({
   circle = false,
   uppercase = false,
   disabled = false,
+  submit = false,
+  active = false,
 }) => {
   const Wrapper: FC<PropsWithChildren<any>> = ({ children, ...props }) =>
     type === 'default' ? (
-      <button {...props}>{children}</button>
+      <button {...props} type={submit ? 'submit' : 'button'}>
+        {children}
+      </button>
     ) : (
       <Link {...props} to={to}>
         {children}
@@ -39,6 +42,7 @@ const Button: FC<ButtonProps> = ({
         circle ? 'rounded-full' : 'rounded-lg',
         uppercase && 'uppercase',
         disabled && 'pointer-events-none',
+        active && 'bg-black/20 dark:bg-white/20 cursor-default',
         className,
       )}
     >

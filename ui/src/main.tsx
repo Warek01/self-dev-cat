@@ -17,9 +17,9 @@ theme === 'dark'
 const router = createBrowserRouter(pagesConfig)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ReduxProvider store={store}>
       <RouterProvider router={router} />
     </ReduxProvider>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

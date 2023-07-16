@@ -17,7 +17,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) => {
     return (
-      <label htmlFor={name} className="relative">
+      <label htmlFor={name} className="relative w-full">
         <input
           type={password ? 'password' : 'text'}
           ref={ref}

@@ -2,12 +2,12 @@ import { FC, memo } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { ChatContainer } from '../../containers'
-import { ChatSelect } from "../../components";
+import { ChatSelect } from '../../components/chat'
 
 const ChatPage: FC = () => {
   return (
     <ChatContainer>
-      <main className="flex w-screen h-screen">
+      <main className="flex flex-1 max-h-full overflow-hidden">
         <ChatSelect />
         <Outlet />
       </main>

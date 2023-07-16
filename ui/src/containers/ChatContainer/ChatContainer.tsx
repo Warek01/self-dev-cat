@@ -50,7 +50,7 @@ const ChatContainer: FC<PropsWithChildren> = ({ children }) => {
 
     chatSocket
       .on(ChatWsEvent.JOIN_ROOM, (res) => {
-        console.log(res)
+        console.log('join room', res)
       })
       .emit(ChatWsEvent.JOIN_ROOM, {
         userId: user!.id,

@@ -10,10 +10,12 @@ export interface ButtonProps {
   text?: string
   iconPosition?: 'left' | 'right'
   iconSize?: number
-  to?: string
+  to?: string | number
   withHover?: boolean
   circle?: boolean
   uppercase?: boolean
   disabled?: boolean
   iconClassName?: string
+  submit?: boolean
+  active?: boolean
 }

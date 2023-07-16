@@ -24,10 +24,10 @@ export const chatSocket: Socket<ServerToClientEvents, ClientToServerEvents> =
 chatSocket
   .on('connect', () => console.log('connected to /chat ws'))
   .on('connect_error', (err) =>
-    console.log(`error connecting to /chat ws "${err.message}"`),
+    console.error(`error connecting to /chat ws "${err.message}"`),
   )
   .on('disconnect', (reason, description) =>
-    console.log(
+    console.warn(
       `chat ws disconnected by reason "${reason}" description: "${description}"`,
     ),
   )

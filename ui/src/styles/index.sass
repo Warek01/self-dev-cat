@@ -1,7 +1,33 @@
+@use './color'
+
 @import 'tailwindcss/base.css'
 @import 'tailwindcss/components.css'
 @import 'tailwindcss/variants.css'
 @import 'tailwindcss/utilities.css'
+
+::-webkit-scrollbar
+  width: 8px
+
+::-webkit-scrollbar-track
+  background: rgba(color.$dark-black, .10)
+  border-radius: 4px
+
+.dark ::-webkit-scrollbar-track
+  background: rgba(color.$dark-white, .10)
+
+::-webkit-scrollbar-thumb
+  background: rgba(color.$dark-black, .35)
+  border-radius: 4px
+
+.dark ::-webkit-scrollbar-thumb
+  background: rgba(color.$dark-white, .35)
+  border-radius: 4px
+
+::-webkit-scrollbar-thumb:hover
+    background: rgba(color.$dark-black, .50)
+
+.dark ::-webkit-scrollbar-thumb:hover
+    background: rgba(color.$dark-white, .50)
 
 @layer base
   *

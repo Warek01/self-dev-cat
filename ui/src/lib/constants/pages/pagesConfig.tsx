@@ -11,8 +11,8 @@ import { AuthPrivateRoute } from '../../../protected-routes'
 import { AppRoute } from '../../enums/AppRoute.ts'
 import ChatPage from '../../../pages/Chat/ChatPage.tsx'
 import GroupChatInfoPage from "../../../pages/Chat/:groupId/Info/GroupChatInfoPage.tsx";
-import ChatMessageAreaEmpty from "../../../ChatMessageAreaEmpty/ChatMessageAreaEmpty.tsx";
-import ChatMessageArea from "../../../components/ChatMessageArea/ChatMessageArea.tsx";
+import ChatMessageAreaEmpty from "../../../components/chat/ChatMessageAreaEmpty/ChatMessageAreaEmpty.tsx";
+import ChatMessageArea from "../../../containers/ChatMessageAreaContainer/ChatMessageAreaContainer.tsx";
 
 export const pagesConfig: RouteObject[] = [
   {

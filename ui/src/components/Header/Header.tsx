@@ -30,7 +30,7 @@ const Header: FC = () => {
   return (
     <header className="flex justify-between py-6 max-h-20">
       <Link
-        to={AppRoute.HOME}
+        to={AppRoute.ROOT}
         className="flex gap-6 items-center font-semibold text-lg md:text-xl"
       >
         <img
@@ -49,6 +49,13 @@ const Header: FC = () => {
           type="link"
           to={`${AppRoute.USERS}/${user?.username}`}
           Icon={icons.User}
+          iconSize={24}
+          disabled={isUnprotectedLocation}
+        />
+        <Button
+          type="link"
+          to={AppRoute.CHAT}
+          Icon={icons.Message}
           iconSize={24}
           disabled={isUnprotectedLocation}
         />
