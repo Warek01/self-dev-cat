@@ -8,7 +8,7 @@ import { UserDto } from '@/User/Dtos'
 export class MessageGroupDto extends Base {
   @Type(() => MessageDto)
   @IsArray()
-  messages: MessageDto
+  messages: MessageDto[]
 
   @Type(() => UserDto)
   @IsArray()

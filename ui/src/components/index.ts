@@ -8,6 +8,7 @@ import SideMenu from './SideMenu/SideMenu.tsx'
 import TextInput from './TextInput/TextInput.tsx'
 import Button from './Button/Button.tsx'
 import Chip from './Chip/Chip.tsx'
+import ModalWindow from './ModalWindow/ModalWindow.tsx'
 
 export {
   Modal,
@@ -19,5 +20,6 @@ export {
   IconLink,
   Header,
   Button,
-  Chip
+  Chip,
+  ModalWindow,
 }

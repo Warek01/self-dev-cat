@@ -17,6 +17,7 @@ import {
 } from '@/MessageGroup/Dtos'
 import { UserService } from '@/User/user.service'
 import { UserCredentials } from '@/Types/RequestWithUser'
+import { MessageDto } from "@/Message/Dtos";
 
 @Injectable()
 export class MessageGroupService {

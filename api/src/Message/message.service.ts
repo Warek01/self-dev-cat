@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { FindOptionsRelations, In, Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 
@@ -20,6 +20,7 @@ import { UserService } from '@/User/user.service'
 import { MessageGroupDto } from '@/MessageGroup/Dtos'
 import { UserDto } from '@/User/Dtos'
 import { UserCredentials } from '@/Types/RequestWithUser'
+import { OperationResponse } from '@/Dtos/OperationResponse'
 
 @Injectable()
 export class MessageService {
@@ -96,5 +97,60 @@ export class MessageService {
       count,
       items: items.map((item) => plainToInstance(MessageDto, item)),
     }
+  }
+
+  public deleteMessages(messages: MessageDto[]): void {
+    messages.forEach(({ id }) => {
+      this._messageRepo.delete({ id })
+    })
+  }
+
+  public async findMessages(ids: number[]): Promise<MessageDto[]> {
+    if (!ids.length) {
+      return []
+    }
+
+    const messages: Message[] = await this._messageRepo.find({
+      where: {
+        id: In(ids),
+      },
+    })
+
+    return messages.map((message) => plainToInstance(MessageDto, message))
+  }
+
+  public async getMessage(
+    id: number,
+    relations: FindOptionsRelations<Message> = {},
+  ): Promise<MessageDto | null> {
+    const message: Message | null = await this._messageRepo.findOne({
+      where: {
+        id,
+      },
+      relations,
+    })
+
+    return plainToInstance(MessageDto, message)
+  }
+
+  public async getMessageOrThrow(
+    id: number,
+    relations: FindOptionsRelations<Message> = {},
+  ): Promise<MessageDto> {
+    const message: MessageDto | null = await this.getMessage(id, relations)
+
+    if (!message) {
+      throw new Error(`message ${id} not found`)
+    }
+
+    return message
+  }
+
+  public deleteAllMessagesFromGroup(groupId: number): void {
+    this._messageRepo.delete({
+      group: {
+        id: groupId,
+      },
+    })
   }
 }

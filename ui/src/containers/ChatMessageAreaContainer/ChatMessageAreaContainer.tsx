@@ -10,7 +10,11 @@ import { messageGroupClient } from '../../lib/clients/messageGroup.client.ts'
 import type { MessageGroup } from '../../lib/types/MessageGroup.ts'
 import { useLocalStorage } from '../../lib/hooks/useLocalStorage.ts'
 import type { ApiFindResponse } from '../../lib/types/Api.ts'
-import { ChatHeader, ChatInputArea, ChatMessagesArea } from '../../components/chat'
+import {
+  ChatHeader,
+  ChatInputArea,
+  ChatMessagesArea,
+} from '../../components/chat'
 import { chatSocket } from '../../lib/ws/sockets/chatSocket.ts'
 import { ChatWsEvent } from '../../lib/ws/enums/ChatWsEvent.ts'
 
@@ -44,13 +48,6 @@ const ChatMessageAreaContainer: FC = () => {
           userId: user.id,
           groupId: groupId,
         })
-
-        const newMessage: Message = {
-          content: text,
-          userId: user.id,
-        }
-
-        setMessages((messages) => [newMessage, ...messages])
       } catch (err: unknown) {
         console.error(err)
         toast('Could not send message', { type: 'error' })
@@ -91,13 +88,16 @@ const ChatMessageAreaContainer: FC = () => {
   }, [groupId, accessToken])
 
   useEffect(() => {
-    chatSocket.on(ChatWsEvent.RECEIVE_MESSAGE, (res) => {
-      const newMessage: Message = {
-        content: res.content,
-        userId: res.userId,
-      }
-      setMessages((messages) => [newMessage, ...messages])
-    })
+    chatSocket
+      .on(ChatWsEvent.RECEIVE_MESSAGE, (newMessage) => {
+        setMessages((messages) => [newMessage, ...messages])
+      })
+      .on(ChatWsEvent.DELETE_ALL_MESSAGES, () => {
+        setMessages([])
+      })
+      .on(ChatWsEvent.DELETE_MESSAGE, (res) => {
+        setMessages(messages => messages.filter(message => message.userId !== res.messageId))
+      })
   }, [])
 
   return (

@@ -4,8 +4,9 @@ import { plainToInstance } from 'class-transformer'
 import { WsResponse } from '@nestjs/websockets'
 
 import {
+  DeleteAllMessagesDto,
+  DeleteMessageDto,
   JoinRoomResponseDto,
-  OperationStatusDto,
   ReceiveMessageDto,
   SendMessageDto,
 } from '@/Chat/Dtos'
@@ -77,41 +78,52 @@ export class ChatService {
   async sendMessage(
     dto: SendMessageDto,
     socket: Socket,
-  ): Promise<WsResponse<OperationStatusDto>> {
-    try {
-      const roomId: string = dto.groupId.toString()
+  ): Promise<WsResponse<ReceiveMessageDto>> {
+    const roomId: string = dto.groupId.toString()
 
-      if (!socket.rooms.has(roomId)) {
-        await this.joinRoom(socket, dto.groupId, dto.userId)
-      }
-
-      const messageDto: MessageDto = await this._messageService.createMessage(
-        dto,
-      )
-      const receiveMessageDto: ReceiveMessageDto = plainToInstance(
-        ReceiveMessageDto,
-        {
-          userId: messageDto.user.id,
-          content: messageDto.content,
-          timestamp: messageDto.createdAt.toISOString(),
-        } as ReceiveMessageDto,
-      )
-      socket.to(roomId).emit(ChatWsEvent.RECEIVE_MESSAGE, receiveMessageDto)
-
-      return {
-        event: ChatWsEvent.SEND_MESSAGE,
-        data: {
-          success: true,
-        },
-      }
-    } catch (err) {
-      return {
-        event: ChatWsEvent.SEND_MESSAGE,
-        data: {
-          success: false,
-          error: err instanceof Error ? err.message : err,
-        },
-      }
+    if (!socket.rooms.has(roomId)) {
+      await this.joinRoom(socket, dto.groupId, dto.userId)
     }
+
+    const messageDto: MessageDto = await this._messageService.createMessage(dto)
+    const receiveMessageDto: ReceiveMessageDto = plainToInstance(
+      ReceiveMessageDto,
+      {
+        user: {
+          id: messageDto.user.id
+        },
+        content: messageDto.content,
+        id: messageDto.id,
+        type: messageDto.type,
+        createdAt: messageDto.createdAt,
+        fileNames: messageDto.fileNames,
+        repliesTo: messageDto.repliesTo,
+        replies: messageDto.replies,
+        updatedAt: messageDto.updatedAt,
+      } as ReceiveMessageDto,
+    )
+    socket.to(roomId).emit(ChatWsEvent.RECEIVE_MESSAGE, messageDto)
+
+    return {
+      event: ChatWsEvent.RECEIVE_MESSAGE,
+      data: receiveMessageDto,
+    }
+  }
+
+  public async deleteMessage(
+    dto: DeleteMessageDto,
+    socket: Socket,
+  ): Promise<void> {
+    await this._messageService.deleteMessages([
+      await this._messageService.getMessageOrThrow(dto.messageId),
+    ])
+    socket.to(dto.groupId.toString()).emit(ChatWsEvent.DELETE_MESSAGE, {
+      messageId: dto.messageId,
+    })
+  }
+
+  public deleteAllMessages(dto: DeleteAllMessagesDto, socket: Socket): void {
+    this._messageService.deleteAllMessagesFromGroup(dto.groupId)
+    socket.to(dto.groupId.toString()).emit(ChatWsEvent.DELETE_ALL_MESSAGES)
   }
 }

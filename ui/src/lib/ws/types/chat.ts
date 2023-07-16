@@ -17,3 +17,12 @@ export interface SendMessage {
   content: string
   userId: number
 }
+
+export interface DeleteMessage {
+  messageId: number
+}
+
+export interface DeleteMessageRequest {
+  messageId: number
+  groupId: number
+}

@@ -41,7 +41,7 @@ const Button: FC<ButtonProps> = ({
         withHover && 'hover:bg-black/20 dark:hover:bg-white/20',
         circle ? 'rounded-full' : 'rounded-lg',
         uppercase && 'uppercase',
-        disabled && 'pointer-events-none',
+        disabled && 'pointer-events-none text-disabled',
         active && 'bg-black/20 dark:bg-white/20 cursor-default',
         className,
       )}

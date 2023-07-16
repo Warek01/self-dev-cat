@@ -2,6 +2,7 @@ import ChatSelect from './ChatSelect/ChatSelect.tsx'
 import ChatMessageAreaEmpty from './ChatMessageAreaEmpty/ChatMessageAreaEmpty.tsx'
 import ChatInputArea from './ChatInputArea/ChatInputArea.tsx'
 import ChatMessagesArea from './ChatMessagesArea/ChatMessagesArea.tsx'
+import ChatMessage from './ChatMessage/ChatMessage.tsx'
 import ChatHeader from './ChatHeader/ChatHeader.tsx'
 
 export {
@@ -10,4 +11,5 @@ export {
   ChatInputArea,
   ChatMessagesArea,
   ChatHeader,
+  ChatMessage,
 }

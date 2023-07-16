@@ -1,13 +1,11 @@
-import { IsDateString, IsInt, IsOptional, IsString } from 'class-validator'
+import { IsNotEmptyObject } from 'class-validator'
+import { OmitType } from '@nestjs/swagger'
 
-export class ReceiveMessageDto {
-  @IsInt()
-  userId: number
+import { MessageDto } from '@/Message/Dtos'
 
-  @IsString()
-  @IsOptional()
-  content?: string
-
-  @IsDateString()
-  timestamp: string
+export class ReceiveMessageDto extends OmitType(MessageDto, ['user', 'group']) {
+  @IsNotEmptyObject()
+  user: {
+    id: number
+  }
 }

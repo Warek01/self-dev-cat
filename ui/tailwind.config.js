@@ -19,7 +19,9 @@ export default {
         'dark-black': '#2C3333',
         'dark-black-lighter': '#363d3d',
         'dark-white': '#E3F6FF',
-        'disabled': '#636e72'
+        'disabled': '#636e72',
+        'error': '#e84118',
+        'error-disabled': '#b33939',
       },
       spacing: {
         xs: '20rem',

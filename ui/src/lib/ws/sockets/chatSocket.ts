@@ -3,19 +3,26 @@ import type { Socket } from 'socket.io-client'
 import { wsManager } from '../wsManager.ts'
 import type { ChatWsEvent } from '../enums/ChatWsEvent.ts'
 import type {
+  DeleteMessage,
+  DeleteMessageRequest,
   JoinRoomRequest,
   JoinRoomResponse,
   SendMessage,
 } from '../types/chat.ts'
+import type { Message } from '../../types/Message.ts'
 
 interface ServerToClientEvents {
   [ChatWsEvent.JOIN_ROOM]: (res: JoinRoomResponse) => void
-  [ChatWsEvent.RECEIVE_MESSAGE]: (res: SendMessage) => void
+  [ChatWsEvent.RECEIVE_MESSAGE]: (res: Message) => void
+  [ChatWsEvent.DELETE_ALL_MESSAGES]: () => void
+  [ChatWsEvent.DELETE_MESSAGE]: (res: DeleteMessage) => void
 }
 
 interface ClientToServerEvents {
   [ChatWsEvent.JOIN_ROOM]: (req: JoinRoomRequest) => void
   [ChatWsEvent.SEND_MESSAGE]: (req: SendMessage) => void
+  [ChatWsEvent.DELETE_ALL_MESSAGES]: () => void
+  [ChatWsEvent.DELETE_MESSAGE]: (req: DeleteMessageRequest) => void
 }
 
 export const chatSocket: Socket<ServerToClientEvents, ClientToServerEvents> =

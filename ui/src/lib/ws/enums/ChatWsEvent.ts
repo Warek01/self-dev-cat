@@ -8,4 +8,6 @@ export enum ChatWsEvent {
   // Messages section
   SEND_MESSAGE = 'Message/Send',
   RECEIVE_MESSAGE = 'Message/Receive',
+  DELETE_MESSAGE = 'Message/Delete',
+  DELETE_ALL_MESSAGES = 'Message/DeleteAll',
 }

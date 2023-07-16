@@ -9,12 +9,15 @@ import { Socket } from 'socket.io'
 
 import { ChatService } from './chat.service'
 import {
+  DeleteAllMessagesDto,
+  DeleteMessageDto,
   JoinRoomRequestDto,
   JoinRoomResponseDto,
-  OperationStatusDto,
+  OperationStatusDto, ReceiveMessageDto,
   SendMessageDto,
 } from './Dtos'
 import { ChatWsEvent } from '@/Chat/Enums/ChatWsEvent'
+import { MessageDto } from "@/Message/Dtos";
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -46,7 +49,23 @@ export class ChatGateway {
   sendMessage(
     @MessageBody() dto: SendMessageDto,
     @ConnectedSocket() socket: Socket,
-  ): Promise<WsResponse<OperationStatusDto>> {
+  ): Promise<WsResponse<ReceiveMessageDto>> {
     return this._chatService.sendMessage(dto, socket)
+  }
+
+  @SubscribeMessage(ChatWsEvent.DELETE_MESSAGE)
+  deleteMessage(
+    @MessageBody() dto: DeleteMessageDto,
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    this._chatService.deleteMessage(dto, socket)
+  }
+
+  @SubscribeMessage(ChatWsEvent.DELETE_ALL_MESSAGES)
+  deleteAllMessages(
+    @MessageBody() dto: DeleteAllMessagesDto,
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    this._chatService.deleteAllMessages(dto, socket)
   }
 }
