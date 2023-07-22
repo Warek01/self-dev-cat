@@ -103,7 +103,9 @@ export class MessageGroupService {
     const [items, count] = await this._messageGroupRepo.findAndCount({
       skip: filter.skip,
       take: filter.limit,
-      cache: true,
+      order: {
+        lastMessageTimestamp: 'desc',
+      },
       where: {
         users: {
           id: user.userId,
@@ -124,6 +126,7 @@ export class MessageGroupService {
           username: true,
         },
         name: true,
+        lastMessageTimestamp: true,
       },
     })
 

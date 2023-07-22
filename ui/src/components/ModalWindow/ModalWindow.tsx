@@ -1,11 +1,12 @@
+import icons from '@icons'
 import { FC, memo, PropsWithChildren } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-import { Backdrop } from '@components'
+import { Backdrop, Button } from '@components'
 import type { ModalWindowProps } from './ModalWindow.types'
 
 export const ModalWindow: FC<PropsWithChildren<ModalWindowProps>> = memo(
-  ({ children, className, overlayBackground = true }) => {
+  ({ children, className, onClose, overlayBackground = true }) => {
     return (
       <Backdrop overlayBackground={overlayBackground}>
         <div
@@ -15,6 +16,13 @@ export const ModalWindow: FC<PropsWithChildren<ModalWindowProps>> = memo(
             className,
           )}
         >
+          <Button
+            circle
+            className="absolute top-3 right-3"
+            Icon={icons.Close}
+            iconSize={24}
+            onClick={() => onClose?.()}
+          />
           {children}
         </div>
       </Backdrop>

@@ -11,7 +11,6 @@ export const messageGroupClient = {
   getAll: async (
     skip: number,
     limit: number,
-    accessToken: string,
   ): Promise<ApiFindResponse<MessageGroup>> => {
     const request: AjaxResponse<ApiFindResponse<MessageGroup>> =
       await firstValueFrom(
@@ -22,34 +21,31 @@ export const messageGroupClient = {
             skip,
             limit,
           },
-          headers: headers.bearer(accessToken),
+          headers: headers.bearer(localStorage.getItem('access_token')!),
         }),
       )
 
     return request.response
   },
 
-  find: async (id: number, accessToken: string): Promise<MessageGroup> => {
+  find: async (id: number): Promise<MessageGroup> => {
     const request: AjaxResponse<MessageGroup> = await firstValueFrom(
       ajax<MessageGroup>({
         url: `${URL}/${id}`,
         method: 'GET',
-        headers: headers.bearer(accessToken),
+        headers: headers.bearer(localStorage.getItem('access_token')!),
       }),
     )
 
     return request.response
   },
 
-  create: async (
-    accessToken: string,
-    dto: CreateMessageGroup,
-  ): Promise<MessageGroup> => {
+  create: async (dto: CreateMessageGroup): Promise<MessageGroup> => {
     const request: AjaxResponse<MessageGroup> = await firstValueFrom(
       ajax<MessageGroup>({
         url: URL,
         method: 'POST',
-        headers: headers.bearer(accessToken),
+        headers: headers.bearer(localStorage.getItem('access_token')!),
         body: dto,
       }),
     )

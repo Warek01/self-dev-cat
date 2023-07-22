@@ -5,17 +5,17 @@ import { Link } from 'react-router-dom'
 import { Button, FormTextField } from '@components'
 import icons from '@icons'
 import { AppRoute } from '@enums/AppRoute'
-import type { RegisterFormProps } from './RegisterForm.types'
+import type { RegisterFormProps, RegisterValues } from './RegisterForm.types'
 
 export const RegisterForm: FC<RegisterFormProps> = memo(
   ({ validationSchema, onSubmit, initialValues }) => {
     return (
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValues as RegisterValues}
         onSubmit={onSubmit}
         validationSchema={validationSchema}
       >
-        {({isSubmitting}) => (
+        {({ isSubmitting }) => (
           <Form
             className="max-w-3xl flex flex-col gap-6 items-center w-full
             dark:bg-dark-white/5 rounded-xl p-12 shadow-xl"

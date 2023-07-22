@@ -21,12 +21,12 @@ export const currentUserClient = {
     return request.response.access_token
   },
 
-  getData: async (accessToken: string): Promise<User | null> => {
+  getData: async (): Promise<User | null> => {
     const request = await firstValueFrom(
       ajax<User>({
         url: URL,
         method: 'GET',
-        headers: headers.bearer(accessToken),
+        headers: headers.bearer(localStorage.getItem('access_token')!),
       }),
     )
 

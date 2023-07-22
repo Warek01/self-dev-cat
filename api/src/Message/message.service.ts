@@ -43,6 +43,7 @@ export class MessageService {
 
     message.user = plainToInstance(User, user)
     message.group = plainToInstance(MessageGroup, group)
+    message.group.lastMessageTimestamp = new Date()
     message.content = content
 
     const res: Message = await this._messageRepo.save(message)

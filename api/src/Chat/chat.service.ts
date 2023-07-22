@@ -86,6 +86,7 @@ export class ChatService {
     }
 
     const messageDto: MessageDto = await this._messageService.createMessage(dto)
+
     const receiveMessageDto: ReceiveMessageDto = plainToInstance(
       ReceiveMessageDto,
       {

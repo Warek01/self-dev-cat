@@ -5,13 +5,13 @@ import { Form, Formik } from 'formik'
 import { Button, FormTextField } from '@components'
 import icons from '@icons'
 import { AppRoute } from '@enums/AppRoute'
-import type { LoginFormProps } from './LoginForm.types'
+import type { LoginFormProps, LoginValues } from './LoginForm.types'
 
 export const LoginForm: FC<LoginFormProps> = memo(
   ({ onSubmit, validationSchema, initialValues }) => {
     return (
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValues as LoginValues}
         onSubmit={onSubmit}
         validationSchema={validationSchema}
       >

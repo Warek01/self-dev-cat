@@ -1,7 +1,7 @@
 import { FC, memo, useState } from 'react'
 
 import icons from '@icons'
-import { AppRoute } from '../../../enums/AppRoute'
+import { AppRoute } from '@enums/AppRoute'
 import { Button, ModalWindow } from '@components'
 import type { ChatHeaderProps } from './ChatHeader.types'
 
@@ -11,14 +11,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
   return (
     <>
       {settingsOpen && (
-        <ModalWindow>
-          <Button
-            circle
-            className="absolute top-3 right-3"
-            Icon={icons.Close}
-            iconSize={24}
-            onClick={() => setSettingsOpen(false)}
-          />
+        <ModalWindow onClose={() => setSettingsOpen(false)}>
           <h2>Group settings</h2>
           <section className="border-t border-black/10 dark:border-dark-white/10 py-3 flex flex-col gap-3 items-start">
             <Button text="Change icon" />

@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsArray, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator'
 
 import { Base } from '@/Entities/Helpers'
 import { MessageDto } from '@/Message/Dtos'
@@ -20,4 +20,7 @@ export class MessageGroupDto extends Base {
   @IsString()
   @IsOptional()
   name?: string
+
+  @IsDateString()
+  lastMessageTimestamp: string
 }

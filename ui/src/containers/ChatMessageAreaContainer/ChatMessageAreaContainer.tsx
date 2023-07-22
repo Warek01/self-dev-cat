@@ -55,7 +55,6 @@ export const ChatMessageAreaContainer: FC = memo(() => {
       try {
         const currentGroup: MessageGroup = await messageGroupClient.find(
           groupId,
-          accessToken!,
         )
 
         setCurrentGroup(currentGroup)

@@ -12,7 +12,6 @@ export const messageClient = {
     groupId: number,
     skip: number,
     limit: number,
-    accessToken: string,
   ): Promise<ApiFindResponse<Message>> => {
     const request: AjaxResponse<ApiFindResponse<Message>> =
       await firstValueFrom(
@@ -24,7 +23,7 @@ export const messageClient = {
             limit,
             groupId,
           },
-          headers: headers.bearer(accessToken),
+          headers: headers.bearer(localStorage.getItem('access_token')!),
         }),
       )
 

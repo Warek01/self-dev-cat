@@ -61,6 +61,7 @@ import Upload from './Upload'
 import User from './User'
 import Webstorm from './Webstorm'
 import Yarn from './Yarn'
+import Add from './Add'
 
 export default {
   Spinner,
@@ -126,4 +127,5 @@ export default {
   File,
   Lightbulb,
   Download,
+  Add,
 }

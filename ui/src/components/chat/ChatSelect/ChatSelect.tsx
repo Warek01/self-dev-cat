@@ -1,52 +1,62 @@
-import { FC, memo, useContext, useEffect, useState } from 'react'
+import {
+  FC,
+  memo,
+  ReactElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 import { ChatContext } from '@containers/ChatContainer/ChatContainer.context'
-import type { ApiFindResponse } from '../../../types/Api'
-import type { MessageGroup } from '../../../types/MessageGroup'
+import icons from '@icons'
 import { Button } from '@components'
+import { ChatCreateModal } from '../ChatCreateModal/ChatCreateModal'
 
 export const ChatSelect: FC = memo(() => {
   const params = useParams()
   const navigate = useNavigate()
-  const { requestMessageGroups } = useContext(ChatContext)
+  const { requestMessageGroups, messageGroups } = useContext(ChatContext)
   const groupId: number | null = params['groupId']
     ? parseInt(params['groupId'])
     : null
 
-  const [messageGroups, setMessageGroups] = useState<MessageGroup[]>([])
+  const [openedModal, setOpenedModal] = useState<ReactElement | null>(null)
+
+  const openChatModal = useCallback(() => {
+    setOpenedModal(<ChatCreateModal onClose={() => setOpenedModal(null)} />)
+  }, [])
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const req: ApiFindResponse<MessageGroup> = await requestMessageGroups(
-          0,
-          25,
-        )
-
-        setMessageGroups(req.items)
-      } catch (err) {
-        console.error(err)
-        toast('Failed to load chats', { type: 'error' })
-      }
-    })()
+    requestMessageGroups(0, 100)
   }, [])
 
   // TODO: implement resize
   return (
-    <main className="flex flex-1 max-w-[20%] pr-4 border-r border-black/10 dark:border-dark-white/10">
-      <ul className="flex flex-1 flex-col justify-start gap-4">
-        {messageGroups.map((group) => (
+    <>
+      {openedModal}
+      <main className="flex flex-1 max-w-[20%] pr-4 border-r border-black/10 dark:border-dark-white/10">
+        <ul className="flex flex-1 flex-col justify-start gap-4">
           <Button
-            active={groupId === group.id}
-            onClick={() => navigate(group.id.toString())}
-            key={group.id}
-            text={group.name}
+            onClick={openChatModal}
             className="py-6"
+            text="Create new group"
+            iconPosition="left"
+            Icon={icons.Add}
+            iconSize={24}
           />
-        ))}
-      </ul>
-    </main>
+          {messageGroups.map((group) => (
+            <Button
+              active={groupId === group.id}
+              onClick={() => navigate(group.id.toString())}
+              key={group.id}
+              text={group.name || 'Unnamed'}
+              className="py-6"
+            />
+          ))}
+        </ul>
+      </main>
+    </>
   )
 })

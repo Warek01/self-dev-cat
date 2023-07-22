@@ -1,4 +1,3 @@
-import { User } from '@/Entities/User.entity'
 import {
   Column,
   Entity,
@@ -8,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm'
 
+import { User } from '@/Entities/User.entity'
 import { Message } from '@/Entities/Message.entity'
 import { Base } from '@/Entities/Helpers'
 
@@ -27,4 +27,11 @@ export class MessageGroup extends Base {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   name?: string
+
+  @Column({
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  lastMessageTimestamp: Date
 }
