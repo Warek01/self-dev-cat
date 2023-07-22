@@ -1,3 +1,4 @@
-import ChatContainer from './ChatContainer/ChatContainer'
-
-export { ChatContainer }
+export * from './ChatContainer/ChatContainer'
+export * from './ChatMessageAreaContainer/ChatMessageAreaContainer'
+export * from './LoginContainer/LoginContainer'
+export * from './RegisterContainer/RegisterContainer'

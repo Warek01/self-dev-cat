@@ -1,15 +1,12 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
-import { Backdrop } from '../index'
-import icons from '../../icons'
-import { LoadingScreenProps } from './LoadingScreen.types'
+import { Backdrop } from '@components'
+import icons from '@icons'
 
-const LoadingScreen: FC<LoadingScreenProps> = ({ visible = true }) => {
+export const LoadingScreen: FC = memo(() => {
   return (
-    <Backdrop visible={visible}>
+    <Backdrop>
       <icons.Spinner width={48} height={48} className="animate-spin" />
     </Backdrop>
   )
-}
-
-export default LoadingScreen
+})

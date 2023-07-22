@@ -1,5 +1,5 @@
-import type { MessageGroup } from "../../../lib/types/MessageGroup.ts";
+import type { MessageGroup } from '../../../types/MessageGroup.ts'
 
-export interface ChatHeaderProps{
+export interface ChatHeaderProps {
   group: MessageGroup | null
 }

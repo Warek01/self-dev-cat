@@ -1,20 +1,19 @@
 import { FC, memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import icons from '../../icons'
-import { unprotectedPages } from '../../lib/constants/pages/unprotectedPages'
-import { AppRoute } from '../../lib/enums/AppRoute'
-import { useAppDispatch } from '../../lib/hooks/useAppDispatch'
-import { useAppSelector } from '../../lib/hooks/useAppSelector'
-import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice'
+import icons from '@icons'
+import { unprotectedPages } from '../../constants/pages/unprotectedPages'
+import { AppRoute } from '../../enums/AppRoute'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
 import {
   selectTheme,
   setSideMenuOpened,
   toggleTheme,
-} from '../../lib/slices/layout/layout.slice'
-import { Button } from '../index'
+} from '../../slices/layout/layout.slice'
+import { Button } from '@components'
 
-const Header: FC = () => {
+export const Header: FC = memo(() => {
   const dispatch = useAppDispatch()
   const location = useLocation()
 
@@ -73,6 +72,4 @@ const Header: FC = () => {
       </div>
     </header>
   )
-}
-
-export default memo(Header)
+})

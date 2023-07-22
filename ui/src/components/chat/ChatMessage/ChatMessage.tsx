@@ -3,8 +3,8 @@ import { twMerge } from 'tailwind-merge'
 
 import type { ChatMessageProps } from './ChatMessage.types'
 
-const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
-  (props, ref) => {
+export const ChatMessage = memo(
+  forwardRef<HTMLDivElement, ChatMessageProps>((props, ref) => {
     const { message, onDelete, className, fromCurrentUser } = props
 
     return (
@@ -31,7 +31,5 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         </div>
       </main>
     )
-  },
+  }),
 )
-
-export default memo(ChatMessage)

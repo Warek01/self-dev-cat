@@ -17,7 +17,8 @@ import {
 } from '@/MessageGroup/Dtos'
 import { UserService } from '@/User/user.service'
 import { UserCredentials } from '@/Types/RequestWithUser'
-import { MessageDto } from "@/Message/Dtos";
+import { UserDto } from '../User/Dtos'
+import { RequestCreateGroupDto } from './Dtos/RequestCreateGroup.dto'
 
 @Injectable()
 export class MessageGroupService {
@@ -30,22 +31,32 @@ export class MessageGroupService {
     private readonly _userService: UserService,
   ) {}
 
-  public async createGroup(rootUserId: number): Promise<MessageGroupDto> {
-    const rootUser: User | null = await this._usersRepo.findOneBy({
-      id: rootUserId,
-    })
+  public async createGroup(
+    dto: RequestCreateGroupDto,
+  ): Promise<MessageGroupDto> {
+    const { userIds, rootUserId, name } = dto
+
+    const rootUser: UserDto = await this._userService.getUserOrThrow(rootUserId)
 
     if (!rootUser) {
       throw new Error(`user ${rootUserId} not found`)
     }
 
     const room: MessageGroup = this._messageGroupRepo.create()
-    room.users = [rootUser]
-    room.rootUser = rootUser
+    const rootUserEntity: User = plainToInstance(User, rootUser)
 
-    const result = await this._messageGroupRepo.save(room)
+    room.users = [rootUserEntity]
+    room.rootUser = rootUserEntity
+    room.name = name
 
-    return plainToInstance(MessageGroupDto, result)
+    for (const id of userIds) {
+      const user = await this._userService.getUserOrThrow(id)
+      room.users.push(plainToInstance(User, user))
+    }
+
+    await this._messageGroupRepo.save(room)
+
+    return plainToInstance(MessageGroupDto, room)
   }
 
   public async getGroup(

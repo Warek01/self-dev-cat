@@ -2,11 +2,11 @@ import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { LoadingScreen } from '../../components'
-import { AppRoute } from '../../lib/enums/AppRoute'
-import { FetchStatus } from '../../lib/enums/FetchStatus'
-import { xor } from '../../lib/helpers/xor'
-import { useAppSelector } from '../../lib/hooks/useAppSelector'
-import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice'
+import { AppRoute } from '../../enums/AppRoute'
+import { FetchStatus } from '../../enums/FetchStatus'
+import { xor } from '../../helpers/xor'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
 import type { AuthPrivateRouteProps } from './AuthPrivateRoute.types'
 
 const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({

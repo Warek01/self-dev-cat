@@ -1,15 +1,6 @@
-import ChatSelect from './ChatSelect/ChatSelect'
-import ChatMessageAreaEmpty from './ChatMessageAreaEmpty/ChatMessageAreaEmpty'
-import ChatInputArea from './ChatInputArea/ChatInputArea'
-import ChatMessagesArea from './ChatMessagesArea/ChatMessagesArea'
-import ChatMessage from './ChatMessage/ChatMessage'
-import ChatHeader from './ChatHeader/ChatHeader'
-
-export {
-  ChatSelect,
-  ChatMessageAreaEmpty,
-  ChatInputArea,
-  ChatMessagesArea,
-  ChatHeader,
-  ChatMessage,
-}
+export * from './ChatSelect/ChatSelect'
+export * from './ChatMessageAreaEmpty/ChatMessageAreaEmpty'
+export * from './ChatInputArea/ChatInputArea'
+export * from './ChatMessagesArea/ChatMessagesArea'
+export * from './ChatMessage/ChatMessage'
+export * from './ChatHeader/ChatHeader'

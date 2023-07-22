@@ -28,7 +28,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<UserDto | null> {
-    const user = await this._userService.findOneByUsername(username)
+    const user = await this._userService.findOneByUsername(username, true)
 
     if (
       user &&

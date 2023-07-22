@@ -1,4 +1,4 @@
-import type { Message } from '../../../lib/types/Message'
+import type { Message } from '../../../types/Message'
 
 export interface ChatMessageProps {
   message: Message

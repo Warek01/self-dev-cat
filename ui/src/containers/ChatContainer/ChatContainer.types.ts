@@ -1,7 +1,7 @@
-import type { SendMessage } from '../../lib/ws/types/chat'
-import type { ApiFindResponse } from '../../lib/types/Api'
-import type { Message } from '../../lib/types/Message'
-import type { MessageGroup } from '../../lib/types/MessageGroup'
+import type { SendMessage } from '../../types/Chat'
+import type { ApiFindResponse } from '../../types/Api'
+import type { Message } from '../../types/Message'
+import type { MessageGroup } from '../../types/MessageGroup'
 
 export interface ChatContainerContextProps {
   sendMessage: (message: SendMessage) => Promise<void>

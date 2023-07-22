@@ -1,11 +1,11 @@
 import { FC, memo } from 'react'
 
-import RegisterForm from '../../forms/RegisterForm/RegisterForm'
+import { RegisterContainer } from "@containers";
 
 const RegisterPage: FC = () => {
   return (
     <main className="flex flex-1 items-center justify-center">
-      <RegisterForm />
+      <RegisterContainer />
     </main>
   )
 }

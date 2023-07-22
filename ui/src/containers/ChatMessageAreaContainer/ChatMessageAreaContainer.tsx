@@ -2,29 +2,23 @@ import { FC, memo, useCallback, useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useAppSelector } from '../../lib/hooks/useAppSelector'
-import * as currentUserSlice from '../../lib/slices/currentUser/currentUser.slice'
+import { useAppSelector } from 'hooks'
+import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
+import type { Message } from '../../types/Message'
+import { messageGroupClient } from '../../clients/messageGroup.client'
+import type { MessageGroup } from '../../types/MessageGroup'
+import { useLocalStorage } from 'hooks'
+import type { ApiFindResponse } from '../../types/Api'
+import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
+import { chatSocket } from '../../ws/sockets/chatSocket'
+import { ChatWsEvent } from '../../ws/enums/ChatWsEvent'
 import { ChatContext } from '../ChatContainer/ChatContainer.context'
-import type { Message } from '../../lib/types/Message'
-import { messageGroupClient } from '../../lib/clients/messageGroup.client'
-import type { MessageGroup } from '../../lib/types/MessageGroup'
-import { useLocalStorage } from '../../lib/hooks/useLocalStorage'
-import type { ApiFindResponse } from '../../lib/types/Api'
-import {
-  ChatHeader,
-  ChatInputArea,
-  ChatMessagesArea,
-} from '../../components/chat'
-import { chatSocket } from '../../lib/ws/sockets/chatSocket'
-import { ChatWsEvent } from '../../lib/ws/enums/ChatWsEvent'
 
-const ChatMessageAreaContainer: FC = () => {
+export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
   const groupId: number = parseInt(params['groupId']!)
 
-  const { user, accessToken } = useAppSelector(
-    currentUserSlice.selectCurrentUser,
-  )
+  const { user, accessToken } = useAppSelector(selectCurrentUser)
   const { sendMessage, requestMessages } = useContext(ChatContext)
 
   const [messages, setMessages] = useLocalStorage<Message[]>(
@@ -96,7 +90,9 @@ const ChatMessageAreaContainer: FC = () => {
         setMessages([])
       })
       .on(ChatWsEvent.DELETE_MESSAGE, (res) => {
-        setMessages(messages => messages.filter(message => message.userId !== res.messageId))
+        setMessages((messages) =>
+          messages.filter((message) => message.user.id !== res.messageId),
+        )
       })
   }, [])
 
@@ -107,6 +103,4 @@ const ChatMessageAreaContainer: FC = () => {
       <ChatInputArea onSendMessage={handleMessageSend} />
     </main>
   )
-}
-
-export default memo(ChatMessageAreaContainer)
+})

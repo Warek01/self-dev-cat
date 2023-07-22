@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
-import { FindOptionsRelations, Repository } from 'typeorm'
+import { FindOptionsRelations, FindOptionsSelect, Repository } from 'typeorm'
 import { WsResponse } from '@nestjs/websockets'
 
 import { AuthService } from '@/Auth/auth.service'
@@ -18,6 +18,7 @@ import { FriendRequest, User } from '@/Entities'
 import { JwtResponse } from '@/Types/Jwt'
 import {
   CreateUserDto,
+  GetFriendsResponseDto,
   PingUsersStatusRequestDto,
   PingUsersStatusResponseDto,
   UpdateUserDto,
@@ -74,10 +75,15 @@ export class UserService {
     return plainToInstance(UserDto, user)
   }
 
-  public async findOneByUsername(username: string): Promise<UserDto | null> {
+  public async findOneByUsername(
+    username: string,
+    withPassword: boolean = false,
+  ): Promise<UserDto | null> {
     const user = await this._userRepo.findOneBy({ username })
 
-    return plainToInstance(UserDto, user)
+    return plainToInstance(UserDto, user, {
+      groups: withPassword ? ['with-password'] : [],
+    })
   }
 
   public async updateUser(
@@ -174,11 +180,13 @@ export class UserService {
 
   public async getUser(
     id: number,
-    relations: FindOptionsRelations<User> = {},
+    relations?: FindOptionsRelations<User>,
+    select?: FindOptionsSelect<User>,
   ): Promise<UserDto | null> {
     const user: User | null = await this._userRepo.findOne({
       where: { id },
       relations,
+      select,
     })
 
     if (!user) {
@@ -190,9 +198,10 @@ export class UserService {
 
   public async getUserOrThrow(
     id: number,
-    relations: FindOptionsRelations<User> = {},
+    relations?: FindOptionsRelations<User>,
+    select?: FindOptionsSelect<User>,
   ): Promise<UserDto> {
-    const user: UserDto | null = await this.getUser(id, relations)
+    const user: UserDto | null = await this.getUser(id, relations, select)
 
     if (!user) {
       throw new NotFoundException(`user ${id} not found`)
@@ -221,6 +230,35 @@ export class UserService {
         data: statuses,
       } as PingUsersStatusResponseDto),
     }
+  }
+
+  public async getFriends(id: number): Promise<GetFriendsResponseDto> {
+    const user = await this._userRepo.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        friends: true,
+      },
+      select: {
+        friends: {
+          username: true,
+          id: true,
+          email: true,
+          realName: true,
+          avatarFileName: true,
+        },
+      },
+    })
+
+    if (!user) {
+      throw new NotFoundException('user not found')
+    }
+
+    return plainToInstance(GetFriendsResponseDto, {
+      items: user.friends,
+      count: user.friends.length,
+    } as GetFriendsResponseDto)
   }
 
   private _setIsOnline(id: number): void {

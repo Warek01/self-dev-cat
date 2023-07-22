@@ -1,13 +1,20 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 import {
@@ -17,6 +24,7 @@ import {
 } from '@/MessageGroup/Dtos'
 import { RequestWithUser } from '@/Types/RequestWithUser'
 import { MessageGroupService } from '@/MessageGroup/MessageGroup.service'
+import { RequestCreateGroupDto } from './Dtos/RequestCreateGroup.dto'
 
 @ApiTags('Message Group')
 @Controller('message-group')
@@ -45,5 +53,13 @@ export class MessageGroupController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<MessageGroupDto> {
     return this._messageGroupService.find(req.user, id)
+  }
+
+  @Post()
+  @UseGuards(BearerAuthGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse()
+  createGroup(@Body() dto: RequestCreateGroupDto): Promise<MessageGroupDto> {
+    return this._messageGroupService.createGroup(dto)
   }
 }

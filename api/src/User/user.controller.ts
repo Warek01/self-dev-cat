@@ -9,6 +9,8 @@ import {
   Inject,
   NotFoundException,
   NotImplementedException,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -29,7 +31,12 @@ import { RequestResponse } from '@/Constans'
 import { User } from '@/Entities'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
-import { CreateUserDto, UpdateUserDto, UserDto } from '@/User/Dtos'
+import {
+  CreateUserDto,
+  GetFriendsResponseDto,
+  UpdateUserDto,
+  UserDto,
+} from '@/User/Dtos'
 import { UserService } from '@/User/user.service'
 import { BasicAuthGuard } from '@/Auth/Guard/BasicAuth.guard'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
@@ -37,6 +44,8 @@ import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 @ApiTags('User')
 @Controller('user')
 export class UserController {
+  id: number
+
   constructor(
     @Inject(forwardRef(() => UserService))
     private _userService: UserService,
@@ -48,8 +57,8 @@ export class UserController {
   @ApiCreatedResponse()
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async postUser(@Body() createUserDto: CreateUserDto): Promise<JwtResponse> {
-    return await this._userService.register(createUserDto)
+  postUser(@Body() createUserDto: CreateUserDto): Promise<JwtResponse> {
+    return this._userService.register(createUserDto)
   }
 
   @ApiBearerAuth()
@@ -85,7 +94,7 @@ export class UserController {
   @UseGuards(BearerAuthGuard)
   @Patch()
   @HttpCode(HttpStatus.OK)
-  async patchUser(
+  patchUser(
     @Req() req: RequestWithUser,
     @Body() patchUserDto: UpdateUserDto,
   ): Promise<UserDto> {
@@ -107,7 +116,7 @@ export class UserController {
   @Patch('remove-friend')
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async removeFriend(): Promise<void> {
+  removeFriend(): Promise<void> {
     throw new NotImplementedException()
   }
 
@@ -118,7 +127,17 @@ export class UserController {
   @Get('login')
   @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async login(@Req() req: RequestWithUser): Promise<JwtResponse> {
+  login(@Req() req: RequestWithUser): Promise<JwtResponse> {
     return this._authService.login(req.user.username)
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(BearerAuthGuard)
+  @Get(':id/friends')
+  @HttpCode(HttpStatus.OK)
+  getFriends(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<GetFriendsResponseDto> {
+    return this._userService.getFriends(id)
   }
 }

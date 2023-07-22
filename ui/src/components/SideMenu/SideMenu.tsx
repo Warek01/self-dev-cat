@@ -2,23 +2,22 @@ import classNames from 'classnames'
 import { FC, memo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import icons from '../../icons'
-import { authorLinks } from '../../lib/constants/links/authorLinks'
-import { headerLinks } from '../../lib/constants/links/headerLinks'
-import { AppRoute } from '../../lib/enums/AppRoute'
-import { useAppDispatch } from '../../lib/hooks/useAppDispatch'
-import { useAppSelector } from '../../lib/hooks/useAppSelector'
-import { signOut } from '../../lib/slices/currentUser/currentUser.slice'
-import { setSideMenuOpened } from '../../lib/slices/layout/layout.slice'
-import { Button, IconLink } from '../index'
+import icons from '@icons'
+import { authorLinks } from '../../constants/links/authorLinks'
+import { headerLinks } from '../../constants/links/headerLinks'
+import { AppRoute } from '../../enums/AppRoute'
+import { useAppDispatch, useAppSelector } from 'hooks'
+import { signOut } from '../../slices/currentUser/currentUser.slice'
+import { setSideMenuOpened } from '../../slices/layout/layout.slice'
+import { Button, IconLink } from '@components'
 import { disabledForPaths } from './SideMenu.constants'
 
-const SideMenu: FC = () => {
+export const SideMenu: FC = memo(() => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  const { isMobile, isSideMenuOpened } = useAppSelector((state) => state.layout)
+  const { isSideMenuOpened } = useAppSelector((state) => state.layout)
 
   const handleClose = () => {
     dispatch(setSideMenuOpened(false))
@@ -75,6 +74,4 @@ const SideMenu: FC = () => {
       </ul>
     </aside>
   )
-}
-
-export default memo(SideMenu)
+})

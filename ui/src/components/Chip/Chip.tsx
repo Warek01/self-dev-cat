@@ -1,11 +1,11 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
+import { twMerge } from 'tailwind-merge'
 
 import { ChipProps } from './Chip.types'
-import { twMerge } from 'tailwind-merge'
-import { Button } from '../index'
-import icons from '../../icons'
+import { Button } from '@components'
+import icons from '@icons'
 
-const Chip: FC<ChipProps> = ({ text, clasName, onClose }) => {
+export const Chip: FC<ChipProps> = memo(({ text, clasName, onClose }) => {
   return (
     <main
       className={twMerge(
@@ -26,6 +26,4 @@ const Chip: FC<ChipProps> = ({ text, clasName, onClose }) => {
       )}
     </main>
   )
-}
-
-export default Chip
+})

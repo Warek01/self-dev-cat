@@ -7,20 +7,19 @@ import {
   useMemo,
 } from 'react'
 
-import { ChatWsEvent } from '../../lib/ws/enums/ChatWsEvent'
-import { useAppSelector } from '../../lib/hooks/useAppSelector'
-import { selectCurrentUser } from '../../lib/slices/currentUser/currentUser.slice'
-import { usePreviousValue } from '../../lib/hooks/usePreviousValue'
-import { chatSocket } from '../../lib/ws/sockets/chatSocket'
-import { ChatContext } from './ChatContainer.context'
-import { SendMessage } from '../../lib/ws/types/chat'
+import { ChatWsEvent } from '../../ws/enums/ChatWsEvent'
+import { useAppSelector, usePreviousValue } from 'hooks'
+import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
+import { chatSocket } from '../../ws/sockets/chatSocket'
+import { SendMessage } from '../../types/Chat'
 import { ChatContainerContextProps } from './ChatContainer.types'
-import { messageClient } from '../../lib/clients/message.client'
-import { ApiFindResponse } from '../../lib/types/Api'
-import { Message } from '../../lib/types/Message'
-import { messageGroupClient } from '../../lib/clients/messageGroup.client'
+import { messageClient } from '../../clients/message.client'
+import { ApiFindResponse } from '../../types/Api'
+import { Message } from '../../types/Message'
+import { messageGroupClient } from '../../clients/messageGroup.client'
+import { ChatContext } from './ChatContainer.context'
 
-const ChatContainer: FC<PropsWithChildren> = ({ children }) => {
+export const ChatContainer: FC<PropsWithChildren> = memo(({ children }) => {
   const { user, accessToken } = useAppSelector(selectCurrentUser)
   const prevUser = usePreviousValue(user)
 
@@ -71,6 +70,4 @@ const ChatContainer: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>
   )
-}
-
-export default memo(ChatContainer)
+})

@@ -16,10 +16,7 @@ export class BasicStrategy extends PassportStrategy(BasicPassportStrategy) {
     })
   }
 
-  async validate(
-    username: string,
-    password: string,
-  ): Promise<Omit<UserDto, 'password'> | null> {
+  async validate(username: string, password: string): Promise<UserDto | null> {
     const user = await this._authService.validateUser(username, password)
 
     if (!user) {

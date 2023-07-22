@@ -1,13 +1,13 @@
 import { FC, memo, useContext, useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { ChatContext } from '../../../containers/ChatContainer/ChatContainer.context'
-import type { ApiFindResponse } from '../../../lib/types/Api'
-import type { MessageGroup } from '../../../lib/types/MessageGroup'
-import { Button } from '../../index'
+import { ChatContext } from '@containers/ChatContainer/ChatContainer.context'
+import type { ApiFindResponse } from '../../../types/Api'
+import type { MessageGroup } from '../../../types/MessageGroup'
+import { Button } from '@components'
 
-const ChatSelect: FC = () => {
+export const ChatSelect: FC = memo(() => {
   const params = useParams()
   const navigate = useNavigate()
   const { requestMessageGroups } = useContext(ChatContext)
@@ -49,6 +49,4 @@ const ChatSelect: FC = () => {
       </ul>
     </main>
   )
-}
-
-export default memo(ChatSelect)
+})
