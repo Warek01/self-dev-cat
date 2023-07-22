@@ -1,9 +1,9 @@
-import { currentUserClient } from '../clients/currentUser.client.ts'
-import { FetchStatus } from '../enums/FetchStatus.ts'
-import * as currentUserSlice from '../slices/currentUser/currentUser.slice.ts'
-import { store } from '../stores/store.ts'
-import type { AuthResult } from '../types/AuthResult.ts'
-import type { RegisterBody } from '../types/RegisterBody.ts'
+import { currentUserClient } from '../clients/currentUser.client'
+import { FetchStatus } from '../enums/FetchStatus'
+import * as currentUserSlice from '../slices/currentUser/currentUser.slice'
+import { store } from '../stores/store'
+import type { AuthResult } from '../types/AuthResult'
+import type { RegisterBody } from '../types/RegisterBody'
 
 export async function register(body: RegisterBody): Promise<AuthResult> {
   try {

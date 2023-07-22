@@ -12,10 +12,10 @@ import { toast } from 'react-toastify'
 import { Button, TextInput } from '../../components'
 
 import icons from '../../icons'
-import { login } from '../../lib/auth/login.ts'
-import { AppRoute } from '../../lib/enums/AppRoute.ts'
-import { useAppDispatch } from '../../lib/hooks/useAppDispatch.ts'
-import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
+import { login } from '../../lib/auth/login'
+import { AppRoute } from '../../lib/enums/AppRoute'
+import { useAppDispatch } from '../../lib/hooks/useAppDispatch'
+import useGlobalListener from '../../lib/hooks/useGlobalListener'
 
 const MIN_PASSWORD_LENGTH = 6
 

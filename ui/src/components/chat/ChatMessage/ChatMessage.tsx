@@ -1,7 +1,7 @@
 import { forwardRef, memo } from 'react'
-
-import type { ChatMessageProps } from './ChatMessage.types.ts'
 import { twMerge } from 'tailwind-merge'
+
+import type { ChatMessageProps } from './ChatMessage.types'
 
 const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
   (props, ref) => {
@@ -16,6 +16,7 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(
         )}
       >
         <div
+          onMouseDownCapture={(e) => e.stopPropagation()}
           className={twMerge(
             'relative py-1 px-3 rounded-full',
             fromCurrentUser

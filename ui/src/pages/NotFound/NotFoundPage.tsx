@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom'
 
 import icons from '../../icons'
 import { Button } from '../../components'
-import { AppRoute } from '../../lib/enums/AppRoute.ts'
-import { Color } from '../../lib/enums/Color.ts'
+import { AppRoute } from '../../lib/enums/AppRoute'
+import { Color } from '../../lib/enums/Color'
 
 const NotFoundPage: FC = () => {
   const location = useLocation()

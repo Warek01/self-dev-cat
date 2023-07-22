@@ -11,11 +11,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Button, TextInput } from '../../components'
 import icons from '../../icons'
-import { register } from '../../lib/auth/register.ts'
+import { register } from '../../lib/auth/register'
 
-import { AppRoute } from '../../lib/enums/AppRoute.ts'
-import { isEmail } from '../../lib/helpers/isEmail.ts'
-import useGlobalListener from '../../lib/hooks/useGlobalListener.ts'
+import { AppRoute } from '../../lib/enums/AppRoute'
+import { isEmail } from '../../lib/helpers/isEmail'
+import useGlobalListener from '../../lib/hooks/useGlobalListener'
 
 const MIN_PASSWORD_LENGTH = 6
 

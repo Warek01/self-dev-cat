@@ -1,3 +1,3 @@
-import AuthPrivateRoute from './AuthPrivateRoute/AuthPrivateRoute.tsx'
+import AuthPrivateRoute from './AuthPrivateRoute/AuthPrivateRoute'
 
 export { AuthPrivateRoute }

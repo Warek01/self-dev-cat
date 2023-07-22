@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { Breakpoint } from '../constants/Breakpoint.ts'
+import { Breakpoint } from '../constants/Breakpoint'
 
 type CallbackInit =
   | ((event: MediaQueryListEvent) => any)

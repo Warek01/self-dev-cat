@@ -4,13 +4,13 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { Header, SideMenu } from './components'
-import { fetchCurrentUser } from './lib/auth/fetchCurrentUser.ts'
-import { toastDefaultProps } from './lib/constants/toastDefaultProps.ts'
-import { useAppDispatch } from './lib/hooks/useAppDispatch.ts'
-import { useAppSelector } from './lib/hooks/useAppSelector.ts'
-import useBreakpointCallback from './lib/hooks/useBreakpointCallback.ts'
-import * as currentUserSlice from './lib/slices/currentUser/currentUser.slice.ts';
-import { selectTheme, setIsMobile } from './lib/slices/layout/layout.slice.ts';
+import { fetchCurrentUser } from './lib/auth/fetchCurrentUser'
+import { toastDefaultProps } from './lib/constants/toastDefaultProps'
+import { useAppDispatch } from './lib/hooks/useAppDispatch'
+import { useAppSelector } from './lib/hooks/useAppSelector'
+import useBreakpointCallback from './lib/hooks/useBreakpointCallback'
+import * as currentUserSlice from './lib/slices/currentUser/currentUser.slice';
+import { selectTheme, setIsMobile } from './lib/slices/layout/layout.slice';
 
 const App: FC = () => {
   const navigate = useNavigate()

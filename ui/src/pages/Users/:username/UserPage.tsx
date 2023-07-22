@@ -1,8 +1,8 @@
 import { FC, memo } from 'react';
 import { useParams } from 'react-router-dom'
 
-import { useAppSelector } from '../../../lib/hooks/useAppSelector.ts'
-import { selectCurrentUser } from '../../../lib/slices/currentUser/currentUser.slice.ts'
+import { useAppSelector } from '../../../lib/hooks/useAppSelector'
+import { selectCurrentUser } from '../../../lib/slices/currentUser/currentUser.slice'
 
 const UserPage: FC = () => {
   const params = useParams()

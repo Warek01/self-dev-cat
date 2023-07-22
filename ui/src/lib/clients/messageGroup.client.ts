@@ -1,9 +1,9 @@
 import { firstValueFrom } from 'rxjs'
 import { ajax, AjaxResponse } from 'rxjs/ajax'
 
-import * as headers from '../helpers/authHeaders.ts'
-import type { ApiFindResponse } from '../types/Api.ts'
-import type { MessageGroup } from '../types/MessageGroup.ts'
+import * as headers from '../helpers/authHeaders'
+import type { ApiFindResponse } from '../types/Api'
+import type { MessageGroup } from '../types/MessageGroup'
 
 const URL = `${import.meta.env.VITE_API_URL}/message-group`
 

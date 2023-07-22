@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io-client'
 
-import { wsManager } from '../wsManager.ts'
+import { wsManager } from '../wsManager'
 
 interface ServerToClientEvents {}
 

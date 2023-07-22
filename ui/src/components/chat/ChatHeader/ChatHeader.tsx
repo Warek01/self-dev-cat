@@ -1,35 +1,39 @@
 import { FC, memo, useState } from 'react'
 
-import type { ChatHeaderProps } from './ChatHeader.types.ts'
-import icons from '../../../icons'
-import { Button, ModalWindow } from '../../index.ts'
-import { AppRoute } from '../../../lib/enums/AppRoute.ts'
+import icons from '@icons'
+import { AppRoute } from '@enums/AppRoute'
+import { Fade, Button, ModalWindow } from '@components'
+import type { ChatHeaderProps } from './ChatHeader.types'
 
 const ChatHeader: FC<ChatHeaderProps> = ({ group }) => {
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
 
   return (
     <>
-      <ModalWindow visible={settingsOpen}>
-        <Button
-          circle
-          className="absolute top-3 right-3"
-          Icon={icons.Close}
-          iconSize={24}
-          onClick={() => setSettingsOpen(false)}
-        />
-        <h2>Group settings</h2>
-        <section className="border-t border-black/10 dark:border-dark-white/10 py-3 flex flex-col gap-3 items-start">
-          <Button text="Change icon" />
-          <Button text="Delete messages" disabled />
-          <Button text="Leave group" className="text-error" />
-          <Button
-            text="Delete group"
-            className="text-error-disabled"
-            disabled
-          />
-        </section>
-      </ModalWindow>
+      {settingsOpen && (
+        <Fade>
+          <ModalWindow>
+            <Button
+              circle
+              className="absolute top-3 right-3"
+              Icon={icons.Close}
+              iconSize={24}
+              onClick={() => setSettingsOpen(false)}
+            />
+            <h2>Group settings</h2>
+            <section className="border-t border-black/10 dark:border-dark-white/10 py-3 flex flex-col gap-3 items-start">
+              <Button text="Change icon" />
+              <Button text="Delete messages" disabled />
+              <Button text="Leave group" className="text-error" />
+              <Button
+                text="Delete group"
+                className="text-error-disabled"
+                disabled
+              />
+            </section>
+          </ModalWindow>
+        </Fade>
+      )}
 
       <main className="border-b p-3 flex items-center justify-between gap-3 border-black/10 dark:border-dark-white/10">
         <section className="flex items-center flex-1 justify-start gap-3">

@@ -1,5 +1,5 @@
-import { repeat } from '../../helpers/repeat.ts'
-import { TextLink } from '../../types/TextLink.ts'
+import { repeat } from '../../helpers/repeat'
+import { TextLink } from '../../types/TextLink'
 
 export const headerLinks: TextLink[] = repeat<TextLink>(
   {

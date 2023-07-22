@@ -1,5 +1,5 @@
-import type { FetchStatus } from '../../enums/FetchStatus.ts'
-import type { User } from '../../types/User.ts'
+import type { FetchStatus } from '../../enums/FetchStatus'
+import type { User } from '../../types/User'
 
 export interface CurrentUserSliceProps {
   user: User | null

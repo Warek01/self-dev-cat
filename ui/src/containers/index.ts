@@ -1,3 +1,3 @@
-import ChatContainer from './ChatContainer/ChatContainer.tsx'
+import ChatContainer from './ChatContainer/ChatContainer'
 
 export { ChatContainer }

@@ -1,6 +1,6 @@
 import { FC, memo } from 'react'
 
-import RegisterForm from '../../forms/RegisterForm/RegisterForm.tsx'
+import RegisterForm from '../../forms/RegisterForm/RegisterForm'
 
 const RegisterPage: FC = () => {
   return (

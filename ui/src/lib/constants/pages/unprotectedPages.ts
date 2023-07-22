@@ -1,4 +1,4 @@
-import { AppRoute } from '../../enums/AppRoute.ts'
+import { AppRoute } from '../../enums/AppRoute'
 
 export const unprotectedPages: Array<AppRoute | string> = [
   AppRoute.LOGIN,

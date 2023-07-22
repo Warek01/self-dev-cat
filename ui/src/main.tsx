@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { pagesConfig } from './lib/constants/pages/pagesConfig.tsx'
-import { store } from './lib/stores/store.ts'
+import { pagesConfig } from './lib/constants/pages/pagesConfig'
+import { store } from './lib/stores/store'
 
 import './styles/index.sass'
 

@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react'
+import { FC, memo, PropsWithChildren } from 'react'
 import { Link } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 
@@ -71,4 +71,4 @@ const Button: FC<ButtonProps> = ({
   )
 }
 
-export default Button
+export default memo(Button)

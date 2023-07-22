@@ -1,10 +1,10 @@
 import { AjaxError } from 'rxjs/ajax'
 
-import { currentUserClient } from '../clients/currentUser.client.ts'
-import { FetchStatus } from '../enums/FetchStatus.ts'
-import * as currentUserSlice from '../slices/currentUser/currentUser.slice.ts'
-import { store } from '../stores/store.ts'
-import { AuthResult } from '../types/AuthResult.ts'
+import { currentUserClient } from '../clients/currentUser.client'
+import { FetchStatus } from '../enums/FetchStatus'
+import * as currentUserSlice from '../slices/currentUser/currentUser.slice'
+import { store } from '../stores/store'
+import { AuthResult } from '../types/AuthResult'
 
 export async function fetchCurrentUser(token: string): Promise<AuthResult> {
   try {

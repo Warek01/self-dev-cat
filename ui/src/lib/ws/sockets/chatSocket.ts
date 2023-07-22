@@ -1,15 +1,15 @@
 import type { Socket } from 'socket.io-client'
 
-import { wsManager } from '../wsManager.ts'
-import type { ChatWsEvent } from '../enums/ChatWsEvent.ts'
+import { wsManager } from '../wsManager'
+import type { ChatWsEvent } from '../enums/ChatWsEvent'
 import type {
   DeleteMessage,
   DeleteMessageRequest,
   JoinRoomRequest,
   JoinRoomResponse,
   SendMessage,
-} from '../types/chat.ts'
-import type { Message } from '../../types/Message.ts'
+} from '../types/chat'
+import type { Message } from '../../types/Message'
 
 interface ServerToClientEvents {
   [ChatWsEvent.JOIN_ROOM]: (res: JoinRoomResponse) => void

@@ -2,10 +2,10 @@ import { FC, memo, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { ChatContext } from '../../../containers/ChatContainer/ChatContainer.context.ts'
-import type { ApiFindResponse } from '../../../lib/types/Api.ts'
-import type { MessageGroup } from '../../../lib/types/MessageGroup.ts'
-import { Button } from '../../index.ts'
+import { ChatContext } from '../../../containers/ChatContainer/ChatContainer.context'
+import type { ApiFindResponse } from '../../../lib/types/Api'
+import type { MessageGroup } from '../../../lib/types/MessageGroup'
+import { Button } from '../../index'
 
 const ChatSelect: FC = () => {
   const params = useParams()

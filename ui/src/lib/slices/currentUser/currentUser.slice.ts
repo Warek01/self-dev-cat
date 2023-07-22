@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { FetchStatus } from '../../enums/FetchStatus.ts'
-import type { RootState } from '../../stores/store.ts'
-import { User } from '../../types/User.ts'
+import { FetchStatus } from '../../enums/FetchStatus'
+import type { RootState } from '../../stores/store'
+import { User } from '../../types/User'
 import type { CurrentUserSliceProps } from './currentUser.slice.types'
 
 const initialState: CurrentUserSliceProps = {

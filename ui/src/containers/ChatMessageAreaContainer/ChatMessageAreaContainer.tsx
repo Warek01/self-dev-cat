@@ -2,21 +2,21 @@ import { FC, memo, useCallback, useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useAppSelector } from '../../lib/hooks/useAppSelector.ts'
-import * as currentUserSlice from '../../lib/slices/currentUser/currentUser.slice.ts'
-import { ChatContext } from '../ChatContainer/ChatContainer.context.ts'
-import type { Message } from '../../lib/types/Message.ts'
-import { messageGroupClient } from '../../lib/clients/messageGroup.client.ts'
-import type { MessageGroup } from '../../lib/types/MessageGroup.ts'
-import { useLocalStorage } from '../../lib/hooks/useLocalStorage.ts'
-import type { ApiFindResponse } from '../../lib/types/Api.ts'
+import { useAppSelector } from '../../lib/hooks/useAppSelector'
+import * as currentUserSlice from '../../lib/slices/currentUser/currentUser.slice'
+import { ChatContext } from '../ChatContainer/ChatContainer.context'
+import type { Message } from '../../lib/types/Message'
+import { messageGroupClient } from '../../lib/clients/messageGroup.client'
+import type { MessageGroup } from '../../lib/types/MessageGroup'
+import { useLocalStorage } from '../../lib/hooks/useLocalStorage'
+import type { ApiFindResponse } from '../../lib/types/Api'
 import {
   ChatHeader,
   ChatInputArea,
   ChatMessagesArea,
 } from '../../components/chat'
-import { chatSocket } from '../../lib/ws/sockets/chatSocket.ts'
-import { ChatWsEvent } from '../../lib/ws/enums/ChatWsEvent.ts'
+import { chatSocket } from '../../lib/ws/sockets/chatSocket'
+import { ChatWsEvent } from '../../lib/ws/enums/ChatWsEvent'
 
 const ChatMessageAreaContainer: FC = () => {
   const params = useParams()

@@ -11,7 +11,7 @@ import {
 
 import { Button, Chip, TextInput } from '../../../components'
 import icons from '../../../icons'
-import type { ChatInputAreaProps } from './ChatInputArea.types.ts'
+import type { ChatInputAreaProps } from './ChatInputArea.types'
 
 const ChatInputArea: FC<ChatInputAreaProps> = ({ onSendMessage }) => {
   const fileInputId = useId()

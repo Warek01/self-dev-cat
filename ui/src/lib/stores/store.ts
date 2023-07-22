@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import layoutReducer from '../slices/layout/layout.slice.ts'
-import userReducer from '../slices/currentUser/currentUser.slice.ts'
-import chatReducer from '../slices/chat/chat.slice.ts'
+import layoutReducer from '../slices/layout/layout.slice'
+import userReducer from '../slices/currentUser/currentUser.slice'
+import chatReducer from '../slices/chat/chat.slice'
 
 const reducer = {
   layout: layoutReducer,

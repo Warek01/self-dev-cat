@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState } from '../../stores/store.ts'
+import { RootState } from '../../stores/store'
 
 import type { LayoutSliceProps } from './layout.slice.types'
 

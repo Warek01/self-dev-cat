@@ -1,6 +1,6 @@
 import { FC, memo } from 'react'
 
-import LoginForm from '../../forms/LoginForm/LoginForm.tsx'
+import LoginForm from '../../forms/LoginForm/LoginForm'
 
 const LoginPage: FC = () => {
   return (

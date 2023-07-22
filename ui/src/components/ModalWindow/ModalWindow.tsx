@@ -1,16 +1,17 @@
-import { FC, memo, PropsWithChildren } from 'react'
-import { Backdrop } from '../index.ts'
-import { ModalWindowProps } from './ModalWindow.types.ts'
+import { FC, memo, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
+
+import { Backdrop } from '../index'
+import type { ModalWindowProps } from './ModalWindow.types'
+import type { FadeRef } from '../utility/Fade/Fade.types'
 
 const ModalWindow: FC<PropsWithChildren<ModalWindowProps>> = ({
   children,
   className,
   overlayBackground = true,
-  visible = true,
 }) => {
   return (
-    <Backdrop overlayBackground={overlayBackground} visible={visible}>
+    <Backdrop overlayBackground={overlayBackground}>
       <div
         className={twMerge(
           'relative w-full max-w-[750px] flex flex-col items-stert justify-start p-12 gap-6',

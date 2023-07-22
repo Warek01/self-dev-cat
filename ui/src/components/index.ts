@@ -1,14 +1,16 @@
-import Backdrop from './Backdrop/Backdrop.tsx'
-import Checkbox from './Checkbox/Checkbox.tsx'
-import Header from './Header/Header.tsx'
-import IconLink from './IconLink/IconLink.tsx'
-import LoadingScreen from './LoadingScreen/LoadingScreen.tsx'
-import Modal from './Modal/Modal.tsx'
-import SideMenu from './SideMenu/SideMenu.tsx'
-import TextInput from './TextInput/TextInput.tsx'
-import Button from './Button/Button.tsx'
-import Chip from './Chip/Chip.tsx'
-import ModalWindow from './ModalWindow/ModalWindow.tsx'
+import Checkbox from './Checkbox/Checkbox'
+import Header from './Header/Header'
+import IconLink from './IconLink/IconLink'
+import LoadingScreen from './LoadingScreen/LoadingScreen'
+import SideMenu from './SideMenu/SideMenu'
+import TextInput from './TextInput/TextInput'
+import Button from './Button/Button'
+import Chip from './Chip/Chip'
+import ModalWindow from './ModalWindow/ModalWindow'
+import Tooltip from './Tooltip/Tooltip'
+import Modal from './utility/Modal/Modal'
+import Fade from './utility/Fade/Fade'
+import Backdrop from './utility/Backdrop/Backdrop'
 
 export {
   Modal,
@@ -22,4 +24,6 @@ export {
   Button,
   Chip,
   ModalWindow,
+  Tooltip,
+  Fade,
 }

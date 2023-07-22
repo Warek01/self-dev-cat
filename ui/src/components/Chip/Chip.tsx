@@ -1,8 +1,8 @@
 import { FC } from 'react'
 
-import { ChipProps } from './Chip.types.ts'
+import { ChipProps } from './Chip.types'
 import { twMerge } from 'tailwind-merge'
-import { Button } from '../index.ts'
+import { Button } from '../index'
 import icons from '../../icons'
 
 const Chip: FC<ChipProps> = ({ text, clasName, onClose }) => {
