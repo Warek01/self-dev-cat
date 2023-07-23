@@ -1,39 +1,28 @@
-import { FC, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { FC, memo, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-import { LoadingScreen } from '../../components'
-import { AppRoute } from '../../enums/AppRoute'
-import { FetchStatus } from '../../enums/FetchStatus'
-import { xor } from '../../helpers/xor'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
+import { xor } from "@helpers/xor";
+import { LoadingScreen } from '@components'
+import { AppRoute } from '@enums'
+import { useGetCurrentUserQuery } from '@slices/currentUser/currentUser.slice'
 import type { AuthPrivateRouteProps } from './AuthPrivateRoute.types'
 
-const AuthPrivateRoute: FC<AuthPrivateRouteProps> = ({
-  to = AppRoute.LOGIN,
-  inverse = false,
-  component,
-}) => {
-  const Component = component
+export const AuthPrivateRoute: FC<AuthPrivateRouteProps> = memo(
+  ({ to = AppRoute.LOGIN, inverse = false, component }) => {
+    const Component = component
 
-  const navigate = useNavigate()
-  const currentUser = useAppSelector(selectCurrentUser)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const currentUser = useGetCurrentUserQuery(null, {
+      skip: !localStorage.getItem('access_token'),
+    })
 
-  useEffect(() => {
-    const condition =
-      ![FetchStatus.FULFILLED].includes(currentUser.status) &&
-      !currentUser.accessToken
+    useEffect(() => {
+      if (xor(inverse, !localStorage.getItem('access_token')) && location.pathname !== to) {
+        navigate(to)
+      }
+    })
 
-    if (xor(inverse, condition)) {
-      navigate(to)
-    }
-  }, [currentUser])
-
-  if (currentUser.status === FetchStatus.PENDING) {
-    return <LoadingScreen />
-  }
-
-  return <Component />
-}
-
-export default AuthPrivateRoute
+    return currentUser.isLoading ? <LoadingScreen /> :<Component />
+  },
+)

@@ -13,6 +13,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -38,14 +39,11 @@ import {
   UserDto,
 } from '@/User/Dtos'
 import { UserService } from '@/User/user.service'
-import { BasicAuthGuard } from '@/Auth/Guard/BasicAuth.guard'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
-  id: number
-
   constructor(
     @Inject(forwardRef(() => UserService))
     private _userService: UserService,
@@ -123,12 +121,13 @@ export class UserController {
   @ApiOperation({ description: 'Login' })
   @ApiOkResponse({ type: String })
   @ApiUnauthorizedResponse()
-  @ApiBasicAuth()
   @Get('login')
-  @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.OK)
-  login(@Req() req: RequestWithUser): Promise<JwtResponse> {
-    return this._authService.login(req.user.username)
+  login(
+    @Query('username') username: string,
+    @Query('password') password: string,
+  ): Promise<JwtResponse> {
+    return this._authService.login(username, password)
   }
 
   @ApiBearerAuth()

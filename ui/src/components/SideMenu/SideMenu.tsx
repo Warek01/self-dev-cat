@@ -1,14 +1,13 @@
 import classNames from 'classnames'
-import { FC, memo } from 'react'
+import { FC, memo, useCallback } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import icons from '@icons'
-import { authorLinks } from '../../constants/links/authorLinks'
-import { headerLinks } from '../../constants/links/headerLinks'
-import { AppRoute } from '../../enums/AppRoute'
-import { useAppDispatch, useAppSelector } from 'hooks'
-import { signOut } from '../../slices/currentUser/currentUser.slice'
-import { setSideMenuOpened } from '../../slices/layout/layout.slice'
+import { authorLinks } from '@constants/links/authorLinks'
+import { headerLinks } from '@constants/links/headerLinks'
+import { AppRoute } from '@enums'
+import { useAppDispatch, useAppSelector } from '@hooks'
+import { currentUserApi, setSideMenuOpened } from '@slices'
 import { Button, IconLink } from '@components'
 import { disabledForPaths } from './SideMenu.constants'
 
@@ -19,14 +18,16 @@ export const SideMenu: FC = memo(() => {
 
   const { isSideMenuOpened } = useAppSelector((state) => state.layout)
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     dispatch(setSideMenuOpened(false))
-  }
+  }, [])
 
-  const handleLogout = () => {
-    dispatch(signOut())
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem('access_token')
+    currentUserApi.util.resetApiState()
+    dispatch(setSideMenuOpened(false))
     navigate(AppRoute.LOGIN)
-  }
+  }, [])
 
   if (disabledForPaths.includes(location.pathname)) {
     return null

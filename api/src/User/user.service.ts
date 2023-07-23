@@ -61,8 +61,7 @@ export class UserService {
     user.realName = data.realName || user.realName
 
     await this._userRepo.save(user)
-
-    return this._authService.login(data.username)
+    return this._authService.login(data.username, data.password)
   }
 
   public async findOneByEmail(email: string): Promise<UserDto | null> {

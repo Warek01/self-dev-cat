@@ -1,28 +1,25 @@
+import { useRegisterUserMutation } from '@slices'
 import { FormikHelpers } from 'formik'
 import { FC, memo, useCallback } from 'react'
-import { toast } from 'react-toastify'
 
-import { LoginValues } from '@components/LoginForm/LoginForm.types'
-import { RegisterValues } from '@components/RegisterForm/RegisterForm.types'
-import { register } from '@auth'
+import type { LoginValues } from '@components/LoginForm/LoginForm.types'
+import type { RegisterValues } from '@components/RegisterForm/RegisterForm.types'
 import { registerSchema } from '@validation-schemas'
 import { RegisterForm } from '@components'
 
 export const RegisterContainer: FC = memo(() => {
+  const [triggerRegister, register] = useRegisterUserMutation()
+
   const handleRegistration = useCallback(
     async (
       values: LoginValues,
       formikHelpers: FormikHelpers<RegisterValues>,
     ) => {
-      const status = await register({
+      triggerRegister({
         username: values.username,
         password: values.password,
         email: values.username,
       })
-
-      if (status.error) {
-        toast(status.error.toString(), { type: 'error' })
-      }
     },
     [],
   )

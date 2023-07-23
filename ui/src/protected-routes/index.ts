@@ -1,3 +1,1 @@
-import AuthPrivateRoute from './AuthPrivateRoute/AuthPrivateRoute'
-
-export { AuthPrivateRoute }
+export * from './AuthPrivateRoute/AuthPrivateRoute'

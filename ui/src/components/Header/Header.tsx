@@ -2,15 +2,15 @@ import { FC, memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import icons from '@icons'
-import { unprotectedPages } from '../../constants/pages/unprotectedPages'
-import { AppRoute } from '../../enums/AppRoute'
-import { useAppDispatch, useAppSelector } from 'hooks'
-import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
+import { unprotectedPages } from '@constants/pages/unprotectedPages'
 import {
+  useGetCurrentUserQuery,
   selectTheme,
   setSideMenuOpened,
   toggleTheme,
-} from '../../slices/layout/layout.slice'
+} from '@slices'
+import { AppRoute } from '@enums'
+import { useAppDispatch, useAppSelector } from 'hooks'
 import { Button } from '@components'
 
 export const Header: FC = memo(() => {
@@ -19,7 +19,9 @@ export const Header: FC = memo(() => {
 
   const isUnprotectedLocation = unprotectedPages.includes(location.pathname)
 
-  const { user } = useAppSelector(selectCurrentUser)
+  const user = useGetCurrentUserQuery(null, {
+    skip: !localStorage.getItem('access_token')
+  })
   const theme = useAppSelector(selectTheme)
 
   const handleMenuOpen = () => {
@@ -46,7 +48,7 @@ export const Header: FC = memo(() => {
       <div className="flex items-center justify-end gap-2 md:gap-6 lg:gap-12">
         <Button
           type="link"
-          to={`${AppRoute.USERS}/${user?.username}`}
+          to={`${AppRoute.USERS}/${user.data?.username}`}
           Icon={icons.User}
           iconSize={24}
           disabled={isUnprotectedLocation}

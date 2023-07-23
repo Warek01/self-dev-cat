@@ -8,9 +8,8 @@ import {
   useState,
 } from 'react'
 
+import { useGetCurrentUserQuery } from "@slices";
 import { ChatWsEvent } from '@ws/enums/ChatWsEvent'
-import { useAppSelector, usePreviousValue } from '@hooks'
-import { selectCurrentUser } from '@slices/currentUser/currentUser.slice'
 import { chatSocket } from '@ws/sockets/chatSocket'
 import type { SendMessage } from '@/types/Chat'
 import { messageClient } from '@clients'
@@ -24,8 +23,7 @@ import type { ChatContainerContextProps } from './ChatContainer.types'
 import { ChatContext } from './ChatContainer.context'
 
 export const ChatContainer: FC<PropsWithChildren> = memo(({ children }) => {
-  const { user, accessToken } = useAppSelector(selectCurrentUser)
-  const prevUser = usePreviousValue(user)
+  const user = useGetCurrentUserQuery()
 
   const [messageGroups, setMessageGroups] = useState<MessageGroup[]>([])
 
@@ -71,7 +69,7 @@ export const ChatContainer: FC<PropsWithChildren> = memo(({ children }) => {
   )
 
   useEffect(() => {
-    if (!user || user === prevUser) {
+    if (!user.data) {
       return
     }
 
@@ -80,7 +78,7 @@ export const ChatContainer: FC<PropsWithChildren> = memo(({ children }) => {
         console.log('join room', res)
       })
       .emit(ChatWsEvent.JOIN_ROOM, {
-        userId: user!.id,
+        userId: user.data.id,
         groupId: 1,
       })
   }, [user])

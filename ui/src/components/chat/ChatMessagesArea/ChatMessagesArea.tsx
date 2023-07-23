@@ -9,8 +9,8 @@ import {
 } from 'react'
 
 import { ChatMessage } from '@components/chat'
-import { useAppSelector, useDragScroll } from 'hooks'
-import { selectCurrentUser } from '../../../slices/currentUser/currentUser.slice'
+import { useDragScroll } from '@hooks'
+import { useGetCurrentUserQuery } from '@slices/currentUser/currentUser.slice'
 import type { ChatMessagesAreaProps } from './ChatMessagesArea.types'
 
 export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
@@ -18,7 +18,7 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
     const messageListRef: MutableRefObject<HTMLElement> = useRef(
       {} as HTMLElement,
     )
-    const { user } = useAppSelector(selectCurrentUser)
+    const user = useGetCurrentUserQuery()
 
     useEffect(() => {
       messageListRef.current?.scrollTo({
@@ -33,7 +33,7 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
           <ChatMessage
             key={message.id}
             message={message}
-            fromCurrentUser={message.user.id === user?.id}
+            fromCurrentUser={message.user.id === user.data?.id}
           />
         )),
       [messages, user],

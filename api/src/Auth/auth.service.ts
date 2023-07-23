@@ -41,10 +41,13 @@ export class AuthService {
     return null
   }
 
-  async login(username: string): Promise<JwtResponse> {
-    const user = await this._userService.findOneByUsername(username)
+  async login(username: string, password: string): Promise<JwtResponse> {
+    const user = await this._userService.findOneByUsername(username, true)
 
-    if (!user) {
+    if (
+      !user ||
+      !(await this._encryptionService.compare(password, user.password))
+    ) {
       throw new UnauthorizedException()
     }
 

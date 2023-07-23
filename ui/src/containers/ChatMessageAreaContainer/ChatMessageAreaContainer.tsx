@@ -1,24 +1,23 @@
+import { useGetCurrentUserQuery } from "@slices";
 import { FC, memo, useCallback, useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useAppSelector } from 'hooks'
-import { selectCurrentUser } from '../../slices/currentUser/currentUser.slice'
-import type { Message } from '../../types/Message'
-import { messageGroupClient } from '../../clients/messageGroup.client'
-import type { MessageGroup } from '../../types/MessageGroup'
-import { useLocalStorage } from 'hooks'
-import type { ApiFindResponse } from '../../types/Api'
+import { useAppSelector, useLocalStorage } from '@hooks'
+import type { Message } from '@/types/Message'
+import { messageGroupClient } from '@clients'
+import type { MessageGroup } from '@/types/MessageGroup'
+import type { ApiFindResponse } from '@/types/Api'
 import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
-import { chatSocket } from '../../ws/sockets/chatSocket'
-import { ChatWsEvent } from '../../ws/enums/ChatWsEvent'
+import { chatSocket } from '@ws/sockets/chatSocket'
+import { ChatWsEvent } from '@ws/enums/ChatWsEvent'
 import { ChatContext } from '../ChatContainer/ChatContainer.context'
 
 export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
   const groupId: number = parseInt(params['groupId']!)
 
-  const { user, accessToken } = useAppSelector(selectCurrentUser)
+  const user = useGetCurrentUserQuery()
   const { sendMessage, requestMessages } = useContext(ChatContext)
 
   const [messages, setMessages] = useLocalStorage<Message[]>(
@@ -32,14 +31,14 @@ export const ChatMessageAreaContainer: FC = memo(() => {
 
   const handleMessageSend = useCallback(
     async (text: string, files: File[]) => {
-      if (!user) {
+      if (!user.data) {
         return
       }
 
       try {
         await sendMessage({
           content: text,
-          userId: user.id,
+          userId: user.data.id,
           groupId: groupId,
         })
       } catch (err: unknown) {
@@ -47,7 +46,7 @@ export const ChatMessageAreaContainer: FC = memo(() => {
         toast('Could not send message', { type: 'error' })
       }
     },
-    [sendMessage, user, accessToken],
+    [sendMessage, user],
   )
 
   useEffect(() => {
@@ -78,7 +77,7 @@ export const ChatMessageAreaContainer: FC = memo(() => {
         toast('Could not load messages', { type: 'error' })
       }
     })()
-  }, [groupId, accessToken])
+  }, [groupId])
 
   useEffect(() => {
     chatSocket

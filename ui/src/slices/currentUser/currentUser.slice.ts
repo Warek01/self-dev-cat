@@ -1,52 +1,61 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { FetchStatus } from '@enums/FetchStatus'
-import type { RootState } from '@constants/store'
 import type { User } from '@/types/User'
-import type { CurrentUserSliceProps } from './currentUser.slice.types'
+import type { LoginCredentials, RegisterCredentials } from '@/types/Auth'
+import type { FriendRequest } from '@/types/FriendRequest'
+import type { JwtResponse } from '@/types/JwtResponse'
 
-const initialState: CurrentUserSliceProps = {
-  user: null,
-  status: FetchStatus.IDLE,
-  accessToken: localStorage.getItem('access_token') ?? null,
-  error: null,
-}
+export const currentUserApi = createApi({
+  reducerPath: 'currentUser',
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = localStorage.getItem('access_token')
 
-export const currentUserSlice = createSlice({
-  name: 'currentUser',
-  initialState,
-  reducers: {
-    signOut: (state) => {
-      localStorage.removeItem('access_token')
-
-      return {
-        ...state,
-        error: null,
-        user: null,
-        accessToken: null,
-        status: FetchStatus.IDLE,
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`)
       }
-    },
-    setToken: (state, action: PayloadAction<string | null>) => {
-      const token = action.payload
 
-      state.accessToken = token
-      token
-        ? localStorage.setItem('access_token', token)
-        : localStorage.removeItem('access_token')
+      return headers
     },
-    setStatus: (state, action: PayloadAction<FetchStatus>) => {
-      state.status = action.payload
-    },
-    setUser: (state, action: PayloadAction<User | null>) => {
-      state.user = action.payload
-    },
-  },
+  }),
+  endpoints: (builder) => ({
+    getCurrentUser: builder.query<User, void | null>({
+      query: () => '/user',
+    }),
+
+    login: builder.query<JwtResponse, LoginCredentials>({
+      query: (credentials) => ({
+        url: '/user/login',
+        params: credentials,
+      }),
+    }),
+
+    registerUser: builder.mutation<User, RegisterCredentials>({
+      query: (dto) => ({
+        url: '/user/create',
+        body: dto,
+      }),
+    }),
+
+    getFriends: builder.query<User, number>({
+      query: (id) => `/user/${id}/friends`,
+    }),
+
+    getFriendRequests: builder.query<FriendRequest, number>({
+      query: (id) => `/user/${id}/friend-requests`,
+    }),
+  }),
 })
 
-export const { signOut, setToken, setStatus, setUser } =
-  currentUserSlice.actions
-export default currentUserSlice.reducer
-
-export const selectAccessToken = (state: RootState) => state.user.accessToken
-export const selectCurrentUser = (state: RootState) => state.user
+export const {
+  useGetCurrentUserQuery,
+  useLazyGetCurrentUserQuery,
+  useLoginQuery,
+  useLazyLoginQuery,
+  useRegisterUserMutation,
+  useGetFriendRequestsQuery,
+  useLazyGetFriendRequestsQuery,
+  useGetFriendsQuery,
+  useLazyGetFriendsQuery,
+} = currentUserApi

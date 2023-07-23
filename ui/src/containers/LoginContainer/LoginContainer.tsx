@@ -1,36 +1,35 @@
+import { AppRoute } from '@enums'
 import { FormikHelpers } from 'formik'
-import { FC, memo, useCallback } from 'react'
+import { FC, memo, useCallback, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import { useLazyLoginQuery } from '@slices'
 import { LoginForm } from '@components'
 import { LoginValues } from '@components/LoginForm/LoginForm.types'
-import { login } from '@auth'
 import { loginSchema } from '@validation-schemas'
 
 export const LoginContainer: FC = memo(() => {
+  const navigate = useNavigate()
+  const [triggerLogin, login] = useLazyLoginQuery()
+
   const handleLogin = useCallback(
     async (values: LoginValues, formikHelpers: FormikHelpers<LoginValues>) => {
-      const { error, unauthorized } = await login(values)
-      if (error) {
-        toast('Login failed', { type: 'error' })
-      }
-
-      if (unauthorized) {
-        toast('Wrong username or password', { type: 'error' })
-      }
+      triggerLogin(values)
+      formikHelpers.resetForm()
     },
     [],
   )
 
-  // useGlobalListener('keydown', (event: KeyboardEvent) => {
-  //   if (
-  //     event.key === 'Enter' &&
-  //     (document.activeElement === loginRefs.username.current ||
-  //       document.activeElement === loginRefs.password.current)
-  //   ) {
-  //     handleLogin()
-  //   }
-  // })
+  useEffect(() => {
+    if (login.isError) {
+      toast('Login error', { type: 'error' })
+      console.error(login.error)
+    } else if (login.data) {
+      localStorage.setItem('access_token', login.data!.access_token)
+      navigate(AppRoute.ROOT)
+    }
+  }, [login])
 
   return (
     <LoginForm
