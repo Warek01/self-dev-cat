@@ -1,5 +1,6 @@
-import { FC, memo, useState } from 'react'
+import { FC, memo, useCallback, useState } from 'react'
 
+import { useDeleteAllMessagesMutation, useGetCurrentUserQuery } from '@apis'
 import icons from '@icons'
 import { AppRoute } from '@enums/AppRoute'
 import { Button, ModalWindow } from '@components'
@@ -7,6 +8,13 @@ import type { ChatHeaderProps } from './ChatHeader.types'
 
 export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
+  const user = useGetCurrentUserQuery()
+  const [deleteAllMessages] = useDeleteAllMessagesMutation()
+
+  const handleDeleteMessages = useCallback(async () => {
+    deleteAllMessages({ groupId: group!.id })
+    setSettingsOpen(false)
+  }, [group])
 
   return (
     <>
@@ -15,7 +23,11 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
           <h2>Group settings</h2>
           <section className="border-t border-black/10 dark:border-dark-white/10 py-3 flex flex-col gap-3 items-start">
             <Button text="Change icon" />
-            <Button text="Delete messages" disabled />
+            <Button
+              text="Delete messages"
+              disabled={group?.rootUser.id !== user.data?.id}
+              onClick={handleDeleteMessages}
+            />
             <Button text="Leave group" className="text-error" />
             <Button
               text="Delete group"

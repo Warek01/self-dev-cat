@@ -3,7 +3,7 @@ export enum ChatWsEvent {
   ECHO = 'Debug/Echo',
 
   // Rooms section
-  JOIN_ROOM = 'Room/Join',
+  JOIN_ROOMS = 'Room/Join',
 
   // Messages section
   SEND_MESSAGE = 'Message/Send',

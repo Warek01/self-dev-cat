@@ -1,3 +1,6 @@
+import icons from '@icons'
+import { ChatWsEvent } from '@ws/enums/ChatWsEvent'
+import { chatSocket } from '@ws/sockets/chatSocket'
 import {
   FC,
   memo,
@@ -10,15 +13,24 @@ import {
 
 import { ChatMessage } from '@components/chat'
 import { useDragScroll } from '@hooks'
-import { useGetCurrentUserQuery } from '@slices/currentUser/currentUser.slice'
+import {
+  useGetCurrentUserQuery,
+  useGetMessagesQuery,
+  useLazyGetMessagesQuery,
+} from '@apis'
 import type { ChatMessagesAreaProps } from './ChatMessagesArea.types'
 
 export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
-  ({ messages }) => {
+  ({ groupId }) => {
     const messageListRef: MutableRefObject<HTMLElement> = useRef(
       {} as HTMLElement,
     )
     const user = useGetCurrentUserQuery()
+    const messages = useGetMessagesQuery({
+      groupId,
+      skip: 0,
+      limit: 100,
+    })
 
     useEffect(() => {
       messageListRef.current?.scrollTo({
@@ -29,7 +41,7 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
 
     const memorizedMessages: ReactElement[] = useMemo(
       () =>
-        messages.map((message) => (
+        (messages.data?.items || []).map((message) => (
           <ChatMessage
             key={message.id}
             message={message}
@@ -44,6 +56,12 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
       withGrabbingCursor: true,
     })
 
+    useEffect(() => {
+      chatSocket.on(ChatWsEvent.DELETE_ALL_MESSAGES, (dto) => {
+        messages.refetch()
+      })
+    }, [])
+
     return (
       <main
         className="flex-1 max-h-full flex overflow-auto"
@@ -52,9 +70,15 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
           messageListRef.current = current!
         }}
       >
-        <ul className="flex min-h-full gap-1 p-3 h-fit w-full flex-col-reverse items-start justify-start overflow-auto">
-          {memorizedMessages}
-        </ul>
+        {messages.isLoading ? (
+          <div className="flex items-center justify-center flex-1">
+            <icons.Spinner width={32} height={32} className="animate-spin" />
+          </div>
+        ) : (
+          <ul className="flex min-h-full gap-1 p-3 h-fit w-full flex-col-reverse items-start justify-start overflow-auto">
+            {memorizedMessages}
+          </ul>
+        )}
       </main>
     )
   },

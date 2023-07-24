@@ -8,20 +8,21 @@ import type {
   JoinRoomRequest,
   JoinRoomResponse,
   SendMessage,
-} from '../../types/Chat'
-import type { Message } from '../../types/Message'
+  DeleteAllMessages,
+  Message,
+} from '@/types/Chat'
 
 interface ServerToClientEvents {
-  [ChatWsEvent.JOIN_ROOM]: (res: JoinRoomResponse) => void
+  [ChatWsEvent.JOIN_ROOMS]: (res: JoinRoomResponse) => void
   [ChatWsEvent.RECEIVE_MESSAGE]: (res: Message) => void
-  [ChatWsEvent.DELETE_ALL_MESSAGES]: () => void
+  [ChatWsEvent.DELETE_ALL_MESSAGES]: (dto: DeleteAllMessages) => void
   [ChatWsEvent.DELETE_MESSAGE]: (res: DeleteMessage) => void
 }
 
 interface ClientToServerEvents {
-  [ChatWsEvent.JOIN_ROOM]: (req: JoinRoomRequest) => void
+  [ChatWsEvent.JOIN_ROOMS]: (req: JoinRoomRequest) => void
   [ChatWsEvent.SEND_MESSAGE]: (req: SendMessage) => void
-  [ChatWsEvent.DELETE_ALL_MESSAGES]: () => void
+  [ChatWsEvent.DELETE_ALL_MESSAGES]: (dto: DeleteAllMessages) => void
   [ChatWsEvent.DELETE_MESSAGE]: (req: DeleteMessageRequest) => void
 }
 
@@ -38,4 +39,3 @@ chatSocket
       `chat ws disconnected by reason "${reason}" description: "${description}"`,
     ),
   )
-  .connect()

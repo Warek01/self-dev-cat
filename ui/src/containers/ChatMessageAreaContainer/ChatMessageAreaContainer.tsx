@@ -1,43 +1,34 @@
-import { useGetCurrentUserQuery } from "@slices";
-import { FC, memo, useCallback, useContext, useEffect } from 'react'
+import { FC, memo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useAppSelector, useLocalStorage } from '@hooks'
-import type { Message } from '@/types/Message'
-import { messageGroupClient } from '@clients'
-import type { MessageGroup } from '@/types/MessageGroup'
-import type { ApiFindResponse } from '@/types/Api'
+import icons from '@icons'
+import {
+  useGetCurrentUserQuery,
+  useGetOneMessageGroupQuery,
+  useSendMessageMutation,
+} from '@apis'
 import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
-import { chatSocket } from '@ws/sockets/chatSocket'
-import { ChatWsEvent } from '@ws/enums/ChatWsEvent'
-import { ChatContext } from '../ChatContainer/ChatContainer.context'
 
 export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
   const groupId: number = parseInt(params['groupId']!)
 
   const user = useGetCurrentUserQuery()
-  const { sendMessage, requestMessages } = useContext(ChatContext)
-
-  const [messages, setMessages] = useLocalStorage<Message[]>(
-    `message_group_${groupId}_messages`,
-    [],
-  )
-  const [currentGroup, setCurrentGroup] = useLocalStorage<MessageGroup | null>(
-    `message_group_${groupId}`,
-    null,
-  )
+  const currentGroup = useGetOneMessageGroupQuery(groupId)
+  const [sendMessage] = useSendMessageMutation()
 
   const handleMessageSend = useCallback(
     async (text: string, files: File[]) => {
-      if (!user.data) {
+      const trimmedText = text.trim()
+
+      if (!user.data || !trimmedText) {
         return
       }
 
       try {
         await sendMessage({
-          content: text,
+          content: trimmedText,
           userId: user.data.id,
           groupId: groupId,
         })
@@ -49,56 +40,19 @@ export const ChatMessageAreaContainer: FC = memo(() => {
     [sendMessage, user],
   )
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const currentGroup: MessageGroup = await messageGroupClient.find(
-          groupId,
-        )
-
-        setCurrentGroup(currentGroup)
-      } catch (err: unknown) {
-        console.error(err)
-        toast('Could not load group', { type: 'error' })
-      }
-    })()
-    ;(async () => {
-      try {
-        // TODO: implement infinite scroll
-        const groupMessages: ApiFindResponse<Message> = await requestMessages(
-          groupId,
-          0,
-          500,
-        )
-
-        setMessages(groupMessages.items)
-      } catch (err: unknown) {
-        console.error(err)
-        toast('Could not load messages', { type: 'error' })
-      }
-    })()
-  }, [groupId])
-
-  useEffect(() => {
-    chatSocket
-      .on(ChatWsEvent.RECEIVE_MESSAGE, (newMessage) => {
-        setMessages((messages) => [newMessage, ...messages])
-      })
-      .on(ChatWsEvent.DELETE_ALL_MESSAGES, () => {
-        setMessages([])
-      })
-      .on(ChatWsEvent.DELETE_MESSAGE, (res) => {
-        setMessages((messages) =>
-          messages.filter((message) => message.user.id !== res.messageId),
-        )
-      })
-  }, [])
-
   return (
     <main className="flex flex-1 max-h-full flex-col overflow-hidden">
-      <ChatHeader group={currentGroup} />
-      <ChatMessagesArea messages={messages} />
-      <ChatInputArea onSendMessage={handleMessageSend} />
+      {currentGroup.isLoading ? (
+        <div>
+          <icons.Spinner width={32} height={32} className="animate-spin" />
+        </div>
+      ) : (
+        <>
+          <ChatHeader group={currentGroup.data!} />
+          <ChatMessagesArea groupId={currentGroup.data?.id!} />
+          <ChatInputArea onSendMessage={handleMessageSend} />
+        </>
+      )}
     </main>
   )
 })

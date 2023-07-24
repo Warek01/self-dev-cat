@@ -74,6 +74,8 @@
       "@ws": ["./ws/index"],
       "@validation-schemas": ["./validation-schemas/index"],
       "@validation-schemas/*": ["./validation-schemas/*"],
+      "@apis/*": ["./apis.*"],
+      "@apis": ["./apis/index"],
       "@/*": ["./*"],
       "@": ["./index"],
     },

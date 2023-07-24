@@ -1,49 +1,38 @@
 import { Field, Form, Formik } from 'formik'
-import { FC, memo, useCallback, useContext, useEffect, useState } from 'react'
+import { FC, memo, useCallback } from 'react'
 
-import { ChatContext } from '@containers/ChatContainer/ChatContainer.context'
-import { useGetCurrentUserQuery } from '@slices/currentUser/currentUser.slice'
+import {
+  useCreateMessageGroupMutation,
+  useGetCurrentUserQuery,
+  useGetFriendsQuery,
+} from '@apis'
 import { closeModal } from '@slices/layout/layout.slice'
-import { userClient } from '@clients'
 import { useAppDispatch } from '@hooks'
 import icons from '@icons'
-import type { User } from '@/types/User'
 import { Button, FormTextField } from '@components'
 import type { ChatCreateFormValues } from './ChatCreateModal.types'
 
 export const ChatCreateModal: FC = memo(() => {
   const dispatch = useAppDispatch()
   const user = useGetCurrentUserQuery()
-  const { createMessageGroup } = useContext(ChatContext)
+  const friends = useGetFriendsQuery(user.data?.id!, {
+    skip: !user.data?.id,
+  })
+  const [createGroup] = useCreateMessageGroupMutation()
 
-  const [friends, setFriends] = useState<User[]>([])
+  const handleSubmit = useCallback(async (values: ChatCreateFormValues) => {
+    if (!user.data) {
+      return
+    }
 
-  useEffect(() => {
-    ;(async () => {
-      if (!user.data) {
-        return
-      }
+    await createGroup({
+      name: values.name || undefined,
+      rootUserid: user.data.id,
+      userIds: values.userIds.map((id) => parseInt(id)),
+    })
 
-      const req = await userClient.getFriends(user.data.id)
-      setFriends(req.items)
-    })()
+    dispatch(closeModal())
   }, [])
-
-  const handleSubmit = useCallback(
-    async (values: ChatCreateFormValues) => {
-      if (!user.data) {
-        return
-      }
-
-      await createMessageGroup({
-        name: values.name || undefined,
-        rootUserid: user.data.id,
-        userIds: values.userIds.map((id) => parseInt(id)),
-      })
-      dispatch(closeModal())
-    },
-    [createMessageGroup],
-  )
 
   return (
     <Formik
@@ -63,19 +52,23 @@ export const ChatCreateModal: FC = memo(() => {
             placeholder="Group name"
             disabled={isSubmitting}
           />
-          <ul className="flex flex-col gap-2 py-8 items-start">
-            {friends.map((user) => (
-              <label key={user.id} className="flex gap-2">
-                <Field
-                  type="checkbox"
-                  name="users"
-                  value={user.id.toString()}
-                  className="transform-gpu scale-125"
-                />
-                <span className="text-lg">{user.username}</span>
-              </label>
-            ))}
-          </ul>
+          {friends.isLoading ? (
+            <icons.Spinner width={32} height={32} className="animate-spin" />
+          ) : (
+            <ul className="flex flex-col gap-2 py-8 items-start">
+              {(friends.data?.items || []).map((user) => (
+                <label key={user.id} className="flex gap-2">
+                  <Field
+                    type="checkbox"
+                    name="users"
+                    value={user.id.toString()}
+                    className="transform-gpu scale-125"
+                  />
+                  <span className="text-lg">{user.username}</span>
+                </label>
+              ))}
+            </ul>
+          )}
           <Button
             disabled={isSubmitting}
             submit

@@ -1,13 +1,17 @@
-import { useRegisterUserMutation } from '@slices'
 import { FormikHelpers } from 'formik'
-import { FC, memo, useCallback } from 'react'
+import { FC, memo, useCallback, useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
+import { AppRoute } from "@enums";
+import { useRegisterUserMutation } from "@apis";
 import type { LoginValues } from '@components/LoginForm/LoginForm.types'
 import type { RegisterValues } from '@components/RegisterForm/RegisterForm.types'
 import { registerSchema } from '@validation-schemas'
 import { RegisterForm } from '@components'
 
 export const RegisterContainer: FC = memo(() => {
+  const navigate = useNavigate()
   const [triggerRegister, register] = useRegisterUserMutation()
 
   const handleRegistration = useCallback(
@@ -20,9 +24,20 @@ export const RegisterContainer: FC = memo(() => {
         password: values.password,
         email: values.username,
       })
+      formikHelpers.resetForm()
     },
     [],
   )
+    useEffect(() => {
+    if (register.isError) {
+      toast('Login error', { type: 'error' })
+      console.error(register.error)
+    } else if (register.data) {
+      localStorage.setItem('access_token', register.data!.access_token)
+      navigate(AppRoute.ROOT)
+    }
+  }, [register])
+
 
   return (
     <RegisterForm

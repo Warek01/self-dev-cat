@@ -1,10 +1,11 @@
 import { FC, memo, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { xor } from "@helpers/xor";
+import { getAccessToken } from '@helpers'
+import { xor } from '@helpers/xor'
 import { LoadingScreen } from '@components'
 import { AppRoute } from '@enums'
-import { useGetCurrentUserQuery } from '@slices/currentUser/currentUser.slice'
+import { useGetCurrentUserQuery } from '@apis'
 import type { AuthPrivateRouteProps } from './AuthPrivateRoute.types'
 
 export const AuthPrivateRoute: FC<AuthPrivateRouteProps> = memo(
@@ -14,15 +15,15 @@ export const AuthPrivateRoute: FC<AuthPrivateRouteProps> = memo(
     const navigate = useNavigate()
     const location = useLocation()
     const currentUser = useGetCurrentUserQuery(null, {
-      skip: !localStorage.getItem('access_token'),
+      skip: !getAccessToken(),
     })
 
     useEffect(() => {
-      if (xor(inverse, !localStorage.getItem('access_token')) && location.pathname !== to) {
+      if (xor(inverse, !getAccessToken()) && location.pathname !== to) {
         navigate(to)
       }
     })
 
-    return currentUser.isLoading ? <LoadingScreen /> :<Component />
+    return currentUser.isLoading ? <LoadingScreen /> : <Component />
   },
 )

@@ -12,12 +12,10 @@ import {
   DeleteAllMessagesDto,
   DeleteMessageDto,
   JoinRoomRequestDto,
-  JoinRoomResponseDto,
-  OperationStatusDto, ReceiveMessageDto,
+  ReceiveMessageDto,
   SendMessageDto,
 } from './Dtos'
 import { ChatWsEvent } from '@/Chat/Enums/ChatWsEvent'
-import { MessageDto } from "@/Message/Dtos";
 
 @WebSocketGateway({
   namespace: 'chat',
@@ -37,12 +35,12 @@ export class ChatGateway {
     }
   }
 
-  @SubscribeMessage(ChatWsEvent.JOIN_ROOM)
+  @SubscribeMessage(ChatWsEvent.JOIN_ROOMS)
   joinRoom(
     @MessageBody() dto: JoinRoomRequestDto,
     @ConnectedSocket() socket: Socket,
-  ): Promise<WsResponse<JoinRoomResponseDto>> {
-    return this._chatService.joinRoom(socket, dto.groupId, dto.userId)
+  ): Promise<void> {
+    return this._chatService.joinRooms(socket, dto.groupIds)
   }
 
   @SubscribeMessage(ChatWsEvent.SEND_MESSAGE)
@@ -65,7 +63,7 @@ export class ChatGateway {
   deleteAllMessages(
     @MessageBody() dto: DeleteAllMessagesDto,
     @ConnectedSocket() socket: Socket,
-  ): void {
-    this._chatService.deleteAllMessages(dto, socket)
+  ): WsResponse<DeleteAllMessagesDto> {
+    return this._chatService.deleteAllMessages(dto, socket)
   }
 }

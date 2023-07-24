@@ -1,10 +1,10 @@
-import { AppRoute } from '@enums'
 import { FormikHelpers } from 'formik'
 import { FC, memo, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useLazyLoginQuery } from '@slices'
+import { useLazyLoginQuery } from "@apis";
+import { AppRoute } from '@enums'
 import { LoginForm } from '@components'
 import { LoginValues } from '@components/LoginForm/LoginForm.types'
 import { loginSchema } from '@validation-schemas'

@@ -3,11 +3,12 @@ import { FC, memo, useCallback } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import icons from '@icons'
+import { userApi } from "@apis";
 import { authorLinks } from '@constants/links/authorLinks'
 import { headerLinks } from '@constants/links/headerLinks'
 import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
-import { currentUserApi, setSideMenuOpened } from '@slices'
+import { setSideMenuOpened } from '@slices'
 import { Button, IconLink } from '@components'
 import { disabledForPaths } from './SideMenu.constants'
 
@@ -24,7 +25,7 @@ export const SideMenu: FC = memo(() => {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('access_token')
-    currentUserApi.util.resetApiState()
+    userApi.util.resetApiState()
     dispatch(setSideMenuOpened(false))
     navigate(AppRoute.LOGIN)
   }, [])

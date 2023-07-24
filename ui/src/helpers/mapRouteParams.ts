@@ -5,7 +5,7 @@ export const mapRouteParams = (
   let parsedRoute = route
 
   Object.entries(paramValues).map(([key, value]) => {
-    parsedRoute = parsedRoute.replace(`:${key}`, value.toString())
+    parsedRoute = parsedRoute.replace(`:${key}`, String(value))
   })
 
   return parsedRoute

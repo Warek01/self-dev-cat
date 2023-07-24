@@ -1,15 +1,29 @@
+export interface Message {
+  id: number
+  user: {
+    id: number
+  }
+  content?: string
+  type: string
+  fileNames: string[]
+  replies: Message[]
+  repliesTo: Message
+  createdAt: string
+  updatedAt: string
+}
+
 export interface JoinRoomResponse {
   success: boolean
   error?: unknown
   username?: string
-  groupId?: number
+  groupIds?: number[]
   groupName?: string
   userId?: number
 }
 
 export interface JoinRoomRequest {
   userId: number
-  groupId: number
+  groupIds: number[]
 }
 
 export interface SendMessage {
@@ -24,5 +38,9 @@ export interface DeleteMessage {
 
 export interface DeleteMessageRequest {
   messageId: number
+  groupId: number
+}
+
+export interface DeleteAllMessages {
   groupId: number
 }

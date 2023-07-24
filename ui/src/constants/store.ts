@@ -2,22 +2,19 @@ import type { ReducersMapObject } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
 
 import layoutReducer from '@slices/layout/layout.slice'
-import { currentUserApi } from '@slices/currentUser/currentUser.slice'
-import chatReducer from '@slices/chat/chat.slice'
-import usersReducer from '@slices/users/users.slice'
+import { chatApi, userApi } from '@apis'
 
 const reducer: ReducersMapObject = {
   layout: layoutReducer,
-  chat: chatReducer,
-  users: usersReducer,
-  [currentUserApi.reducerPath]: currentUserApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
+  [chatApi.reducerPath]: chatApi.reducer,
 }
 
 export const store = configureStore({
   reducer,
   devTools: true,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(currentUserApi.middleware),
+    getDefaultMiddleware().concat([userApi.middleware, chatApi.middleware]),
 })
 
 export type RootState = ReturnType<typeof store.getState>
