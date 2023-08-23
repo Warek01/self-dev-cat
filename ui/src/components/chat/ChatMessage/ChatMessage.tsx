@@ -1,11 +1,14 @@
 import { forwardRef, memo } from 'react'
 import { twMerge } from 'tailwind-merge'
+import { useFloating } from '@floating-ui/react'
 
 import type { ChatMessageProps } from './ChatMessage.types'
 
 export const ChatMessage = memo(
   forwardRef<HTMLDivElement, ChatMessageProps>((props, ref) => {
     const { message, onDelete, className, fromCurrentUser } = props
+
+    const { floatingStyles, refs } = useFloating()
 
     return (
       <main
@@ -16,6 +19,7 @@ export const ChatMessage = memo(
         )}
       >
         <div
+          ref={refs.setReference}
           onMouseDownCapture={(e) => e.stopPropagation()}
           className={twMerge(
             'relative py-1 px-3 rounded-full',
@@ -25,6 +29,9 @@ export const ChatMessage = memo(
             className,
           )}
         >
+          <div ref={refs.setFloating} style={floatingStyles}>
+            Tooltip
+          </div>
           <span className="whitespace-pre-wrap break-words">
             {message.content}
           </span>

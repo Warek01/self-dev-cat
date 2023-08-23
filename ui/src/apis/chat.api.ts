@@ -7,7 +7,13 @@ import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
 import { getAccessToken } from '@helpers'
 
+enum Tag {
+  MESSAGE = 'message',
+  MESSAGE_GROUP = 'message-group'
+}
+
 export const chatApi = createApi({
+  tagTypes: ['message', 'message-group'],
   reducerPath: 'chat',
   refetchOnReconnect: true,
   refetchOnFocus: true,
@@ -29,6 +35,7 @@ export const chatApi = createApi({
       ApiFindResponse<Message>,
       ApiPaginationRequest<{ groupId: number }>
     >({
+      providesTags: [Tag.MESSAGE],
       query: (dto) => ({
         url: '/message/all',
         params: dto,
@@ -61,6 +68,7 @@ export const chatApi = createApi({
     }),
 
     sendMessage: builder.mutation<SendMessage, SendMessage>({
+      invalidatesTags: [Tag.MESSAGE],
       queryFn: (dto) => {
         return new Promise((resolve) => {
           chatSocket.emit(ChatWsEvent.SEND_MESSAGE, dto)
@@ -70,6 +78,7 @@ export const chatApi = createApi({
     }),
 
     deleteAllMessages: builder.mutation<DeleteAllMessages, DeleteAllMessages>({
+      invalidatesTags: [Tag.MESSAGE],
       queryFn: (dto) => {
         return new Promise((resolve) => {
           chatSocket.emit(ChatWsEvent.DELETE_ALL_MESSAGES, dto)
@@ -82,6 +91,7 @@ export const chatApi = createApi({
       ApiFindResponse<MessageGroup>,
       ApiPaginationRequest<{}>
     >({
+      providesTags: [Tag.MESSAGE_GROUP],
       query: (dto) => ({
         url: '/message-group/all',
         params: dto,
@@ -89,12 +99,14 @@ export const chatApi = createApi({
     }),
 
     getOneMessageGroup: builder.query<MessageGroup, number>({
+      providesTags: [Tag.MESSAGE_GROUP],
       query: (id) => ({
         url: `/message-group/${id}`,
       }),
     }),
 
     createMessageGroup: builder.mutation<MessageGroup, CreateMessageGroup>({
+      invalidatesTags: [Tag.MESSAGE_GROUP],
       query: (dto) => ({
         url: `/message-group`,
         body: dto,
@@ -113,4 +125,5 @@ export const {
   useLazyGetOneMessageGroupQuery,
   useSendMessageMutation,
   useDeleteAllMessagesMutation,
+  usePrefetch,
 } = chatApi

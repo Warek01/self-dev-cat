@@ -17,9 +17,6 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "types": [
-      "./src/Types"
-    ],
     "esModuleInterop": true,
     "allowUnreachableCode": false,
     "allowUmdGlobalAccess": false,

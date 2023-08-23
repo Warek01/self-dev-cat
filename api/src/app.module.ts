@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import 'multer'
 
 import { FriendRequestModule } from '@/FriendRequest/FriendRequest.module'
 import { MessageGroupModule } from '@/MessageGroup/MessageGroup.module'
@@ -14,6 +15,7 @@ import { BlogModule } from '@/Blog/blog.module'
 import { MessageModule } from '@/Message/message.module'
 import config from '@/Config/Debug'
 import { ChatModule } from '@/Chat/chat.module'
+import { FileModule } from '@/File/File.module'
 
 @Module({
   imports: [
@@ -46,6 +48,7 @@ import { ChatModule } from '@/Chat/chat.module'
     MessageModule,
     MessageGroupModule,
     ChatModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [],
