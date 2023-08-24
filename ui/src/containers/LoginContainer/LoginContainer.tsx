@@ -3,11 +3,12 @@ import { FC, memo, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-import { useLazyLoginQuery } from "@apis";
+import { useLazyLoginQuery } from '@apis'
 import { AppRoute } from '@enums'
-import { LoginForm } from '@components'
+import { AnimateOnMount, LoginForm } from '@components'
 import { LoginValues } from '@components/LoginForm/LoginForm.types'
 import { loginSchema } from '@validation-schemas'
+import {localStorageHelper} from "@helpers/localStorageHelper";
 
 export const LoginContainer: FC = memo(() => {
   const navigate = useNavigate()
@@ -26,16 +27,18 @@ export const LoginContainer: FC = memo(() => {
       toast('Login error', { type: 'error' })
       console.error(login.error)
     } else if (login.data) {
-      localStorage.setItem('access_token', login.data!.access_token)
+      localStorageHelper.accessToken = login.data!.access_token
       navigate(AppRoute.ROOT)
     }
   }, [login])
 
   return (
-    <LoginForm
-      validationSchema={loginSchema}
-      onSubmit={handleLogin}
-      initialValues={{ username: '', password: '' }}
-    />
+    <AnimateOnMount>
+      <LoginForm
+        validationSchema={loginSchema}
+        onSubmit={handleLogin}
+        initialValues={{ username: '', password: '' }}
+      />
+    </AnimateOnMount>
   )
 })

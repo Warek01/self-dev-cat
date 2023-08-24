@@ -1,25 +1,26 @@
-import { FC, memo, useCallback, useState } from 'react'
+import { FC, memo, useCallback } from 'react'
 
 import { useDeleteAllMessagesMutation, useGetCurrentUserQuery } from '@apis'
 import icons from '@icons'
 import { AppRoute } from '@enums/AppRoute'
-import { Button, ModalWindow } from '@components'
+import { Button } from '@components'
 import type { ChatHeaderProps } from './ChatHeader.types'
+import { useAppDispatch } from '@hooks'
+import { openModal } from '@slices'
 
 export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
-  const [settingsOpen, setSettingsOpen] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
   const user = useGetCurrentUserQuery()
   const [deleteAllMessages] = useDeleteAllMessagesMutation()
 
   const handleDeleteMessages = useCallback(async () => {
     deleteAllMessages({ groupId: group!.id })
-    setSettingsOpen(false)
   }, [group])
 
-  return (
-    <>
-      {settingsOpen && (
-        <ModalWindow onClose={() => setSettingsOpen(false)}>
+  const openSettings = useCallback(() => {
+    dispatch(
+      openModal(
+        <>
           <h2>Group settings</h2>
           <section className="border-t border-black/10 dark:border-dark-white/10 py-3 flex flex-col gap-3 items-start">
             <Button text="Change icon" />
@@ -35,38 +36,40 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
               disabled
             />
           </section>
-        </ModalWindow>
-      )}
+        </>,
+      ),
+    )
+  }, [handleDeleteMessages, group, user])
 
-      <main className="border-b p-3 flex items-center justify-between gap-3 border-black/10 dark:border-dark-white/10">
-        <section className="flex items-center flex-1 justify-start gap-3">
-          <div>
-            <Button
-              type="link"
-              to="info"
-              Icon={icons.User}
-              iconSize={24}
-              circle
-            />
-          </div>
-          <span>{group?.name}</span>
-        </section>
-        <section className="flex items-center justify-end gap-3">
+  return (
+    <main className="border-b p-3 flex items-center justify-between gap-3 border-black/10 dark:border-dark-white/10">
+      <section className="flex items-center flex-1 justify-start gap-3">
+        <div>
           <Button
-            circle
-            Icon={icons.ArrowLeft}
             type="link"
-            to={AppRoute.CHAT}
+            to="info"
+            Icon={icons.User}
             iconSize={24}
-          />
-          <Button
             circle
-            Icon={icons.Settings}
-            iconSize={24}
-            onClick={() => setSettingsOpen(true)}
           />
-        </section>
-      </main>
-    </>
+        </div>
+        <span>{group?.name}</span>
+      </section>
+      <section className="flex items-center justify-end gap-3">
+        <Button
+          circle
+          Icon={icons.ArrowLeft}
+          type="link"
+          to={AppRoute.CHAT}
+          iconSize={24}
+        />
+        <Button
+          circle
+          Icon={icons.Settings}
+          iconSize={24}
+          onClick={openSettings}
+        />
+      </section>
+    </main>
   )
 })

@@ -1,14 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ReactElement } from 'react'
 
-import { OpenedModalWindow } from "@enums";
 import type { RootState } from '@constants/store'
 import type { LayoutSliceProps } from './layout.slice.types'
+import { localStorageHelper } from '@helpers/localStorageHelper'
 
 const initialState: LayoutSliceProps = {
   isSideMenuOpened: false,
   isMobile: false,
-  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light',
-  openedModalWindow: null,
+  theme: localStorageHelper.theme,
+  modalWindowElement: null,
+  isModalWindowOpened: false,
+  isChatSelectCollapsed: localStorageHelper.isChatSelectCollapsed,
 }
 
 export const layoutSlice = createSlice({
@@ -23,13 +26,15 @@ export const layoutSlice = createSlice({
     },
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light'
-      localStorage.setItem('theme', state.theme)
+      localStorageHelper.theme = state.theme
     },
-    openModal: (state, action: PayloadAction<OpenedModalWindow | null>) => {
-      state.openedModalWindow = action.payload
+    openModal: (state, action: PayloadAction<ReactElement | null>) => {
+      state.modalWindowElement = action.payload
+      state.isModalWindowOpened = true
     },
     closeModal: (state) => {
-      state.openedModalWindow = null
+      state.modalWindowElement = null
+      state.isModalWindowOpened = false
     },
   },
 })

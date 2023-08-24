@@ -28,7 +28,6 @@ import {
 
 import { AuthService } from '@/Auth/auth.service'
 import { RequestResponse } from '@/Constans'
-import { User } from '@/Entities'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
 import {

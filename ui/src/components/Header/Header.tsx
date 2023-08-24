@@ -1,7 +1,7 @@
 import { FC, memo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-import { getAccessToken, mapRouteParams } from '@helpers'
+import { mapRouteParams } from '@helpers'
 import icons from '@icons'
 import { unprotectedPages } from '@constants/pages/unprotectedPages'
 import { selectTheme, setSideMenuOpened, toggleTheme } from '@slices'
@@ -9,6 +9,7 @@ import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
 import { Button } from '@components'
 import { useGetCurrentUserQuery } from '@apis'
+import {localStorageHelper} from "@helpers/localStorageHelper";
 
 export const Header: FC = memo(() => {
   const dispatch = useAppDispatch()
@@ -17,7 +18,7 @@ export const Header: FC = memo(() => {
   const isUnprotectedLocation = unprotectedPages.includes(location.pathname)
 
   const user = useGetCurrentUserQuery(null, {
-    skip: !getAccessToken(),
+    skip: !localStorageHelper.accessToken,
   })
   const theme = useAppSelector(selectTheme)
 

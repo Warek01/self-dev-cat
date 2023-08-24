@@ -6,7 +6,7 @@ import type { AnimateProps } from './Animate.types'
 import { animationMap, durationMap } from './Animate.constants'
 
 export const Animate: FC<PropsWithChildren<AnimateProps>> = memo(
-  ({ show, children, duration = 150, animation = 'fade' }) => {
+  ({ show, children, duration = 150, animation = 'fade & scale' }) => {
     const [innerShow, setInnerShow] = useState(false)
     const timeoutRef = useRef<number>()
 

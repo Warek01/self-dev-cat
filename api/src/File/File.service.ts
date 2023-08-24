@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import Sharp from 'sharp'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Message, File } from '@/Entities'
+import { UploadFilesFromMessageDto } from '@/File/Dtos'
 
 @Injectable()
 export class FileService {
@@ -13,9 +14,30 @@ export class FileService {
   ) {}
 
   public async save(
-    files: Express.Multer.File | Array<Express.Multer.File>,
+    files: Array<Express.Multer.File>,
+    body: UploadFilesFromMessageDto,
   ): Promise<void> {
-    console.log(files)
+    files.forEach((file) => {
+      !(async () => {
+        const entity = this._fileRepo.create()
+        entity.buffer = ('\\x' + file.buffer.toString('hex')) as any
+        entity.name = file.originalname
+        entity.size = file.size
+        entity.mime = file.mimetype
+
+        const message = await this._messageRepo.findOneBy({
+          id: body.messageId,
+        })
+
+        if (!message) {
+          throw new NotFoundException(`message ${body.messageId} not found`)
+        }
+
+        entity.message = message
+
+        await this._fileRepo.save(entity)
+      })()
+    })
   }
 
   public resize(instance: Sharp.Sharp): Sharp.Sharp {

@@ -5,7 +5,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import { pagesConfig } from '@constants/pages/pagesConfig'
 import { store } from '@constants/store'
-
 import '@styles/index.sass'
 
 const theme = store.getState().layout.theme

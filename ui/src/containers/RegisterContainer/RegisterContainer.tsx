@@ -1,14 +1,15 @@
 import { FormikHelpers } from 'formik'
 import { FC, memo, useCallback, useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
-import { AppRoute } from "@enums";
-import { useRegisterUserMutation } from "@apis";
+import { AppRoute } from '@enums'
+import { useRegisterUserMutation } from '@apis'
 import type { LoginValues } from '@components/LoginForm/LoginForm.types'
 import type { RegisterValues } from '@components/RegisterForm/RegisterForm.types'
 import { registerSchema } from '@validation-schemas'
-import { RegisterForm } from '@components'
+import { AnimateOnMount, RegisterForm } from '@components'
+import { localStorageHelper } from '@helpers/localStorageHelper'
 
 export const RegisterContainer: FC = memo(() => {
   const navigate = useNavigate()
@@ -28,27 +29,28 @@ export const RegisterContainer: FC = memo(() => {
     },
     [],
   )
-    useEffect(() => {
+  useEffect(() => {
     if (register.isError) {
       toast('Login error', { type: 'error' })
       console.error(register.error)
     } else if (register.data) {
-      localStorage.setItem('access_token', register.data!.access_token)
+      localStorageHelper.accessToken = register.data!.access_token
       navigate(AppRoute.ROOT)
     }
   }, [register])
 
-
   return (
-    <RegisterForm
-      validationSchema={registerSchema}
-      initialValues={{
-        password: '',
-        passwordConfirm: '',
-        username: '',
-        email: '',
-      }}
-      onSubmit={handleRegistration}
-    />
+    <AnimateOnMount>
+      <RegisterForm
+        validationSchema={registerSchema}
+        initialValues={{
+          password: '',
+          passwordConfirm: '',
+          username: '',
+          email: '',
+        }}
+        onSubmit={handleRegistration}
+      />
+    </AnimateOnMount>
   )
 })

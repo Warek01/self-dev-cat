@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "incremental": true,
@@ -21,10 +17,7 @@
     "watch": false,
     "removeComments": true,
     "moduleDetection": "auto",
-    "types": [
-      "vite/client"
-    ],
-
+    "types": ["vite/client"],
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
@@ -77,9 +70,8 @@
       "@apis/*": ["./apis.*"],
       "@apis": ["./apis/index"],
       "@/*": ["./*"],
-      "@": ["./index"],
+      "@": ["./index"]
     },
-
     /* Linting */
     "strict": true,
     "alwaysStrict": true,
@@ -99,12 +91,8 @@
     "useUnknownInCatchVariables": true,
     "noPropertyAccessFromIndexSignature": false
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "**/node_modules"
-  ],
+  "include": ["src"],
+  "exclude": ["**/node_modules"],
   "references": [
     {
       "path": "./tsconfig.node.json"

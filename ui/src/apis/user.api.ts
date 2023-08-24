@@ -1,11 +1,11 @@
-import { getAccessToken } from "@helpers";
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import type { User } from '@/types/User'
 import type { LoginCredentials, RegisterCredentials } from '@/types/Auth'
 import type { FriendRequest } from '@/types/FriendRequest'
 import type { JwtResponse } from '@/types/JwtResponse'
-import { ApiFindResponse } from "../types/Api";
+import type { ApiFindResponse } from '@/types/Api'
+import { localStorageHelper } from '@helpers/localStorageHelper'
 
 export const userApi = createApi({
   reducerPath: 'user',
@@ -15,10 +15,8 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers) => {
-      const token = getAccessToken()
-
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
+      if (localStorageHelper.accessToken) {
+        headers.set('Authorization', `Bearer ${localStorageHelper.accessToken}`)
       }
 
       return headers

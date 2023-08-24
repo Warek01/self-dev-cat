@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 
-type UseGlobalListener = (event: string, callback: Function) => void
+type UseOnWindow = (event: keyof WindowEventMap, callback: Function) => void
 
-export const useGlobalListener: UseGlobalListener = (event, callback) => {
+export const useOnWindow: UseOnWindow = (event, callback) => {
   useEffect(() => {
     window.addEventListener(event, callback as EventListener)
 

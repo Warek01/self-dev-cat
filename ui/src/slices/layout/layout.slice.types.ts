@@ -1,8 +1,12 @@
-import type { OpenedModalWindow } from "@enums";
+import type { ReactElement } from 'react'
+
+import type { Theme } from '@/types/Theme'
 
 export interface LayoutSliceProps {
-  theme: 'dark' | 'light'
+  theme: Theme
   isSideMenuOpened: boolean
+  isChatSelectCollapsed: boolean
   isMobile: boolean
-  openedModalWindow: OpenedModalWindow | null
+  modalWindowElement: ReactElement | null
+  isModalWindowOpened: boolean
 }

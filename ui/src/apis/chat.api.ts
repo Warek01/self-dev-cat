@@ -5,11 +5,11 @@ import { chatSocket } from '@ws/sockets/chatSocket'
 import type { DeleteAllMessages, Message, SendMessage } from '@/types/Chat'
 import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
-import { getAccessToken } from '@helpers'
+import { localStorageHelper } from '@helpers/localStorageHelper'
 
 enum Tag {
   MESSAGE = 'message',
-  MESSAGE_GROUP = 'message-group'
+  MESSAGE_GROUP = 'message-group',
 }
 
 export const chatApi = createApi({
@@ -21,10 +21,8 @@ export const chatApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers) => {
-      const token = getAccessToken()
-
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
+      if (localStorageHelper.accessToken) {
+        headers.set('Authorization', `Bearer ${localStorageHelper.accessToken}`)
       }
 
       return headers

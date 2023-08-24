@@ -8,14 +8,14 @@ export class File extends Base {
   @Column({ type: 'varchar', length: 255 })
   name: string
 
-  @Column({ type: 'varchar', length: 255 })
-  extension: string
-
   @Column({ type: 'int' })
   size: number
 
+  @Column({ type: 'varchar', length: 255 })
+  mime: string
+
   @Column({ type: 'bytea' })
-  bytes: number[]
+  buffer: Buffer
 
   @ManyToOne(() => Message)
   message: Message
