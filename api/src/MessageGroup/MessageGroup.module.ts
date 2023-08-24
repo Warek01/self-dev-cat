@@ -6,9 +6,7 @@ import { MessageGroupService } from './MessageGroup.service'
 import {MessageGroup, User} from '@/Entities'
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([MessageGroup, User])
-  ],
+  imports: [TypeOrmModule.forFeature([MessageGroup, User])],
   providers: [MessageGroupService],
   controllers: [MessageGroupController],
   exports: [MessageGroupService],

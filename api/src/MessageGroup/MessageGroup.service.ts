@@ -17,7 +17,7 @@ import {
 } from '@/MessageGroup/Dtos'
 import { UserService } from '@/User/user.service'
 import { UserCredentials } from '@/Types/RequestWithUser'
-import { UserDto } from '../User/Dtos'
+import { UserDto } from '@/User/Dtos'
 import { RequestCreateGroupDto } from './Dtos/RequestCreateGroup.dto'
 
 @Injectable()
@@ -25,8 +25,6 @@ export class MessageGroupService {
   constructor(
     @InjectRepository(MessageGroup)
     private readonly _messageGroupRepo: Repository<MessageGroup>,
-    @InjectRepository(User)
-    private readonly _usersRepo: Repository<User>,
     @Inject(forwardRef(() => UserService))
     private readonly _userService: UserService,
   ) {}

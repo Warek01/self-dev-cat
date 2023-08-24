@@ -89,8 +89,15 @@ export class MessageService {
           id: true,
         },
         createdAt: true,
-        fileNames: true,
         type: true,
+        attachments: {
+          id: true,
+          createdAt: true,
+          mime: true,
+          name: true,
+          updatedAt: true,
+          size: true,
+        },
       },
     })
 

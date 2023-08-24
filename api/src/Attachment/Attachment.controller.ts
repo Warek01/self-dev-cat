@@ -1,33 +1,46 @@
 import {
   Body,
   Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
+  Req,
+  StreamableFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { FileService } from '@/File/File.service'
 import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger'
 import { FilesInterceptor } from '@nestjs/platform-express'
 
+import { AttachmentService } from '@/Attachment/Attachment.service'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
-import { UploadFilesFromMessageDto } from '../../dist/src/File/Dtos'
+import { UploadFilesFromMessageDto } from '@/Attachment/Dtos'
+import { RequestWithUser } from '@/Types/RequestWithUser'
 
-@ApiTags('File')
-@Controller('file')
-export class FileController {
-  constructor(private _fileService: FileService) {}
+@ApiTags('Attachments')
+@Controller('attachment')
+export class AttachmentController {
+  constructor(private _fileService: AttachmentService) {}
 
   @Post('from-message')
   @ApiOperation({
-    description: 'Post a file',
+    description: 'Post an attachment',
   })
+  @HttpCode(HttpStatus.CREATED)
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
   @ApiBody({
     type: 'multipart/form-data',
     required: true,
@@ -56,5 +69,21 @@ export class FileController {
     @Body() body: UploadFilesFromMessageDto,
   ): Promise<void> {
     return this._fileService.save(files, body)
+  }
+
+  @Get('get/:id')
+  @ApiOperation({
+    description: 'Get an attachment from a message',
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiBearerAuth()
+  @UseGuards(BearerAuthGuard)
+  getFile(
+    @Param('id', ParseIntPipe) fileId: number,
+    @Req() req: RequestWithUser,
+  ): Promise<StreamableFile> {
+    return this._fileService.streamFile(fileId, req.user.userId)
   }
 }

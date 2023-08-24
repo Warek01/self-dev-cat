@@ -4,15 +4,12 @@ import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { User } from '@/Entities/User.entity'
 import { MessageType } from '@/Message/Enums/MessageType.enum'
 import { Base } from './Helpers'
-import { File } from '@/Entities/File.entity'
+import { Attachment } from '@/Entities/Attachment.entity'
 
 @Entity()
 export class Message extends Base {
   @Column({ type: 'varchar', nullable: true })
   content?: string
-
-  @Column({ type: 'varchar', array: true, nullable: true })
-  fileNames?: string[]
 
   @Column({ type: 'enum', enum: MessageType, default: MessageType.DEFAULT })
   type: MessageType
@@ -37,6 +34,6 @@ export class Message extends Base {
   @OneToMany(() => Message, (message) => message.repliesTo)
   replies: Message[]
 
-  @OneToMany(() => File, (file) => file.message)
-  attachments: File[]
+  @OneToMany(() => Attachment, (file) => file.message)
+  attachments: Attachment[]
 }

@@ -15,7 +15,7 @@ import { BlogModule } from '@/Blog/blog.module'
 import { MessageModule } from '@/Message/message.module'
 import config from '@/Config/Debug'
 import { ChatModule } from '@/Chat/chat.module'
-import { FileModule } from '@/File/File.module'
+import { AttachmentModule } from '@/Attachment/Attachment.module'
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ import { FileModule } from '@/File/File.module'
     MessageModule,
     MessageGroupModule,
     ChatModule,
-    FileModule,
+    AttachmentModule,
   ],
   controllers: [AppController],
   providers: [],
