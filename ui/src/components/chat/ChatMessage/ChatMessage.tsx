@@ -1,16 +1,15 @@
 import { forwardRef, memo } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { useFloating } from '@floating-ui/react'
 
 import type { ChatMessageProps } from './ChatMessage.types'
+import { ChatMessageAttachment } from '@components/chat'
 
 export const ChatMessage = memo(
   forwardRef<HTMLDivElement, ChatMessageProps>((props, ref) => {
     const { message, onDelete, className, fromCurrentUser } = props
+    const hasAttachments = !!message.attachments?.length
 
-    const { floatingStyles, refs } = useFloating()
-
-    return (
+    return message.content || hasAttachments ? (
       <main
         ref={ref}
         className={twMerge(
@@ -19,24 +18,32 @@ export const ChatMessage = memo(
         )}
       >
         <div
-          ref={refs.setReference}
           onMouseDownCapture={(e) => e.stopPropagation()}
           className={twMerge(
-            'relative py-1 px-3 rounded-full',
+            'relative py-1.5 px-4 rounded-3xl flex flex-col w-fit max-w-[66.666%] lg:max-w-[40%]',
             fromCurrentUser
               ? 'bg-heading-green rounded-br-none'
               : 'bg-black/10 dark:bg-dark-white/10 rounded-bl-none',
             className,
           )}
         >
-          <div ref={refs.setFloating} style={floatingStyles}>
-            Tooltip
-          </div>
-          <span className="whitespace-pre-wrap break-words">
-            {message.content}
-          </span>
+          {message.content && (
+            <span className="whitespace-pre-wrap break-words">
+              {message.content}
+            </span>
+          )}
+          {hasAttachments && (
+            <section className="flex flex-col gap-2 py-2">
+              {message.attachments!.map((attachment) => (
+                <ChatMessageAttachment
+                  attachment={attachment}
+                  key={attachment.id}
+                />
+              ))}
+            </section>
+          )}
         </div>
       </main>
-    )
+    ) : null
   }),
 )

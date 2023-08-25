@@ -1,9 +1,9 @@
-import { IsInt } from 'class-validator'
+import {IsInt, IsUUID} from 'class-validator'
 
 export class DeleteMessageDto {
-  @IsInt()
-  messageId: number
+  @IsUUID('4')
+  messageId: string
 
-  @IsInt()
-  groupId: number
+  @IsUUID('4')
+  groupId: string
 }

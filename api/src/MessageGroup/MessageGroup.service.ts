@@ -32,7 +32,7 @@ export class MessageGroupService {
   public async createGroup(
     dto: RequestCreateGroupDto,
   ): Promise<MessageGroupDto> {
-    const { userIds, rootUserId, name } = dto
+    const { userIds, rootUserId, name, groupId } = dto
 
     const rootUser: UserDto = await this._userService.getUserOrThrow(rootUserId)
 
@@ -43,6 +43,7 @@ export class MessageGroupService {
     const room: MessageGroup = this._messageGroupRepo.create()
     const rootUserEntity: User = plainToInstance(User, rootUser)
 
+    room.id = groupId
     room.users = [rootUserEntity]
     room.rootUser = rootUserEntity
     room.name = name
@@ -58,7 +59,7 @@ export class MessageGroupService {
   }
 
   public async getGroup(
-    id: number,
+    id: string,
     relations: FindOptionsRelations<MessageGroup> = {},
   ): Promise<MessageGroupDto | null> {
     const group: MessageGroup | null = await this._messageGroupRepo.findOne({
@@ -74,7 +75,7 @@ export class MessageGroupService {
   }
 
   public async getGroupOrThrow(
-    id: number,
+    id: string,
     relations: FindOptionsRelations<MessageGroup> = {},
   ): Promise<MessageGroupDto> {
     const group: MessageGroupDto | null = await this.getGroup(id, relations)
@@ -86,7 +87,7 @@ export class MessageGroupService {
     return group
   }
 
-  public async containsUser(groupId: number, userId: number): Promise<boolean> {
+  public async containsUser(groupId: string, userId: string): Promise<boolean> {
     const group: MessageGroupDto = await this.getGroupOrThrow(groupId, {
       users: true,
     })
@@ -136,7 +137,7 @@ export class MessageGroupService {
 
   public async find(
     user: UserCredentials,
-    id: number,
+    id: string,
   ): Promise<MessageGroupDto> {
     if (!(await this.containsUser(id, user.userId))) {
       throw new BadRequestException('user not in current group')

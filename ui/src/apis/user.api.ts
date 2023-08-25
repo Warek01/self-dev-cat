@@ -38,18 +38,19 @@ export const userApi = createApi({
       query: (dto) => ({
         url: '/user/create',
         body: dto,
+        method: 'POST',
       }),
     }),
 
-    getFriends: builder.query<ApiFindResponse<User>, number>({
+    getFriends: builder.query<ApiFindResponse<User>, string>({
       query: (id) => `/user/${id}/friends`,
     }),
 
-    getFriendRequests: builder.query<FriendRequest, number>({
+    getFriendRequests: builder.query<FriendRequest, string>({
       query: (id) => `/user/${id}/friend-requests`,
     }),
 
-    getUser: builder.query<User, number>({
+    getUser: builder.query<User, string>({
       query: (id) => `/user/${id}`,
     }),
   }),

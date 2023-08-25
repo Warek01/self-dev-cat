@@ -1,8 +1,19 @@
-import { Entity } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
-import { Base } from './Helpers';
-
-@Entity()
-export class Post extends Base {
+@Entity('posts')
+export class Post {
   // TODO: populate
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

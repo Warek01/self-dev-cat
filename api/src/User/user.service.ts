@@ -29,7 +29,7 @@ import { UserWsEvent } from '@/User/Enums/UserWsEvent'
 
 @Injectable()
 export class UserService {
-  public readonly onlineUserIds: Record<number, NodeJS.Timeout> = {}
+  public readonly onlineUserIds: Record<string, NodeJS.Timeout> = {}
 
   constructor(
     @InjectRepository(User)
@@ -178,7 +178,7 @@ export class UserService {
   }
 
   public async getUser(
-    id: number,
+    id: string,
     relations?: FindOptionsRelations<User>,
     select?: FindOptionsSelect<User>,
   ): Promise<UserDto | null> {
@@ -196,7 +196,7 @@ export class UserService {
   }
 
   public async getUserOrThrow(
-    id: number,
+    id: string,
     relations?: FindOptionsRelations<User>,
     select?: FindOptionsSelect<User>,
   ): Promise<UserDto> {
@@ -216,9 +216,9 @@ export class UserService {
   ): WsResponse<PingUsersStatusResponseDto> {
     const statuses: OnlineStatusIdMap[] = []
 
-    dto.ids.forEach((id: number): void => {
+    dto.ids.forEach((id) => {
       statuses.push({
-        id,
+        userId: id,
         online: !!this.onlineUserIds[id] ?? false,
       })
     })
@@ -231,7 +231,7 @@ export class UserService {
     }
   }
 
-  public async getFriends(id: number): Promise<GetFriendsResponseDto> {
+  public async getFriends(id: string): Promise<GetFriendsResponseDto> {
     const user = await this._userRepo.findOne({
       where: {
         id,
@@ -260,7 +260,7 @@ export class UserService {
     } as GetFriendsResponseDto)
   }
 
-  private _setIsOnline(id: number): void {
+  private _setIsOnline(id: string): void {
     clearTimeout(this.onlineUserIds[id])
 
     this.onlineUserIds[id] = setTimeout(() => {

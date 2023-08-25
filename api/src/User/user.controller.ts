@@ -10,7 +10,7 @@ import {
   NotFoundException,
   NotImplementedException,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -133,7 +133,7 @@ export class UserController {
   @Get(':id/friends')
   @HttpCode(HttpStatus.OK)
   getFriends(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<GetFriendsResponseDto> {
     return this._userService.getFriends(id)
   }

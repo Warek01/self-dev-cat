@@ -1,15 +1,17 @@
 import type { User } from './User'
 
 export interface MessageGroup {
-  id: number
+  id: string
   users: User[]
   rootUser: User
   name: string
   createdAt: string
+  updatedAt: string
 }
 
 export interface CreateMessageGroup {
-  rootUserid: number
+  groupId?: string
+  rootUserid: string
   name?: string
-  userIds: number[]
+  userIds: string[]
 }

@@ -1,18 +1,21 @@
 import {
-  Column,
+  Column, CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm'
 
 import { User } from '@/Entities/User.entity'
 import { Message } from '@/Entities/Message.entity'
-import { Base } from '@/Entities/Helpers'
 
-@Entity()
-export class MessageGroup extends Base {
+@Entity('message_groups')
+export class MessageGroup {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @OneToMany(() => Message, (message) => message.group)
   messages: Message[]
 
@@ -34,4 +37,10 @@ export class MessageGroup extends Base {
     default: () => 'CURRENT_TIMESTAMP',
   })
   lastMessageTimestamp: Date
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

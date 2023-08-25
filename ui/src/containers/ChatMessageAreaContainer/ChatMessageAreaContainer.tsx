@@ -1,41 +1,59 @@
 import { FC, memo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { v4 as uuid } from 'uuid'
 
 import icons from '@icons'
 import {
   useGetCurrentUserQuery,
   useGetOneMessageGroupQuery,
+  usePostAttachmentsMutation,
   useSendMessageMutation,
 } from '@apis'
 import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
 
 export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
-  const groupId: number = parseInt(params['groupId']!)
+  const groupId = params['groupId']!
 
   const user = useGetCurrentUserQuery()
   const currentGroup = useGetOneMessageGroupQuery(groupId)
   const [sendMessage] = useSendMessageMutation()
+  const [postAttachments] = usePostAttachmentsMutation()
 
   const handleMessageSend = useCallback(
-    async (text: string, files: File[]) => {
-      const trimmedText = text.trim()
+    async (text: string, files?: File[]) => {
+      const trimmedText = text.trim() || null
 
-      if (!user.data || !trimmedText) {
-        return
+      if (!user.data) {
+        throw new Error(`user data missing`)
       }
 
-      try {
-        await sendMessage({
-          content: trimmedText,
-          userId: user.data.id,
-          groupId: groupId,
+      const messageId = uuid()
+
+      if (files?.length) {
+        const formData = new FormData()
+        formData.set('messageId', messageId)
+
+        files.forEach((file) => {
+          formData.append('files', file)
         })
-      } catch (err: unknown) {
+
+        postAttachments(formData).then(console.log).catch((err) => {
+          console.error(err)
+          toast('Error sending attachments', { type: 'error' })
+        })
+      }
+
+      sendMessage({
+        content: trimmedText,
+        userId: user.data.id,
+        groupId: groupId,
+        messageId,
+      }).catch((err) => {
         console.error(err)
         toast('Could not send message', { type: 'error' })
-      }
+      })
     },
     [sendMessage, user],
   )

@@ -25,7 +25,7 @@ export class ChatService {
     private readonly _messageService: MessageService,
   ) {}
 
-  public async joinRooms(socket: Socket, groupIds: number[]): Promise<void> {
+  public async joinRooms(socket: Socket, groupIds: string[]): Promise<void> {
     const ids = groupIds.map((id) => id.toString())
 
     socket.join(ids)

@@ -1,7 +1,7 @@
-import { IsArray, IsInt } from 'class-validator'
+import { IsArray, IsInt, IsUUID } from 'class-validator'
 
 export class PingUsersStatusRequestDto {
-  @IsInt({ each: true })
+  @IsUUID('4', { each: true })
   @IsArray()
-  ids: number[]
+  ids: string[]
 }

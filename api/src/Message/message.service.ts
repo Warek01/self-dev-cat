@@ -20,7 +20,6 @@ import { UserService } from '@/User/user.service'
 import { MessageGroupDto } from '@/MessageGroup/Dtos'
 import { UserDto } from '@/User/Dtos'
 import { UserCredentials } from '@/Types/RequestWithUser'
-import { OperationResponse } from '@/Dtos/OperationResponse'
 
 @Injectable()
 export class MessageService {
@@ -41,6 +40,7 @@ export class MessageService {
       await this._messageGroupService.getGroupOrThrow(groupId)
     const user: UserDto = await this._userService.getUserOrThrow(userId)
 
+    message.id = dto.messageId
     message.user = plainToInstance(User, user)
     message.group = plainToInstance(MessageGroup, group)
     message.group.lastMessageTimestamp = new Date()
@@ -78,6 +78,7 @@ export class MessageService {
         user: true,
         replies: true,
         repliesTo: true,
+        attachments: true,
       },
       select: {
         user: {
@@ -89,7 +90,6 @@ export class MessageService {
           id: true,
         },
         createdAt: true,
-        type: true,
         attachments: {
           id: true,
           createdAt: true,
@@ -113,7 +113,7 @@ export class MessageService {
     })
   }
 
-  public async findMessages(ids: number[]): Promise<MessageDto[]> {
+  public async findMessages(ids: string[]): Promise<MessageDto[]> {
     if (!ids.length) {
       return []
     }
@@ -128,7 +128,7 @@ export class MessageService {
   }
 
   public async getMessage(
-    id: number,
+    id: string,
     relations: FindOptionsRelations<Message> = {},
   ): Promise<MessageDto | null> {
     const message: Message | null = await this._messageRepo.findOne({
@@ -142,7 +142,7 @@ export class MessageService {
   }
 
   public async getMessageOrThrow(
-    id: number,
+    id: string,
     relations: FindOptionsRelations<Message> = {},
   ): Promise<MessageDto> {
     const message: MessageDto | null = await this.getMessage(id, relations)
@@ -154,7 +154,7 @@ export class MessageService {
     return message
   }
 
-  public deleteAllMessagesFromGroup(groupId: number): void {
+  public deleteAllMessagesFromGroup(groupId: string): void {
     this._messageRepo.delete({
       group: {
         id: groupId,

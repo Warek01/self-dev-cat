@@ -6,7 +6,7 @@ import 'tippy.js/dist/tippy.css'
 import { toastDefaultProps } from '@constants/toastDefaultProps'
 import { useAppDispatch, useAppSelector, useBreakpointCallback } from '@hooks'
 import { selectTheme, setIsMobile } from '@slices/layout/layout.slice'
-import { Header, ModalWindowModule, SideMenu } from '@components'
+import { Header, SideMenu } from '@components'
 
 export const DefaultLayout: FC<PropsWithChildren> = memo(({ children }) => {
   const dispatch = useAppDispatch()
@@ -30,7 +30,6 @@ export const DefaultLayout: FC<PropsWithChildren> = memo(({ children }) => {
       id="layout"
       className="overflow-x-hidden text-black dark:text-dark-white bg-white dark:bg-dark-black"
     >
-      <ModalWindowModule />
       <main className="relative w-screen max-h-screen min-h-screen max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36 flex flex-col">
         <ToastContainer {...toastDefaultProps} theme={theme} />
         <Header />

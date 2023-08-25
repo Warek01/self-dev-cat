@@ -5,7 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Req,
   StreamableFile,
@@ -81,7 +81,7 @@ export class AttachmentController {
   @ApiBearerAuth()
   @UseGuards(BearerAuthGuard)
   getFile(
-    @Param('id', ParseIntPipe) fileId: number,
+    @Param('id', ParseUUIDPipe) fileId: string,
     @Req() req: RequestWithUser,
   ): Promise<StreamableFile> {
     return this._fileService.streamFile(fileId, req.user.userId)

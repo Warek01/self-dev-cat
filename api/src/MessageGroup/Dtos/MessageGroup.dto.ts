@@ -1,11 +1,22 @@
 import { Type } from 'class-transformer'
-import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsDateString,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 
-import { Base } from '@/Entities/Helpers'
 import { MessageDto } from '@/Message/Dtos'
 import { UserDto } from '@/User/Dtos'
 
-export class MessageGroupDto extends Base {
+export class MessageGroupDto {
+  @ApiPropertyOptional({ type: String })
+  @IsUUID('4')
+  @IsOptional()
+  id: string
+
   @Type(() => MessageDto)
   @IsArray()
   messages: MessageDto[]

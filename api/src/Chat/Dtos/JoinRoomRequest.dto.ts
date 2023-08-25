@@ -1,9 +1,9 @@
-import { IsArray, IsInt } from 'class-validator'
+import { IsArray, IsInt, IsUUID } from 'class-validator'
 
 export class JoinRoomRequestDto {
-  @IsInt({ each: true })
+  @IsUUID('4', { each: true })
   @IsArray()
-  groupIds: number[]
+  groupIds: string[]
 
   @IsInt()
   userId: number

@@ -57,8 +57,8 @@ export class AttachmentService {
   }
 
   public async streamFile(
-    fileId: number,
-    userId: number,
+    fileId: string,
+    userId: string,
   ): Promise<StreamableFile> {
     const fileEntity = await this._fileRepo.findOne({
       where: { id: fileId },

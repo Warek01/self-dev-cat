@@ -1,11 +1,20 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 import { FriendRequestStatus } from '@/FriendRequest/enums/FriendRequestStatus'
-import { Base } from './Helpers'
 import { User } from './index'
 
-@Entity()
-export class FriendRequest extends Base {
+@Entity('friend_requests')
+export class FriendRequest {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   date: Date
 
@@ -22,4 +31,10 @@ export class FriendRequest extends Base {
     nullable: false,
   })
   status: FriendRequestStatus
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

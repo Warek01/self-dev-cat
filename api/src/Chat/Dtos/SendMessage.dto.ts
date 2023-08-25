@@ -1,12 +1,16 @@
-import {IsInt, IsString} from "class-validator";
+import { IsOptional, IsString, IsUUID } from 'class-validator'
 
 export class SendMessageDto {
-  @IsInt()
-  groupId: number
+  @IsUUID('4')
+  @IsOptional()
+  messageId: string
+
+  @IsUUID('4')
+  groupId: string
 
   @IsString()
   content: string
 
-  @IsInt()
-  userId: number
+  @IsUUID('4')
+  userId: string
 }

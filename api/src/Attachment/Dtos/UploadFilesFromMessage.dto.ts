@@ -1,9 +1,9 @@
-import { IsInt, Min } from 'class-validator'
+import { IsUUID, Min } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UploadFilesFromMessageDto {
-  @ApiProperty({ type: String })
-  @IsInt()
+  @ApiProperty({ type: 'uuid' })
+  @IsUUID('4')
   @Min(0)
-  messageId: number
+  messageId: string
 }

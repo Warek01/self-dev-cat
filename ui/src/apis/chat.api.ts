@@ -31,7 +31,7 @@ export const chatApi = createApi({
   endpoints: (builder) => ({
     getMessages: builder.query<
       ApiFindResponse<Message>,
-      ApiPaginationRequest<{ groupId: number }>
+      ApiPaginationRequest<{ groupId: string }>
     >({
       providesTags: [Tag.MESSAGE],
       query: (dto) => ({
@@ -96,7 +96,7 @@ export const chatApi = createApi({
       }),
     }),
 
-    getOneMessageGroup: builder.query<MessageGroup, number>({
+    getOneMessageGroup: builder.query<MessageGroup, string>({
       providesTags: [Tag.MESSAGE_GROUP],
       query: (id) => ({
         url: `/message-group/${id}`,
@@ -108,7 +108,17 @@ export const chatApi = createApi({
       query: (dto) => ({
         url: `/message-group`,
         body: dto,
+        method: 'POST'
       }),
+    }),
+
+    postAttachments: builder.mutation<void, FormData>({
+      invalidatesTags: [Tag.MESSAGE],
+      query: (formData) => ({
+        url: `/attachment/from-message`,
+        body: formData,
+        method: 'POST'
+      }) ,
     }),
   }),
 })
@@ -123,5 +133,6 @@ export const {
   useLazyGetOneMessageGroupQuery,
   useSendMessageMutation,
   useDeleteAllMessagesMutation,
+  usePostAttachmentsMutation,
   usePrefetch,
 } = chatApi

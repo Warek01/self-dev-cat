@@ -1,10 +1,12 @@
-import { Column, Entity, ManyToMany } from 'typeorm'
+import {Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm'
 
 import { Blog } from './index'
-import { Base } from './Helpers'
 
-@Entity()
-export class BlogCategory extends Base {
+@Entity('blog_categories')
+export class BlogCategory {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'varchar', nullable: false })
   slug: string
 
@@ -13,4 +15,10 @@ export class BlogCategory extends Base {
 
   @ManyToMany(() => Blog, (blog) => blog.categories)
   blogs: Blog[]
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

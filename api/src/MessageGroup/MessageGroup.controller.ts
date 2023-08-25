@@ -3,7 +3,7 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Query,
   Req,
@@ -50,7 +50,7 @@ export class MessageGroupController {
   @Get(':id')
   find(
     @Req() req: RequestWithUser,
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ): Promise<MessageGroupDto> {
     return this._messageGroupService.find(req.user, id)
   }

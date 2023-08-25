@@ -5,6 +5,6 @@ export interface RequestWithUser extends Request {
 }
 
 export interface UserCredentials {
-  userId: number
+  userId: string
   username: string
 }

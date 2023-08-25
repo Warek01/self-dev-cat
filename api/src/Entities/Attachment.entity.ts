@@ -1,10 +1,19 @@
-import { Column, Entity, ManyToOne } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
-import { Base } from '@/Entities/Helpers'
 import { Message } from '@/Entities/Message.entity'
 
-@Entity()
-export class Attachment extends Base {
+@Entity('attachments')
+export class Attachment {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'varchar', length: 255 })
   name: string
 
@@ -26,4 +35,10 @@ export class Attachment extends Base {
     onUpdate: 'CASCADE',
   })
   message: Message
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

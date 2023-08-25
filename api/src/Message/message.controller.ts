@@ -1,4 +1,14 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -8,7 +18,7 @@ import {
 } from '@nestjs/swagger'
 
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
-import { ResponseMessagesDto, RequestMessagesDto } from './Dtos'
+import { ResponseMessagesDto, RequestMessagesDto, MessageDto } from './Dtos'
 import { MessageService } from './message.service'
 import { RequestWithUser } from '@/Types/RequestWithUser'
 
@@ -30,5 +40,16 @@ export class MessageController {
     @Query() filter: RequestMessagesDto,
   ): Promise<ResponseMessagesDto> {
     return this._messageService.getAll(req.user, filter)
+  }
+
+  @ApiOperation({ description: 'get message' })
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MessageDto })
+  @ApiUnauthorizedResponse()
+  @UseGuards(BearerAuthGuard)
+  @Get('get/:id')
+  @HttpCode(HttpStatus.OK)
+  getOne(@Param('id', ParseUUIDPipe) id: string): Promise<MessageDto> {
+    return this._messageService.getMessageOrThrow(id)
   }
 }

@@ -1,12 +1,23 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { UserRole } from '@/User/Enums/UserRole'
 import { UsefulResource, FriendRequest } from './index'
-import { Base } from './Helpers'
 
-@Entity({ name: 'users' })
-export class User extends Base {
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'varchar', nullable: false, unique: true })
   username: string
 
@@ -45,4 +56,10 @@ export class User extends Base {
     nullable: false,
   })
   role: UserRole
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

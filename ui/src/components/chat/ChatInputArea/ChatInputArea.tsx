@@ -2,7 +2,6 @@ import {
   FC,
   FormEventHandler,
   memo,
-  RefObject,
   useCallback,
   useId,
   useRef,
@@ -17,9 +16,9 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
   ({ onSendMessage }) => {
     const fileInputId = useId()
     const messageInputId = useId()
-    const messageTextInputRef: RefObject<HTMLInputElement> = useRef(null)
-    const fileInputRef: RefObject<HTMLInputElement> = useRef(null)
-    const formRef: RefObject<HTMLFormElement> = useRef(null)
+    const messageTextInputRef = useRef({} as HTMLInputElement)
+    const fileInputRef = useRef({} as HTMLInputElement)
+    const formRef = useRef({} as HTMLFormElement)
 
     const [files, setFiles] = useState<File[]>([])
 
@@ -28,15 +27,11 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
         event.preventDefault()
         event.stopPropagation()
 
-        if (!formRef.current || !messageTextInputRef.current) {
-          return
-        }
-
         await onSendMessage(messageTextInputRef.current.value, files)
         formRef.current.reset()
         setFiles([])
       },
-      [onSendMessage],
+      [onSendMessage, files],
     )
 
     const handleClickFiles = useCallback(() => {
@@ -44,13 +39,8 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
     }, [])
 
     const handleSelectFiles = useCallback(() => {
-      if (!fileInputRef.current) {
-        return
-      }
-
       const files = fileInputRef.current.files
-
-      setFiles(files ? Array.from(files) : [])
+      setFiles(Array.from(files ?? []))
     }, [])
 
     return (
@@ -59,22 +49,20 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
         ref={formRef}
         className="flex flex-col gap-3 p-3 rouned-full border-t border-black/10 dark:border-dark-white/10"
       >
-        <section className="">
-          <div className="flex flex-wrap items-start justify-start gap-1">
-            {files.map((file, index) => (
-              <Chip
-                key={index}
-                text={file.name}
-                onClose={() =>
-                  setFiles((files) => {
-                    const f = [...files]
-                    f.splice(index, 1)
-                    return f
-                  })
-                }
-              />
-            ))}
-          </div>
+        <section className="flex flex-wrap items-start justify-start gap-1">
+          {files.map((file, index) => (
+            <Chip
+              key={index}
+              text={file.name}
+              onClose={() =>
+                setFiles((files) => {
+                  const f = [...files]
+                  f.splice(index, 1)
+                  return f
+                })
+              }
+            />
+          ))}
         </section>
         <section className="flex items-center justify-between gap-3">
           <TextInput

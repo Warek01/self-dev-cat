@@ -6,13 +6,13 @@ import {
   useGetCurrentUserQuery,
   useGetFriendsQuery,
 } from '@apis'
-import { closeModal } from '@slices/layout/layout.slice'
 import { useAppDispatch } from '@hooks'
 import icons from '@icons'
 import { Button, FormTextField } from '@components'
 import type { ChatCreateFormValues } from './ChatCreateModal.types'
+import type { ChatCreateModalProps } from './ChatCreateModal.types'
 
-export const ChatCreateModal: FC = memo(() => {
+export const ChatCreateModal: FC<ChatCreateModalProps> = memo(({ onClose }) => {
   const dispatch = useAppDispatch()
   const user = useGetCurrentUserQuery()
   const friends = useGetFriendsQuery(user.data?.id!, {
@@ -22,16 +22,15 @@ export const ChatCreateModal: FC = memo(() => {
 
   const handleSubmit = useCallback(async (values: ChatCreateFormValues) => {
     if (!user.data) {
-      return
+      throw new Error('user data is missing')
     }
 
     await createGroup({
       name: values.name || undefined,
       rootUserid: user.data.id,
-      userIds: values.userIds.map((id) => parseInt(id)),
+      userIds: values.userIds,
     })
-
-    dispatch(closeModal())
+    onClose()
   }, [])
 
   return (

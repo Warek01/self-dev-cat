@@ -1,11 +1,14 @@
-import { UserDto } from '@/User/Dtos'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsString } from 'class-validator'
+import { IsDateString, IsString, IsUUID } from 'class-validator'
 
-import { BaseDto } from '@/Dtos'
+import { UserDto } from '@/User/Dtos'
 
-export class UsefulResourceDto extends BaseDto {
+export class UsefulResourceDto {
+  @ApiProperty({ type: 'uuid' })
+  @IsUUID()
+  id: string
+
   @ApiProperty({ type: String })
   @IsString()
   title: string
@@ -17,4 +20,12 @@ export class UsefulResourceDto extends BaseDto {
   @ApiProperty({ type: () => UserDto })
   @Type(() => UserDto)
   user: UserDto
+
+  @ApiProperty({ type: String })
+  @IsDateString()
+  createdAt: string
+
+  @ApiProperty({ type: String })
+  @IsDateString()
+  updatedAt: string
 }

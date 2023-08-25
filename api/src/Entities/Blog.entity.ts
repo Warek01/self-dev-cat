@@ -1,10 +1,23 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 import { User, BlogCategory } from './index'
-import { Base } from './Helpers'
 
-@Entity()
-export class Blog extends Base {
+@Entity('blogs')
+@Index('idx_blogs_blogs_categories_name', ['categories.name'])
+export class Blog {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'varchar', nullable: false })
   content: string
 
@@ -26,6 +39,13 @@ export class Blog extends Base {
   @JoinTable()
   categories: BlogCategory[]
 
-  @Column({ type: 'varchar', nullable: false })
+  @Index('idx_blogs_slug')
+  @Column({ type: 'varchar', nullable: false, unique: true })
   slug: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

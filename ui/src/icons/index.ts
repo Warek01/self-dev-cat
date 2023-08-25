@@ -62,6 +62,7 @@ import User from './User'
 import Webstorm from './Webstorm'
 import Yarn from './Yarn'
 import Add from './Add'
+import Image from './Image'
 
 export default {
   Spinner,
@@ -128,4 +129,5 @@ export default {
   Lightbulb,
   Download,
   Add,
+  Image,
 }

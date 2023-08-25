@@ -1,11 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
-import { IsArray, IsEmail, IsString } from 'class-validator'
+import {
+  IsArray,
+  IsDateString,
+  IsEmail,
+  IsString,
+  IsUUID,
+} from 'class-validator'
 
-import { BaseDto } from '@/Dtos'
 import { UsefulResourceDto } from '@/UsefulResources/Dtos'
 
-export class UserDto extends BaseDto {
+export class UserDto {
+  @ApiProperty({ type: 'uuid' })
+  @IsUUID('4')
+  id: string
+
   @ApiProperty({ type: String })
   @IsString()
   @Expose()
@@ -37,4 +46,12 @@ export class UserDto extends BaseDto {
 
   @Expose({ groups: ['with-password'] })
   password: string
+
+  @ApiProperty({ type: String })
+  @IsDateString()
+  createdAt: string
+
+  @ApiProperty({ type: String })
+  @IsDateString()
+  updatedAt: string
 }

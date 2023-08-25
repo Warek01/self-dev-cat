@@ -1,18 +1,26 @@
-import { Column, Entity, JoinTable, ManyToOne, OneToMany } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { User } from '@/Entities/User.entity'
-import { MessageType } from '@/Message/Enums/MessageType.enum'
-import { Base } from './Helpers'
 import { Attachment } from '@/Entities/Attachment.entity'
 
-@Entity()
-export class Message extends Base {
+@Entity('messages')
+export class Message {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
   @Column({ type: 'varchar', nullable: true })
   content?: string
-
-  @Column({ type: 'enum', enum: MessageType, default: MessageType.DEFAULT })
-  type: MessageType
 
   @ManyToOne(() => User)
   @JoinTable()
@@ -22,6 +30,7 @@ export class Message extends Base {
     onDelete: 'CASCADE',
   })
   @JoinTable()
+  @Index('idx_messages_message_groups')
   group: MessageGroup
 
   @ManyToOne(() => Message, (message) => message.replies, {
@@ -36,4 +45,10 @@ export class Message extends Base {
 
   @OneToMany(() => Attachment, (file) => file.message)
   attachments: Attachment[]
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 }

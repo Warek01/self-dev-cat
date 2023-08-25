@@ -9,9 +9,12 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
   },
-  devTools: true,
+  devTools: import.meta.env.DEV,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([userApi.middleware, chatApi.middleware]),
+    getDefaultMiddleware({ serializableCheck: import.meta.env.DEV }).concat([
+      userApi.middleware,
+      chatApi.middleware,
+    ]),
 })
 
 export type RootState = ReturnType<typeof store.getState>

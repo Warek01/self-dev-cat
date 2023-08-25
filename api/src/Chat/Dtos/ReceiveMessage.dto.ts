@@ -6,6 +6,6 @@ import { MessageDto } from '@/Message/Dtos'
 export class ReceiveMessageDto extends OmitType(MessageDto, ['user', 'group']) {
   @IsNotEmptyObject()
   user: {
-    id: number
+    id: string
   }
 }

@@ -1,23 +1,25 @@
-import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator'
 import { Type } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 
-import { Base } from '@/Entities/Helpers'
-import { MessageType } from '@/Message/Enums/MessageType.enum'
 import { UserDto } from '@/User/Dtos'
 import { MessageGroupDto } from '@/MessageGroup/Dtos'
 
-export class MessageDto extends Base {
+export class MessageDto {
+  @ApiProperty({ type: 'uuid' })
+  @IsUUID()
+  id: string
+
+  @ApiProperty({ type: String })
   @IsString()
   @IsOptional()
   content?: string
 
+  @ApiProperty({ type: String, isArray: true })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
   fileNames?: string[]
-
-  @IsEnum(MessageType)
-  type: MessageType
 
   @Type(() => UserDto)
   user: UserDto

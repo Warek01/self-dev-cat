@@ -21,5 +21,7 @@ export enum AppRoute {
   CHAT_GROUP = '/chat/:groupId',
   CHAT_GROUP_INFO = '/chat/:groupId/info',
 
+  ATTACHMENT = '/attachment/get/:id',
+
   ANY = '*',
 }

@@ -1,4 +1,4 @@
 export interface OnlineStatusIdMap {
-  id: number
+  userId: string
   online: boolean
 }
