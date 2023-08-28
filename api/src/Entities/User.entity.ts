@@ -5,13 +5,14 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 
 import { MessageGroup } from '@/Entities/MessageGroup.entity'
 import { UserRole } from '@/User/Enums/UserRole'
-import { UsefulResource, FriendRequest } from './index'
+import { UsefulResource, FriendRequest, Image } from './index'
 
 @Entity('users')
 export class User {
@@ -30,8 +31,8 @@ export class User {
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string
 
-  @Column({ type: 'varchar', nullable: true })
-  avatarFileName?: string
+  @OneToOne(() => Image, { nullable: true })
+  avatar?: Image
 
   @OneToMany(() => UsefulResource, (usefulResource) => usefulResource.user)
   usefulResources: UsefulResource[]
@@ -39,13 +40,11 @@ export class User {
   @OneToMany(() => FriendRequest, (req) => req.from)
   friendRequests: FriendRequest[]
 
-  @ManyToMany(() => User, (user) => user.friends, { onDelete: 'CASCADE' })
+  @ManyToMany(() => User, (user) => user.friends)
   @JoinTable()
   friends: User[]
 
-  @ManyToMany(() => MessageGroup, (messageGroup) => messageGroup.users, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(() => MessageGroup, (messageGroup) => messageGroup.users)
   @JoinTable()
   messageGroups: MessageGroup[]
 

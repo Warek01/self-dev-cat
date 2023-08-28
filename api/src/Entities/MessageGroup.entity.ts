@@ -19,9 +19,7 @@ export class MessageGroup {
   @OneToMany(() => Message, (message) => message.group)
   messages: Message[]
 
-  @ManyToMany(() => User, (user) => user.messageGroups, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToMany(() => User, (user) => user.messageGroups)
   users: User[]
 
   @ManyToOne(() => User)

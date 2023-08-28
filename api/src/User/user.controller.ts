@@ -31,8 +31,7 @@ import { RequestResponse } from '@/Constans'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
 import {
-  CreateUserDto,
-  GetFriendsResponseDto,
+  CreateUserDto, GetFriendsResponseDto,
   UpdateUserDto,
   UserDto,
 } from '@/User/Dtos'
@@ -95,17 +94,6 @@ export class UserController {
     @Body() patchUserDto: UpdateUserDto,
   ): Promise<UserDto> {
     return this._userService.updateUser(req.user.username, patchUserDto)
-  }
-
-  @ApiBearerAuth()
-  @Patch('add-friend')
-  @UseGuards(BearerAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async addFriend(
-    @Req() req: RequestWithUser,
-    @Body() body: { to: string },
-  ): Promise<void> {
-    await this._userService.addFriend(req.user.username, body.to)
   }
 
   @ApiBearerAuth()

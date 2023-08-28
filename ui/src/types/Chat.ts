@@ -50,7 +50,7 @@ export interface Attachment {
   id: string
   name: string
   mime: string
-  size: string
+  size: number
   createdAt: string
   updatedAt: string
 }

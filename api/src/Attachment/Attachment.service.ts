@@ -4,13 +4,14 @@ import {
   StreamableFile,
   UnauthorizedException,
 } from '@nestjs/common'
-import Sharp from 'sharp'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Message, Attachment } from '@/Entities'
 import { UploadFilesFromMessageDto } from '@/Attachment/Dtos'
 import { MessageGroupService } from '@/MessageGroup/MessageGroup.service'
+import { OperationResponseDto } from '@/Dtos'
+import { plainToInstance } from 'class-transformer'
 
 @Injectable()
 export class AttachmentService {
@@ -23,7 +24,7 @@ export class AttachmentService {
   public async save(
     files: Array<Express.Multer.File>,
     body: UploadFilesFromMessageDto,
-  ): Promise<void> {
+  ): Promise<OperationResponseDto> {
     files.forEach((file) => {
       !(async () => {
         const entity = this._fileRepo.create()
@@ -31,15 +32,9 @@ export class AttachmentService {
         entity.originalSize = file.size
         entity.mime = file.mimetype
 
-        let buffer: Buffer = file.buffer
-
-        if (file.mimetype.startsWith('image/')) {
-          buffer = await this._getResizedImageBuffer(buffer)
-        }
-
         // entity.buffer = ('\\x' + buffer.toString('hex')) as any
-        entity.buffer = buffer
-        entity.size = buffer.length
+        entity.buffer = file.buffer
+        entity.size = file.buffer.length
 
         const message = await this._messageRepo.findOneBy({
           id: body.messageId,
@@ -54,6 +49,10 @@ export class AttachmentService {
         await this._fileRepo.save(entity)
       })()
     })
+
+    return plainToInstance(OperationResponseDto, {
+      message: 'success',
+    } as OperationResponseDto)
   }
 
   public async streamFile(
@@ -88,16 +87,5 @@ export class AttachmentService {
       disposition: `attachment; filename="${fileEntity.name}"`,
       type: fileEntity.mime,
     })
-  }
-
-  private _getResizedImageBuffer(buffer: Buffer): Promise<Buffer> {
-    return Sharp(buffer)
-      .resize({
-        fit: Sharp.fit.cover,
-        height: 1080,
-        withoutReduction: false,
-        withoutEnlargement: true,
-      })
-      .toBuffer()
   }
 }

@@ -13,6 +13,7 @@ import { AppRoute } from '@enums'
 import ChatPage from '@pages/Chat/ChatPage'
 import { ChatMessageAreaEmpty } from '@components/chat'
 import { ChatMessageAreaContainer } from '@containers'
+import FriendsPage from '@pages/Users/:username/Friends/FriendsPage'
 
 export const pagesConfig: RouteObject[] = [
   {
@@ -41,6 +42,10 @@ export const pagesConfig: RouteObject[] = [
           {
             path: AppRoute.USER_FRIEND_REQUESTS,
             element: <AuthPrivateRoute component={FriendRequestsPage} />,
+          },
+          {
+            path: AppRoute.USER_FRIENDS,
+            element: <AuthPrivateRoute component={FriendsPage} />,
           },
         ],
       },

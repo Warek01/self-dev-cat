@@ -63,6 +63,10 @@ import Webstorm from './Webstorm'
 import Yarn from './Yarn'
 import Add from './Add'
 import Image from './Image'
+import TextFile from './TextFile'
+import Pdf from './Pdf'
+import Archive from './Archive'
+import UserAdd from './UserAdd'
 
 export default {
   Spinner,
@@ -130,4 +134,8 @@ export default {
   Download,
   Add,
   Image,
+  TextFile,
+  Pdf,
+  Archive,
+  UserAdd,
 }

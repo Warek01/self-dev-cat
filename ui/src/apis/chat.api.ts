@@ -6,6 +6,7 @@ import type { DeleteAllMessages, Message, SendMessage } from '@/types/Chat'
 import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
 import { localStorageHelper } from '@helpers/localStorageHelper'
+import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 enum Tag {
   MESSAGE = 'message',
@@ -108,7 +109,7 @@ export const chatApi = createApi({
       query: (dto) => ({
         url: `/message-group`,
         body: dto,
-        method: 'POST'
+        method: 'POST',
       }),
     }),
 
@@ -117,8 +118,8 @@ export const chatApi = createApi({
       query: (formData) => ({
         url: `/attachment/from-message`,
         body: formData,
-        method: 'POST'
-      }) ,
+        method: 'POST',
+      }),
     }),
   }),
 })

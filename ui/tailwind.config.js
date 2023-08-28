@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        xs: '0px'
+        xs: '0px',
       },
       colors: {
         black: '#2D2D2D',
@@ -50,6 +50,9 @@ export default {
       },
       fontSize: {
         17: '17px',
+      },
+      opacity: {
+        '15': '15%',
       },
     },
   },

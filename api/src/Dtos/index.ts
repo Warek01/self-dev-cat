@@ -1,1 +1,1 @@
-export * from './OperationResponse'
+export * from './OperationResponseDto'

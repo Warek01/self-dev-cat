@@ -32,7 +32,6 @@ export class Attachment {
   @ManyToOne(() => Message, (message) => message.attachments, {
     nullable: false,
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   message: Message
 

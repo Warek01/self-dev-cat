@@ -16,6 +16,7 @@ import { MessageModule } from '@/Message/message.module'
 import config from '@/Config/Debug'
 import { ChatModule } from '@/Chat/chat.module'
 import { AttachmentModule } from '@/Attachment/Attachment.module'
+import { ImageModule } from '@/Image/Image.module'
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AttachmentModule } from '@/Attachment/Attachment.module'
     MessageGroupModule,
     ChatModule,
     AttachmentModule,
+    ImageModule,
   ],
   controllers: [AppController],
   providers: [],

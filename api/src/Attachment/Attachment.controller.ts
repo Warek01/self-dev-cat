@@ -28,6 +28,7 @@ import { AttachmentService } from '@/Attachment/Attachment.service'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 import { UploadFilesFromMessageDto } from '@/Attachment/Dtos'
 import { RequestWithUser } from '@/Types/RequestWithUser'
+import {OperationResponseDto} from "@/Dtos";
 
 @ApiTags('Attachments')
 @Controller('attachment')
@@ -67,7 +68,7 @@ export class AttachmentController {
   postFromMessage(
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body() body: UploadFilesFromMessageDto,
-  ): Promise<void> {
+  ): Promise<OperationResponseDto> {
     return this._fileService.save(files, body)
   }
 

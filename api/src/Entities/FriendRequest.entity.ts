@@ -7,16 +7,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 
-import { FriendRequestStatus } from '@/FriendRequest/enums/FriendRequestStatus'
+import { FriendRequestStatus } from '@/FriendRequest/Enums/FriendRequestStatus'
 import { User } from './index'
 
 @Entity('friend_requests')
 export class FriendRequest {
   @PrimaryGeneratedColumn('uuid')
   id: string
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  date: Date
 
   @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
   from: User

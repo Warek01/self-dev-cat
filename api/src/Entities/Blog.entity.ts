@@ -13,7 +13,6 @@ import {
 import { User, BlogCategory } from './index'
 
 @Entity('blogs')
-@Index('idx_blogs_blogs_categories_name', ['categories.name'])
 export class Blog {
   @PrimaryGeneratedColumn('uuid')
   id: string

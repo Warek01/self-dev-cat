@@ -59,6 +59,11 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
           />
           <Button
             circle
+            Icon={icons.Add}
+            iconSize={24}
+          />
+          <Button
+            circle
             Icon={icons.Settings}
             iconSize={24}
             onClick={() => setChatModalOpened(true)}

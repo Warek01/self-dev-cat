@@ -3,7 +3,7 @@ import { compare, hash } from 'bcrypt'
 
 @Injectable()
 export class EncryptionService {
-  private static _saltRounds = 5
+  private static _saltRounds = 10
 
   public async encrypt(str: string): Promise<string> {
     return await hash(str, EncryptionService._saltRounds)

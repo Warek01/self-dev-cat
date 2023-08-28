@@ -1,11 +1,12 @@
 import {
   Column,
   CreateDateColumn,
-  Entity,
+  Entity, OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { ImageType } from '@/Image/Enums/ImageType.enum'
+import {User} from "@/Entities/User.entity";
 
 @Entity('images')
 export class Image {

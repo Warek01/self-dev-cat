@@ -1,4 +1,15 @@
-import { Module } from '@nestjs/common'
+import {Global, Module} from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-@Module({})
+import { FriendRequest, User } from '@/Entities'
+import { FriendRequestController } from './FriendRequest.controller'
+import { FriendRequestService } from './FriendRequest.service'
+
+@Global()
+@Module({
+  imports: [TypeOrmModule.forFeature([FriendRequest, User])],
+  controllers: [FriendRequestController],
+  providers: [FriendRequestService],
+  exports: [],
+})
 export class FriendRequestModule {}

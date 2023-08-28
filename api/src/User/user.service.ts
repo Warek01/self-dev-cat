@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   forwardRef,
   Inject,
   Injectable,
@@ -14,7 +13,7 @@ import { WsResponse } from '@nestjs/websockets'
 
 import { AuthService } from '@/Auth/auth.service'
 import { EncryptionService } from '@/Encryption/encryption.service'
-import { FriendRequest, User } from '@/Entities'
+import { User } from '@/Entities'
 import { JwtResponse } from '@/Types/Jwt'
 import {
   CreateUserDto,
@@ -34,8 +33,6 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly _userRepo: Repository<User>,
-    @InjectRepository(FriendRequest)
-    private readonly _friendRequestRepo: Repository<FriendRequest>,
     @Inject(forwardRef(() => EncryptionService))
     private readonly _encryptionService: EncryptionService,
     @Inject(forwardRef(() => AuthService))
@@ -144,39 +141,6 @@ export class UserService {
     })
   }
 
-  public async addFriend(
-    username: string,
-    friendUsername: string,
-  ): Promise<void> {
-    const user = await this.findOneByUsername(username)
-    const friend = await this.findOneByUsername(friendUsername)
-
-    if (!user) {
-      throw new NotFoundException(`User ${username} not found`)
-    }
-
-    if (!friend) {
-      throw new NotFoundException(`User ${friendUsername} not found`)
-    }
-
-    const existingRequest = await this._friendRequestRepo
-      .createQueryBuilder('req')
-      .where('req."fromId" = :userId', { userId: user.id })
-      .andWhere('req."toId" = :friendId', { friendId: friend.id })
-      .andWhere("req.status IN ('pending', 'accepted')")
-      .getOne()
-
-    if (existingRequest) {
-      throw new ConflictException('Friend request already sent')
-    }
-
-    const request = this._friendRequestRepo.create()
-    request.from = plainToInstance(User, user)
-    request.to = plainToInstance(User, friend)
-
-    this._friendRequestRepo.save(request)
-  }
-
   public async getUser(
     id: string,
     relations?: FindOptionsRelations<User>,
@@ -245,7 +209,6 @@ export class UserService {
           id: true,
           email: true,
           realName: true,
-          avatarFileName: true,
         },
       },
     })
@@ -260,11 +223,11 @@ export class UserService {
     } as GetFriendsResponseDto)
   }
 
-  private _setIsOnline(id: string): void {
-    clearTimeout(this.onlineUserIds[id])
-
-    this.onlineUserIds[id] = setTimeout(() => {
-      delete this.onlineUserIds[id]
-    }, 30_000)
-  }
+  // private _setIsOnline(id: string): void {
+  //   clearTimeout(this.onlineUserIds[id])
+  //
+  //   this.onlineUserIds[id] = setTimeout(() => {
+  //     delete this.onlineUserIds[id]
+  //   }, 30_000)
+  // }
 }
