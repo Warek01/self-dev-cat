@@ -57,6 +57,13 @@ export const SideMenu: FC = memo(() => {
         >
           Friends
         </Link>
+        <Link
+          to={mapRouteParams(AppRoute.USER_FRIEND_REQUESTS, {
+            username: user.data?.username || '',
+          })}
+        >
+          Friend requests
+        </Link>
       </div>
       <ul className="py-8">
         <Button

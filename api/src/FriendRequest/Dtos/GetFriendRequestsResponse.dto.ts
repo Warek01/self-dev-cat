@@ -12,5 +12,5 @@ export class GetFriendRequestsResponseDto {
   @ApiProperty({ type: [FriendRequestDto], isArray: true })
   @Type(() => FriendRequestDto)
   @IsArray()
-  data: FriendRequestDto[]
+  items: FriendRequestDto[]
 }

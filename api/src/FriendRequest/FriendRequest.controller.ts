@@ -6,6 +6,8 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
+  Query,
   Req,
   Request,
   UseGuards,
@@ -15,12 +17,16 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
 import { FriendRequestService } from './FriendRequest.service'
 import { RequestWithUser } from '@/Types/RequestWithUser'
-import { GetFriendRequestsResponseDto } from '@/FriendRequest/Dtos'
+import {
+  GetFriendRequestsResponseDto,
+  GetFriendsRequestsRequestDto,
+} from '@/FriendRequest/Dtos'
 
 @ApiTags('Friend requests')
 @Controller('friend-request')
@@ -28,7 +34,7 @@ export class FriendRequestController {
   constructor(private readonly _friendRequestService: FriendRequestService) {}
 
   @ApiBearerAuth()
-  @Patch('send/:userId')
+  @Post('send/:userId')
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async addFriend(
@@ -54,28 +60,31 @@ export class FriendRequestController {
   }
 
   @ApiBearerAuth()
-  @Patch('deny/:friendRequestID')
+  @Patch('deny/:friendRequestId')
   @UseGuards(BearerAuthGuard)
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async denyFriendRequest(
     @Req() req: RequestWithUser,
-    @Param('friendRequestId', ParseUUIDPipe) friendRequestID: string,
+    @Param('friendRequestId', ParseUUIDPipe) friendRequestId: string,
   ): Promise<void> {
     await this._friendRequestService.denyFriendRequest(
       req.user.userId,
-      friendRequestID,
+      friendRequestId,
     )
   }
 
   @ApiOperation({ description: 'Get friend requests of current user' })
   @ApiBearerAuth()
   @UseGuards(BearerAuthGuard)
+  @ApiOkResponse({ type: GetFriendRequestsResponseDto })
+  @ApiUnauthorizedResponse()
   @Get('user')
   @HttpCode(HttpStatus.OK)
   getFriendRequests(
     @Request() req: RequestWithUser,
+    @Query() query: GetFriendsRequestsRequestDto,
   ): Promise<GetFriendRequestsResponseDto> {
-    return this._friendRequestService.getFriendRequests(req.user.userId)
+    return this._friendRequestService.getFriendRequests(req.user.userId, query)
   }
 }

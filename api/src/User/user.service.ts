@@ -18,6 +18,7 @@ import { JwtResponse } from '@/Types/Jwt'
 import {
   CreateUserDto,
   GetFriendsResponseDto,
+  GetUsersResponseDto,
   PingUsersStatusRequestDto,
   PingUsersStatusResponseDto,
   UpdateUserDto,
@@ -25,6 +26,7 @@ import {
 } from '@/User/Dtos'
 import { OnlineStatusIdMap } from '@/User/Types/OnlineStatusIdMap'
 import { UserWsEvent } from '@/User/Enums/UserWsEvent'
+import { GetUsersRequestDto } from '@/User/Dtos/GetUsersRequest.dto'
 
 @Injectable()
 export class UserService {
@@ -76,6 +78,17 @@ export class UserService {
     withPassword: boolean = false,
   ): Promise<UserDto | null> {
     const user = await this._userRepo.findOneBy({ username })
+
+    return plainToInstance(UserDto, user, {
+      groups: withPassword ? ['with-password'] : [],
+    })
+  }
+
+  public async findOneById(
+    id: string,
+    withPassword: boolean = false,
+  ): Promise<UserDto | null> {
+    const user = await this._userRepo.findOneBy({ id })
 
     return plainToInstance(UserDto, user, {
       groups: withPassword ? ['with-password'] : [],
@@ -221,6 +234,18 @@ export class UserService {
       items: user.friends,
       count: user.friends.length,
     } as GetFriendsResponseDto)
+  }
+
+  public async getAll(query: GetUsersRequestDto): Promise<GetUsersResponseDto> {
+    const [items, count] = await this._userRepo.findAndCount({
+      skip: query.skip ?? 0,
+      take: query.limit ?? 10,
+    })
+
+    return plainToInstance(GetUsersResponseDto, {
+      items,
+      count,
+    })
   }
 
   // private _setIsOnline(id: string): void {

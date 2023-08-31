@@ -14,6 +14,7 @@ import ChatPage from '@pages/Chat/ChatPage'
 import { ChatMessageAreaEmpty } from '@components/chat'
 import { ChatMessageAreaContainer } from '@containers'
 import FriendsPage from '@pages/Users/:username/Friends/FriendsPage'
+import UsersPage from '@pages/Users/UsersPage'
 
 export const pagesConfig: RouteObject[] = [
   {
@@ -33,7 +34,7 @@ export const pagesConfig: RouteObject[] = [
       // User section
       {
         path: AppRoute.USER,
-        element: <AuthPrivateRoute component={() => <Outlet />} />,
+        element: <AuthPrivateRoute component={Outlet} />,
         children: [
           {
             path: AppRoute.USER_PROFILE,
@@ -48,6 +49,10 @@ export const pagesConfig: RouteObject[] = [
             element: <AuthPrivateRoute component={FriendsPage} />,
           },
         ],
+      },
+      {
+        path: AppRoute.USERS,
+        element: <AuthPrivateRoute component={UsersPage} />,
       },
 
       // Utility section

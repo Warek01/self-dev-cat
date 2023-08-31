@@ -5,7 +5,6 @@ import { toast } from 'react-toastify'
 
 import { AppRoute } from '@enums'
 import { useRegisterUserMutation } from '@apis'
-import type { LoginValues } from '@components/LoginForm/LoginForm.types'
 import type { RegisterValues } from '@components/RegisterForm/RegisterForm.types'
 import { registerSchema } from '@validation-schemas'
 import { AnimateOnMount, RegisterForm } from '@components'
@@ -17,13 +16,13 @@ export const RegisterContainer: FC = memo(() => {
 
   const handleRegistration = useCallback(
     async (
-      values: LoginValues,
+      values: RegisterValues,
       formikHelpers: FormikHelpers<RegisterValues>,
     ) => {
       triggerRegister({
         username: values.username,
         password: values.password,
-        email: values.username,
+        email: values.email,
       })
       formikHelpers.resetForm()
     },

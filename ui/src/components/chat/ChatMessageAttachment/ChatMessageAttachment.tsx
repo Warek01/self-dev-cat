@@ -48,7 +48,7 @@ export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(
         className="custom w-full flex justify-between rounded-lg bg-black/10 hover:bg-black/20 dark:bg-dark-black/10 hover:dark:bg-dark-black/20
         text-white items-center px-2 py-1 gap-1.5 lg:gap-3"
       >
-        <div className="flex flex-col gap-0.5 items-center">
+        <div className="flex flex-col gap-0.5 items-start">
           <Icon width={24} height={24} className="" />
           <p className="text-[9px]">{convertSize(attachment.size)}</p>
         </div>

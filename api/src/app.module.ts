@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common'
+import { Module, ValidationPipe } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import { APP_PIPE } from '@nestjs/core'
 import 'multer'
 
 import { FriendRequestModule } from '@/FriendRequest/FriendRequest.module'
 import { MessageGroupModule } from '@/MessageGroup/MessageGroup.module'
-import { UsefulResourcesModule } from '@/UsefulResources/usefulResources.module'
+import { UsefulResourcesModule } from '@/UsefulResources/UsefulResources.module'
 import { AppController } from './app.controller'
 import { UserModule } from '@/User/user.module'
 import { EncryptionModule } from '@/Encryption/encryption.module'
@@ -53,6 +54,14 @@ import { ImageModule } from '@/Image/Image.module'
     ImageModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: false },
+      }),
+    },
+  ],
 })
 export class AppModule {}

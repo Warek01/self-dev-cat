@@ -7,6 +7,7 @@ import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
 import { localStorageHelper } from '@helpers/localStorageHelper'
 import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import {apiUrl} from "@constants/apiUrl";
 
 enum Tag {
   MESSAGE = 'message',
@@ -14,7 +15,7 @@ enum Tag {
 }
 
 export const chatApi = createApi({
-  tagTypes: ['message', 'message-group'],
+  tagTypes: Object.values(Tag),
   reducerPath: 'chat',
   refetchOnReconnect: true,
   refetchOnFocus: true,
@@ -36,7 +37,7 @@ export const chatApi = createApi({
     >({
       providesTags: [Tag.MESSAGE],
       query: (dto) => ({
-        url: '/message/all',
+        url: apiUrl.message.all(),
         params: dto,
       }),
       onCacheEntryAdded: async (
@@ -92,22 +93,22 @@ export const chatApi = createApi({
     >({
       providesTags: [Tag.MESSAGE_GROUP],
       query: (dto) => ({
-        url: '/message-group/all',
+        url: apiUrl.messageGroup.all(),
         params: dto,
       }),
     }),
 
     getOneMessageGroup: builder.query<MessageGroup, string>({
       providesTags: [Tag.MESSAGE_GROUP],
-      query: (id) => ({
-        url: `/message-group/${id}`,
+      query: (messageGroupId) => ({
+        url: apiUrl.messageGroup.getOne(messageGroupId),
       }),
     }),
 
     createMessageGroup: builder.mutation<MessageGroup, CreateMessageGroup>({
       invalidatesTags: [Tag.MESSAGE_GROUP],
       query: (dto) => ({
-        url: `/message-group`,
+        url: apiUrl.messageGroup.post(),
         body: dto,
         method: 'POST',
       }),
@@ -116,7 +117,7 @@ export const chatApi = createApi({
     postAttachments: builder.mutation<void, FormData>({
       invalidatesTags: [Tag.MESSAGE],
       query: (formData) => ({
-        url: `/attachment/from-message`,
+        url: apiUrl.attachment.fromMessage(),
         body: formData,
         method: 'POST',
       }),

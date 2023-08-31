@@ -33,7 +33,8 @@ export class UserDto {
   @ApiProperty({ type: () => UsefulResourceDto })
   @Type(() => UsefulResourceDto)
   @Expose()
-  usefulResources: UsefulResourceDto[]
+  // usefulResources: UsefulResourceDto[]
+  usefulResources: any
 
   @Expose()
   friendRequests: any[]

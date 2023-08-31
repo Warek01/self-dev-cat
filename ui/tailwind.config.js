@@ -22,6 +22,7 @@ export default {
         'disabled': '#636e72',
         'error': '#e84118',
         'error-disabled': '#b33939',
+        'accept-green': '#2ecc71'
       },
       spacing: {
         xs: '20rem',

@@ -3,7 +3,7 @@ export interface ApiFindResponse<T> {
   count: number
 }
 
-export type ApiPaginationRequest<T extends object> = T & {
+export type ApiPaginationRequest<T extends {} = {}> = T & {
   skip?: number
   limit?: number
 }

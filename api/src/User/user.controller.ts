@@ -31,12 +31,14 @@ import { RequestResponse } from '@/Constans'
 import type { JwtResponse } from '@/Types/Jwt'
 import type { RequestWithUser } from '@/Types/RequestWithUser'
 import {
-  CreateUserDto, GetFriendsResponseDto,
+  CreateUserDto,
+  GetFriendsResponseDto, GetUsersResponseDto,
   UpdateUserDto,
-  UserDto,
-} from '@/User/Dtos'
+  UserDto
+} from "@/User/Dtos";
 import { UserService } from '@/User/user.service'
 import { BearerAuthGuard } from '@/Auth/Guard/BearerAuth.guard'
+import { GetUsersRequestDto } from "@/User/Dtos/GetUsersRequest.dto";
 
 @ApiTags('User')
 @Controller('user')
@@ -57,12 +59,12 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ description: 'Get user data' })
+  @ApiOperation({ description: 'Get current user data' })
   @ApiOkResponse({ type: UserDto })
   @Get()
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.OK)
-  public async getUserData(
+  public async getCurrentUserData(
     @Req() req: RequestWithUser,
   ): Promise<UserDto | null> {
     try {
@@ -70,6 +72,34 @@ export class UserController {
     } catch {
       throw new NotFoundException()
     }
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ description: 'Get user data' })
+  @ApiOkResponse({ type: UserDto })
+  @Get('get/:id')
+  @UseGuards(BearerAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  public async getUserData(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<UserDto | null> {
+    try {
+      return await this._userService.findOneById(id)
+    } catch {
+      throw new NotFoundException()
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ description: 'Get users' })
+  @ApiOkResponse({ type: GetUsersResponseDto })
+  @Get('get')
+  @UseGuards(BearerAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  public async getUsers(
+    @Query() query: GetUsersRequestDto
+  ): Promise<GetUsersResponseDto> {
+    return this._userService.getAll(query)
   }
 
   @ApiOperation({ description: 'Delete current user' })

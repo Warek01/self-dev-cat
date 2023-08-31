@@ -7,12 +7,14 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common'
 import { OperationResponseDto } from '@/Dtos'
 import { FriendRequest, User } from '@/Entities'
 import { FriendRequestStatus } from './Enums/FriendRequestStatus'
-import { GetFriendRequestsResponseDto } from '@/FriendRequest/Dtos'
+import {
+  GetFriendRequestsResponseDto,
+  GetFriendsRequestsRequestDto,
+} from '@/FriendRequest/Dtos'
 
 @Injectable()
 export class FriendRequestService {
@@ -139,16 +141,27 @@ export class FriendRequestService {
 
   public async getFriendRequests(
     currentUserId: string,
+    query: GetFriendsRequestsRequestDto,
   ): Promise<GetFriendRequestsResponseDto> {
     const [requests, count] = await this._friendRequestRepo.findAndCount({
       where: {
         status: FriendRequestStatus.PENDING,
-        to: {
-          id: currentUserId,
-        },
+        to: query.outgoing
+          ? undefined
+          : {
+              id: currentUserId,
+            },
+        from: query.outgoing
+          ? {
+              id: currentUserId,
+            }
+          : undefined,
       },
+      skip: query.skip ?? 0,
+      take: query.limit ?? 10,
       relations: {
         from: true,
+        to: true,
       },
       select: {
         status: true,
@@ -163,8 +176,8 @@ export class FriendRequestService {
     })
 
     return plainToInstance(GetFriendRequestsResponseDto, {
-      data: requests,
+      items: requests,
       count,
-    } as GetFriendRequestsResponseDto)
+    })
   }
 }
