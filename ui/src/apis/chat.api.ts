@@ -6,7 +6,6 @@ import type { DeleteAllMessages, Message, SendMessage } from '@/types/Chat'
 import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
 import { localStorageHelper } from '@helpers/localStorageHelper'
-import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 import {apiUrl} from "@constants/apiUrl";
 
 enum Tag {
@@ -136,5 +135,4 @@ export const {
   useSendMessageMutation,
   useDeleteAllMessagesMutation,
   usePostAttachmentsMutation,
-  usePrefetch,
 } = chatApi

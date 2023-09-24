@@ -1,11 +1,11 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { EnvService } from '@/env/env.service'
 
 @ApiTags('Debug')
 @Controller()
 export class AppController {
-  constructor(private _configService: ConfigService) {}
+  constructor(private readonly env: EnvService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -16,6 +16,6 @@ export class AppController {
     type: String,
   })
   getMode(): string {
-    return this._configService.get<string>('env')!
+    return this.env.env
   }
 }

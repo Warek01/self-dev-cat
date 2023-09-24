@@ -1,4 +1,5 @@
 import { FC, memo, ReactElement, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 
 import type { UsersListUserProps } from './UsersListUser.types'
 import {
@@ -7,10 +8,9 @@ import {
   useSendFriendRequestMutation,
 } from '@apis'
 import { Button, FriendRequestButtons, LoadingSpinner } from "@/components";
-import { FriendRequest } from '@/types/FriendRequest'
+import type { FriendRequest } from '@/types/FriendRequest'
 import { mapRouteParams } from '@helpers'
 import { AppRoute } from '@enums'
-import { Link } from 'react-router-dom'
 
 export const UsersListUser: FC<UsersListUserProps> = memo(({ user }) => {
   const currentUser = useGetCurrentUserQuery()

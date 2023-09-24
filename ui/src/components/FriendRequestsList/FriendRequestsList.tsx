@@ -6,7 +6,11 @@ import { FriendRequest } from '@components/FriendRequest/FriendRequest'
 
 export const FriendRequestsList: FC = memo(() => {
   const user = useGetCurrentUserQuery()
-  const friendRequests = useGetFriendRequestsQuery()
+  const friendRequests = useGetFriendRequestsQuery({
+    limit: 100,
+    skip: 0,
+    outgoing: false,
+  })
 
   return (
     <main>

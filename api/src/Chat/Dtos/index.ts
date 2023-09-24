@@ -1,7 +1,0 @@
-export * from './JoinRoomRequest.dto'
-export * from './RoomMembersOnline.dto'
-export * from './SendMessage.dto'
-export * from './OperationStatus.dto'
-export * from './ReceiveMessage.dto'
-export * from './DeleteMessage.dto'
-export * from './DeleteAllMessages.dto'

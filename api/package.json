@@ -34,6 +34,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sharp": "^0.32.4",
+    "socket.io": "^4.7.2",
     "typeorm": "^0.3.12",
     "typeorm-naming-strategies": "^4.1.0",
     "uuid": "^9.0.0",

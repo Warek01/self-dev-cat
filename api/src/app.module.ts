@@ -1,51 +1,46 @@
 import { Module, ValidationPipe } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { APP_PIPE } from '@nestjs/core'
 import 'multer'
 
-import { FriendRequestModule } from '@/FriendRequest/FriendRequest.module'
-import { MessageGroupModule } from '@/MessageGroup/MessageGroup.module'
-import { UsefulResourcesModule } from '@/UsefulResources/UsefulResources.module'
+import { FriendRequestModule } from '@/friend-request/friend-request.module'
+import { MessageGroupModule } from '@/message-group/message-group.module'
+import { UsefulResourceModule } from '@/useful-resource/useful-resource.module'
+import { UserModule } from '@/user/user.module'
+import { AuthModule } from '@/auth/auth.module'
+import { BlogModule } from '@/blog/blog.module'
+import { MessageModule } from '@/message/message.module'
+import { ChatModule } from '@/chat/chat.module'
+import { AttachmentModule } from '@/attachment/attachment.module'
+import { ImageModule } from '@/image/image.module'
+import { EnvModule } from '@/env/env.module'
+import { EnvService } from '@/env/env.service'
+
 import { AppController } from './app.controller'
-import { UserModule } from '@/User/user.module'
-import { EncryptionModule } from '@/Encryption/encryption.module'
-import { AuthModule } from '@/Auth/auth.module'
-import { BlogModule } from '@/Blog/blog.module'
-import { MessageModule } from '@/Message/message.module'
-import config from '@/Config/Debug'
-import { ChatModule } from '@/Chat/chat.module'
-import { AttachmentModule } from '@/Attachment/Attachment.module'
-import { ImageModule } from '@/Image/Image.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [config],
-    }),
+    EnvModule,
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: configService.get<any>('db.type'),
-        host: configService.get<string>('db.host'),
-        port: configService.get<number>('db.port'),
-        database: configService.get<string>('db.name'),
-        username: configService.get<string>('db.user'),
-        password: configService.get<string>('db.password'),
-        synchronize: configService.get<boolean>('db.synchronize'),
-        schema: configService.get<string>('db.schema'),
-        entities: configService.get<any[]>('db.entities'),
+      inject: [EnvService],
+      useFactory: (env: EnvService) => ({
+        type: env.db.type,
+        host: env.db.host,
+        port: env.db.port,
+        database: env.db.name,
+        username: env.db.user,
+        password: env.db.password,
+        synchronize: env.isDev,
+        schema: env.db.schema,
+        entities: ['**/*.entity.js'],
         namingStrategy: new SnakeNamingStrategy(),
       }),
     }),
     AuthModule,
     UserModule,
-    EncryptionModule,
     BlogModule,
-    UsefulResourcesModule,
+    UsefulResourceModule,
     FriendRequestModule,
     MessageModule,
     MessageGroupModule,
@@ -59,7 +54,6 @@ import { ImageModule } from '@/Image/Image.module'
       provide: APP_PIPE,
       useValue: new ValidationPipe({
         transform: true,
-        transformOptions: { enableImplicitConversion: false },
       }),
     },
   ],

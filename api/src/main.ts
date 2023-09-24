@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { INestApplication } from '@nestjs/common'
 
 import { AppModule } from './app.module'
+import { EnvService } from '@/env/env.service'
 
 async function bootstrap(): Promise<void> {
   const swaggerConfig = new DocumentBuilder()
@@ -11,20 +13,15 @@ async function bootstrap(): Promise<void> {
     .addBasicAuth()
     .build()
 
-  const app = await NestFactory.create(AppModule, {
-    logger:
-      process.env.NODE_ENV === 'production'
-        ? ['log', 'error']
-        : ['verbose', 'debug', 'log', 'error', 'warn'],
-    bodyParser: true,
-  })
+  const app: INestApplication = await NestFactory.create(AppModule)
+  const env: EnvService = app.get(EnvService)
 
   app.enableCors()
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('api', app, swaggerDocument)
 
-  await app.listen(process.env.PORT || 3000)
+  await app.listen(env.port)
 }
 
 bootstrap()

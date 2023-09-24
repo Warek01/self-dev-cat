@@ -1,10 +1,8 @@
 import { FC } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import icons from '../../icons'
-import { Button } from '../../components'
-import { AppRoute } from '../../enums/AppRoute'
-import { Color } from '../../enums/Color'
+import icons from '@icons'
+import { Button } from "@components"
 
 const NotFoundPage: FC = () => {
   const location = useLocation()
@@ -18,12 +16,11 @@ const NotFoundPage: FC = () => {
       <Button
         Icon={icons.ArrowLeft}
         text="Go home"
-        to={AppRoute.HOME}
+        to="/"
         type="link"
         iconSize={20}
         iconPosition="left"
         uppercase
-        iconFill={Color.LinkBlue}
       />
     </main>
   )
