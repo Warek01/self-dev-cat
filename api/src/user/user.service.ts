@@ -9,13 +9,15 @@ import { User } from '@/entities/user.entity'
 
 import type { OnlineStatusIdMap } from './user.types'
 import { UserWsEvent } from './enums/user-ws-event'
-import { GetUsersRequestDto } from './dto/get-users-request.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { UserDto } from './dto/user.dto'
-import { GetFriendsResponseDto } from './dto/get-friends-response.dto'
-import { GetUsersResponseDto } from './dto/get-users-response.dto'
-import { PingUsersStatusRequestDto } from './dto/ping-user-status-request.dto'
-import { PingUsersStatusResponseDto } from './dto/ping-user-status-response.dto'
+import {
+  UserDto,
+  GetUsersResponseDto,
+  GetFriendsResponseDto,
+  GetUsersRequestDto,
+  UpdateUserDto,
+  PingUsersStatusResponseDto,
+  PingUsersStatusRequestDto,
+} from './dto'
 
 @Injectable()
 export class UserService {

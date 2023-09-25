@@ -1,13 +1,18 @@
 import { FC, memo, useCallback, useState } from 'react'
 
-import { useDeleteAllMessagesMutation, useGetCurrentUserQuery } from '@apis'
 import icons from '@icons'
 import { AppRoute } from '@enums/AppRoute'
-import { Button, ModalWindow } from '@components'
+import type { User } from '@/types/User'
+import { useAppSelector } from '@hooks'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
+import { useDeleteAllMessagesMutation } from '@redux/chat.api'
+import { ModalWindow } from '@components/utility'
+import { Button } from '@components/input'
+
 import type { ChatHeaderProps } from './ChatHeader.types'
 
 export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
-  const user = useGetCurrentUserQuery()
+  const user: User | null = useAppSelector(selectAuthenticatedUser)
   const [deleteAllMessages] = useDeleteAllMessagesMutation()
   const [chatModalOpened, setChatModalOpened] = useState<boolean>(false)
 
@@ -24,7 +29,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
             <Button text="Change icon" />
             <Button
               text="Delete messages"
-              disabled={group?.rootUser.id !== user.data?.id}
+              disabled={group?.rootUser.id !== user?.id}
               onClick={handleDeleteMessages}
             />
             <Button text="Leave group" className="text-error" />
@@ -57,11 +62,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(({ group }) => {
             to={AppRoute.CHAT}
             iconSize={24}
           />
-          <Button
-            circle
-            Icon={icons.Add}
-            iconSize={24}
-          />
+          <Button circle Icon={icons.Add} iconSize={24} />
           <Button
             circle
             Icon={icons.Settings}

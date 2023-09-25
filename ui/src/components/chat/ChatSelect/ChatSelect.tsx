@@ -1,10 +1,11 @@
 import { FC, memo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { useGetMessageGroupsQuery } from '@apis'
 import icons from '@icons'
-import { Button, ModalWindow } from '@components'
 import { ChatCreateModal } from '@components/chat'
+import { useGetMessageGroupsQuery } from '@redux/chat.api'
+import { ModalWindow } from '@components/utility'
+import { Button } from '@components/input'
 
 export const ChatSelect: FC = memo(() => {
   const params = useParams()

@@ -1,23 +1,32 @@
 import classNames from 'classnames'
 import { FC, memo, useCallback } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import {
+  Link,
+  Location,
+  NavigateFunction,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 
 import icons from '@icons'
-import { useGetCurrentUserQuery, userApi } from '@apis'
-import { authorLinks } from '@constants/links/authorLinks'
+import { authorLinks } from '@constants/author-links'
 import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
-import { setSideMenuOpened } from '@slices'
-import { Button, IconLink } from '@components'
-import { disabledForPaths } from './SideMenu.constants'
 import { localStorageHelper } from '@helpers/localStorageHelper'
 import { mapRouteParams } from '@helpers'
+import type { User } from '@/types/User'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
+import { setSideMenuOpened } from '@redux/layout.slice'
+import { userApi } from '@redux/user.api'
+import { Button, IconLink } from '@components/input'
+
+import { disabledForPaths } from './SideMenu.constants'
 
 export const SideMenu: FC = memo(() => {
-  const location = useLocation()
-  const navigate = useNavigate()
+  const location: Location = useLocation()
+  const navigate: NavigateFunction = useNavigate()
   const dispatch = useAppDispatch()
-  const user = useGetCurrentUserQuery()
+  const user: User | null = useAppSelector(selectAuthenticatedUser)
 
   const { isSideMenuOpened } = useAppSelector((state) => state.layout)
 
@@ -52,14 +61,14 @@ export const SideMenu: FC = memo(() => {
       <div className="flex flex-col items-center gap-8 text-2xl">
         <Link
           to={mapRouteParams(AppRoute.USER_FRIENDS, {
-            username: user.data?.username || '',
+            username: user?.username || '',
           })}
         >
           Friends
         </Link>
         <Link
           to={mapRouteParams(AppRoute.USER_FRIEND_REQUESTS, {
-            username: user.data?.username || '',
+            username: user?.username || '',
           })}
         >
           Friend requests

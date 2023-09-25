@@ -1,11 +1,11 @@
 import { FC, memo } from 'react'
 
-import { LoginContainer } from '@containers'
+import { LoginForm } from "@components/forms";
 
 const LoginPage: FC = () => {
   return (
     <main className="flex-1 flex items-center justify-center">
-      <LoginContainer />
+      <LoginForm />
     </main>
   )
 }

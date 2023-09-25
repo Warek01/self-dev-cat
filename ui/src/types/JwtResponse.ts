@@ -1,3 +1,11 @@
+import type { User } from '@/types/User'
+
 export interface JwtResponse {
-  access_token: string
+  token: string
+}
+
+export interface JwtPayload {
+  iat: number
+  exp: number
+  user: User
 }

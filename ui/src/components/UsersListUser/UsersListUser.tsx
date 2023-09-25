@@ -1,25 +1,33 @@
 import { FC, memo, ReactElement, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 
-import type { UsersListUserProps } from './UsersListUser.types'
-import {
-  useGetCurrentUserQuery,
-  useGetFriendRequestsQuery,
-  useSendFriendRequestMutation,
-} from '@apis'
-import { Button, FriendRequestButtons, LoadingSpinner } from "@/components";
 import type { FriendRequest } from '@/types/FriendRequest'
 import { mapRouteParams } from '@helpers'
 import { AppRoute } from '@enums'
 
+import type { User } from '@/types/User'
+import { useAppSelector } from '@hooks'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
+import {
+  useGetFriendRequestsQuery,
+  useSendFriendRequestMutation,
+} from '@redux/user.api'
+import { FriendRequestButtons } from '@/components'
+import { Button } from '@components/input'
+import { LoadingSpinner } from '@components/utility'
+
+import type { UsersListUserProps } from './UsersListUser.types'
+
 export const UsersListUser: FC<UsersListUserProps> = memo(({ user }) => {
-  const currentUser = useGetCurrentUserQuery()
+  const currentUser: User | null = useAppSelector(selectAuthenticatedUser)
   const [sendFriendRequest] = useSendFriendRequestMutation()
+
   const friendRequests = useGetFriendRequestsQuery({
     limit: 100,
     skip: 0,
     outgoing: false,
   })
+
   const sentFriendRequests = useGetFriendRequestsQuery({
     limit: 100,
     skip: 0,
@@ -54,13 +62,11 @@ export const UsersListUser: FC<UsersListUserProps> = memo(({ user }) => {
     )
   }, [user, isFriendRequestSent, friendRequestFromUser])
 
-  if (currentUser.isLoading || friendRequests.isLoading) {
-    return (
-      <LoadingSpinner size={32} />
-    )
+  if (friendRequests.isLoading) {
+    return <LoadingSpinner size={32} />
   }
 
-  if (currentUser.data?.id === user.id) {
+  if (currentUser?.id === user.id) {
     return null
   }
 

@@ -1,7 +1,8 @@
 import { FC, memo } from 'react'
 
-import type { UsersListProps } from './UsersList.types'
 import { UsersListUser } from '@/components'
+
+import type { UsersListProps } from './UsersList.types'
 
 export const UsersList: FC<UsersListProps> = memo(({ users }) => {
   return (

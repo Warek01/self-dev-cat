@@ -2,8 +2,9 @@ import { FC, memo, PropsWithChildren, useRef, useState } from 'react'
 import classNames from 'classnames'
 
 import { useSkipFirstRender } from '@hooks'
-import type { AnimateProps } from './Animate.types'
+
 import { animationMap, durationMap } from './Animate.constants'
+import type { AnimateProps } from './Animate.types'
 
 export const Animate: FC<PropsWithChildren<AnimateProps>> = memo(
   ({ show, children, duration = 150, animation = 'fade & scale' }) => {

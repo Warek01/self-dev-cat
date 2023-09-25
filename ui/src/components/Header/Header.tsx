@@ -1,26 +1,29 @@
 import { FC, memo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, Location } from 'react-router-dom'
 
 import { mapRouteParams } from '@helpers'
 import icons from '@icons'
-import { unprotectedPages } from '@constants/pages/unprotectedPages'
-import { selectTheme, setSideMenuOpened, toggleTheme } from '@slices'
+import { unprotectedPages } from '@constants/unprotected-pages'
 import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
-import { Button } from '@components'
-import { useGetCurrentUserQuery } from '@apis'
-import {localStorageHelper} from "@helpers/localStorageHelper";
+import type { User } from '@/types/User'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
+import {
+  selectTheme,
+  setSideMenuOpened,
+  toggleTheme,
+} from '@redux/layout.slice'
+import { Button } from '@components/input'
+import { Theme } from '@/types/Theme'
 
 export const Header: FC = memo(() => {
   const dispatch = useAppDispatch()
-  const location = useLocation()
-
-  const isUnprotectedLocation = unprotectedPages.includes(location.pathname)
-
-  const user = useGetCurrentUserQuery(null, {
-    skip: !localStorageHelper.accessToken,
-  })
-  const theme = useAppSelector(selectTheme)
+  const location: Location = useLocation()
+  const user: User | null = useAppSelector(selectAuthenticatedUser)
+  const isUnprotectedLocation: boolean = unprotectedPages.includes(
+    location.pathname,
+  )
+  const theme: Theme = useAppSelector(selectTheme)
 
   const handleMenuOpen = () => {
     dispatch(setSideMenuOpened(true))
@@ -46,17 +49,17 @@ export const Header: FC = memo(() => {
       <div className="flex items-center justify-end gap-2 md:gap-6 lg:gap-12">
         <Button
           type="link"
-          to={mapRouteParams(AppRoute.USER, { username: user.data?.username! })}
+          to={mapRouteParams(AppRoute.USER, { username: user?.username! })}
           Icon={icons.User}
           iconSize={24}
-          disabled={isUnprotectedLocation && !user.data}
+          disabled={isUnprotectedLocation && !user}
         />
         <Button
           type="link"
           to={AppRoute.CHAT}
           Icon={icons.Message}
           iconSize={24}
-          disabled={isUnprotectedLocation && !user.data}
+          disabled={isUnprotectedLocation && !user}
         />
         <Button
           iconSize={24}

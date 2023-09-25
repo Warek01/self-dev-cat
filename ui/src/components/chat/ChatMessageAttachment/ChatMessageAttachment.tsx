@@ -1,10 +1,10 @@
 import { FC, memo, useCallback, useRef } from 'react'
 import { toast } from 'react-toastify'
 
-import type { ChatMessageAttachmentProps } from './ChatMessageAttachment.types'
 import icons from '@icons'
-import { localStorageHelper } from '@helpers/localStorageHelper'
-import { convertSize } from '@helpers'
+import { convertSize, localStorageHelper } from '@helpers'
+
+import type { ChatMessageAttachmentProps } from './ChatMessageAttachment.types'
 import { attachmentIconMap } from './ChatMessageAttachment.constants'
 
 export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(

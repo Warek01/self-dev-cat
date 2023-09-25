@@ -1,8 +1,8 @@
 import { FC, memo } from 'react'
 
 import icons from '@icons'
-import { useGetUsersQuery } from '@apis'
 import { UsersList } from '@components'
+import { useGetUsersQuery } from "@redux/user.api";
 
 const UsersPage: FC = () => {
   const users = useGetUsersQuery({ limit: 100 })

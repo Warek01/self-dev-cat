@@ -1,11 +1,10 @@
 import { FC, memo } from 'react'
 
-import { useGetCurrentUserQuery, useGetFriendRequestsQuery } from '@apis'
 import icons from '@icons'
 import { FriendRequest } from '@components/FriendRequest/FriendRequest'
+import { useGetFriendRequestsQuery } from "@redux/user.api";
 
 export const FriendRequestsList: FC = memo(() => {
-  const user = useGetCurrentUserQuery()
   const friendRequests = useGetFriendRequestsQuery({
     limit: 100,
     skip: 0,

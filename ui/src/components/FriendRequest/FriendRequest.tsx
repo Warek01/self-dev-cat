@@ -1,8 +1,9 @@
-import { FC, memo } from "react";
+import { FC, memo } from 'react'
 
-import { FriendRequestProps } from "@components/FriendRequest/FriendRequest.types";
-import { useGetUserQuery } from "@apis";
-import { FriendRequestButtons } from "@components";
+import { FriendRequestButtons } from '@components'
+import { useGetUserQuery } from '@redux/user.api'
+
+import type { FriendRequestProps } from './FriendRequest.types'
 
 // TODO: implement user icon
 export const FriendRequest: FC<FriendRequestProps> = memo(({ request }) => {

@@ -3,9 +3,10 @@ import { FC, memo } from 'react'
 import {
   useAcceptFriendRequestMutation,
   useDenyFriendRequestMutation,
-} from '@apis'
-import { Button } from '@components'
-import { FriendRequestButtonsProps } from '@components/FriendRequestButtons/FriendRequestButtons.types'
+} from '@redux/user.api'
+import { Button } from '@components/input'
+
+import type { FriendRequestButtonsProps } from './FriendRequestButtons.types'
 
 export const FriendRequestButtons: FC<FriendRequestButtonsProps> = memo(
   ({ requestId }) => {

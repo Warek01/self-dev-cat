@@ -1,33 +1,35 @@
 import { Field, Form, Formik } from 'formik'
 import { FC, memo, useCallback } from 'react'
 
-import {
-  useCreateMessageGroupMutation,
-  useGetCurrentUserQuery,
-  useGetFriendsQuery,
-} from '@apis'
-import { useAppDispatch } from '@hooks'
+import { useAppSelector } from '@hooks'
 import icons from '@icons'
-import { Button, FormTextField } from '@components'
-import type { ChatCreateFormValues } from './ChatCreateModal.types'
-import type { ChatCreateModalProps } from './ChatCreateModal.types'
+import type { User } from '@/types/User'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
+import { useGetFriendsQuery } from '@redux/user.api'
+import { useCreateMessageGroupMutation } from '@redux/chat.api'
+import { FormTextField } from '@components/forms'
+import { Button } from '@components/input'
+
+import type {
+  ChatCreateFormValues,
+  ChatCreateModalProps,
+} from './ChatCreateModal.types'
 
 export const ChatCreateModal: FC<ChatCreateModalProps> = memo(({ onClose }) => {
-  const dispatch = useAppDispatch()
-  const user = useGetCurrentUserQuery()
-  const friends = useGetFriendsQuery(user.data?.id!, {
-    skip: !user.data?.id,
+  const user: User | null = useAppSelector(selectAuthenticatedUser)
+  const friends = useGetFriendsQuery(user?.id!, {
+    skip: !user?.id,
   })
   const [createGroup] = useCreateMessageGroupMutation()
 
   const handleSubmit = useCallback(async (values: ChatCreateFormValues) => {
-    if (!user.data) {
+    if (!user) {
       throw new Error('user data is missing')
     }
 
     await createGroup({
       name: values.name || undefined,
-      rootUserid: user.data.id,
+      rootUserid: user.id,
       userIds: values.userIds,
     })
     onClose()

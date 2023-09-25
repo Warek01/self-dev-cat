@@ -1,16 +1,16 @@
-import type {Theme} from '@/types/Theme'
+import type { Theme } from '@/types/Theme'
 
 export interface LocalStorageItems {
   remove: (key: keyof Omit<LocalStorageItems, 'remove'>) => void
   theme: Theme
-  isChatSelectCollapsed: boolean
+  isChatMenuCollapsed: boolean
   accessToken: string | null
 }
 
 const keyMap: Record<keyof Omit<LocalStorageItems, 'remove'>, string> = {
-  accessToken: 'access_token',
+  accessToken: 'accessToken',
   theme: 'theme',
-  isChatSelectCollapsed: 'is_chat_menu_collapsed'
+  isChatMenuCollapsed: 'chatMenuCollapsed',
 }
 
 export const get = <T>(
@@ -37,10 +37,10 @@ export const localStorageHelper: LocalStorageItems = {
   remove: (key) => rm(keyMap[key]),
 
   get accessToken() {
-    return get<typeof this.accessToken>('access_token', null)
+    return get<typeof this.accessToken>('accessToken', null)
   },
   set accessToken(value) {
-    set('access_token', value)
+    set('accessToken', value)
   },
 
   get theme() {
@@ -50,13 +50,10 @@ export const localStorageHelper: LocalStorageItems = {
     set('theme', value)
   },
 
-  get isChatSelectCollapsed() {
-    return get<typeof this.isChatSelectCollapsed>(
-      'is_chat_select_collapsed',
-      false,
-    )
+  get isChatMenuCollapsed() {
+    return get<typeof this.isChatMenuCollapsed>('chatMenuCollapsed', false)
   },
-  set isChatSelectCollapsed(value) {
-    set('is_chat_select_collapsed', value)
+  set isChatMenuCollapsed(value) {
+    set('chatMenuCollapsed', value)
   },
 }

@@ -73,6 +73,9 @@ import FileExcel from './FileExcel'
 import Font from './Font'
 import FileWord from './FileWord'
 import FilePpt from './FilePpt'
+import Copy from './Copy'
+import Clipboard from './Clipboard'
+import Delete from './Delete'
 
 export default {
   Spinner,
@@ -150,4 +153,7 @@ export default {
   Font,
   FileWord,
   FilePpt,
+  Copy,
+  Clipboard,
+  Delete,
 }

@@ -1,22 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { StrictMode } from 'react'
+import { createRoot, Root } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import { pagesConfig } from '@constants/pages/pagesConfig'
-import { store } from '@constants/store'
+import { pagesConfig } from '@constants/pages-config'
+import { store } from '@/redux/store'
 import '@styles/index.sass'
 
-const theme = store.getState().layout.theme
-
-theme === 'dark'
-  ? document.body.classList.add('dark')
-  : document.body.classList.remove('dark')
+if (store.getState().layout.theme === 'dark') {
+  document.body.classList.add('dark')
+}
 
 const router = createBrowserRouter(pagesConfig)
+const rootElement: HTMLElement = document.getElementById('root')!
+const appRoot: Root = createRoot(rootElement)
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ReduxProvider store={store}>
-    <RouterProvider router={router} />
-  </ReduxProvider>,
+appRoot.render(
+  <StrictMode>
+    <ReduxProvider store={store}>
+      <RouterProvider router={router} />
+    </ReduxProvider>
+  </StrictMode>,
 )

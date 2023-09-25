@@ -22,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'varchar', nullable: false, unique: true })
+  @Column({ type: 'varchar', nullable: false })
   username: string
 
   @Column({ type: 'varchar', nullable: false })

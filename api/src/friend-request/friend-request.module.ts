@@ -7,7 +7,6 @@ import { User } from '@/entities/user.entity'
 import { FriendRequestController } from './friend-request.controller'
 import { FriendRequestService } from './friend-request.service'
 
-@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([FriendRequest, User])],
   controllers: [FriendRequestController],

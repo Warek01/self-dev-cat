@@ -1,35 +1,36 @@
 import { FC, memo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { v4 as uuid } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 import icons from '@icons'
+import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
 import {
-  useGetCurrentUserQuery,
   useGetOneMessageGroupQuery,
   usePostAttachmentsMutation,
   useSendMessageMutation,
-} from '@apis'
-import { ChatHeader, ChatInputArea, ChatMessagesArea } from '@components/chat'
+} from '@redux/chat.api'
+import type { User } from '@/types/User'
+import { useAppSelector } from '@hooks'
+import { selectAuthenticatedUser } from '@redux/auth.slice'
 
 export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
-  const groupId = params['groupId']!
-
-  const user = useGetCurrentUserQuery()
+  const groupId: string = params['groupId']!
+  const user: User | null = useAppSelector(selectAuthenticatedUser)
   const currentGroup = useGetOneMessageGroupQuery(groupId)
   const [sendMessage] = useSendMessageMutation()
   const [postAttachments] = usePostAttachmentsMutation()
 
   const handleMessageSend = useCallback(
     async (text: string, files?: File[]) => {
-      const trimmedText = text.trim() || null
+      const trimmedText: string | null = text?.trim() ?? null
 
-      if (!user.data) {
+      if (!user) {
         throw new Error(`user data missing`)
       }
 
-      const messageId = uuid()
+      const messageId: string = uuidv4()
 
       if (files?.length) {
         const formData = new FormData()
@@ -39,15 +40,18 @@ export const ChatMessageAreaContainer: FC = memo(() => {
           formData.append('files', file)
         })
 
-        postAttachments(formData).then(console.log).catch((err) => {
-          console.error(err)
-          toast('Error sending attachments', { type: 'error' })
-        })
+        postAttachments(formData)
+          .then(console.log)
+          .catch((err) => {
+            console.error(err)
+            toast('Error sending attachments', { type: 'error' })
+          })
       }
+
 
       sendMessage({
         content: trimmedText,
-        userId: user.data.id,
+        userId: user.id,
         groupId: groupId,
         messageId,
       }).catch((err) => {

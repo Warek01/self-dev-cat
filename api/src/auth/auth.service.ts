@@ -10,13 +10,11 @@ import { plainToInstance } from 'class-transformer'
 import bcrypt from 'bcrypt'
 
 import { EnvService } from '@/env/env.service'
-import type { JwtResponse } from '@/types/jwt'
-import { JwtPayload } from '@/types/jwt'
+import type { JwtPayload, JwtResponse } from '@/types/jwt'
 import { User } from '@/entities/user.entity'
 import { UserDto } from '@/user/dto/user.dto'
-import { CreateUserDto } from '@/user/dto/create-user.dto'
 
-import { LoginDto } from './dto/login.dto'
+import { LoginDto, RegisterDto } from './dto'
 
 @Injectable()
 export class AuthService {
@@ -27,7 +25,8 @@ export class AuthService {
     private readonly usersRepo: Repository<User>,
   ) {}
 
-  public async login({ email, password }: LoginDto): Promise<JwtResponse> {
+  public async login(dto: LoginDto): Promise<JwtResponse> {
+    const { password, email } = dto
     const user: User | null = await this.usersRepo.findOneBy({ email })
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -44,7 +43,7 @@ export class AuthService {
     }
   }
 
-  public async register(dto: CreateUserDto): Promise<JwtResponse> {
+  public async register(dto: RegisterDto): Promise<JwtResponse> {
     const userExists: boolean = await this.usersRepo.exist({
       where: { email: dto.email },
     })

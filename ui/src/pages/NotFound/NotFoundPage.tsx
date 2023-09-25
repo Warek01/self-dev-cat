@@ -1,11 +1,11 @@
 import { FC } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Location, useLocation } from 'react-router-dom'
 
 import icons from '@icons'
-import { Button } from "@components"
+import { Button } from '@components/input'
 
 const NotFoundPage: FC = () => {
-  const location = useLocation()
+  const location: Location = useLocation()
 
   return (
     <main className="flex-1 gap-12 flex justify-center items-center flex-col">

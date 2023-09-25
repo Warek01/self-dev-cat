@@ -2,10 +2,9 @@ import { Body, Controller, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 
 import { JwtResponse } from '@/types/jwt'
-import { CreateUserDto } from '@/user/dto/create-user.dto'
 
-import { LoginDto } from './dto/login.dto'
 import { AuthService } from './auth.service'
+import { RegisterDto, LoginDto } from './dto'
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -14,7 +13,7 @@ export class AuthController {
 
   @Post('register')
   public async register(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: RegisterDto,
   ): Promise<JwtResponse> {
     return this.authService.register(createUserDto)
   }

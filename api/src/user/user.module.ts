@@ -1,13 +1,11 @@
 import { Global, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { User } from '@/entities/user.entity'
-import { FriendRequest } from '@/entities/friend-request.entity'
+import { FriendRequest, User } from '@/entities'
 
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
 
-@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([User, FriendRequest])],
   providers: [UserService],

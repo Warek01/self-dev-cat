@@ -8,8 +8,9 @@ import {
   useState,
 } from 'react'
 
-import { Button, Chip, TextInput } from '@components'
 import icons from '@icons'
+import { Button, Chip, TextInput } from '@components/input'
+
 import type { ChatInputAreaProps } from './ChatInputArea.types'
 
 export const ChatInputArea: FC<ChatInputAreaProps> = memo(

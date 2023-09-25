@@ -9,11 +9,13 @@ import { Socket } from 'socket.io'
 
 import { ChatService } from './chat.service'
 import { ChatWsEvent } from './enums/chat-ws-event'
-import { JoinRoomRequestDto } from './dto/join-room-request.dto'
-import { SendMessageDto } from './dto/send-message.dto'
-import { ReceiveMessageDto } from './dto/receive-message.dto'
-import { DeleteMessageDto } from './dto/delete-message.dto'
-import { DeleteAllMessagesDto } from './dto/delete-all-messages.dto'
+import {
+  JoinRoomRequestDto,
+  SendMessageDto,
+  ReceiveMessageDto,
+  DeleteMessageDto,
+  DeleteAllMessagesDto,
+} from './dto'
 
 @WebSocketGateway({
   namespace: 'chat',

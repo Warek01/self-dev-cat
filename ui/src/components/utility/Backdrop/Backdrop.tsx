@@ -1,7 +1,8 @@
 import { FC, memo, PropsWithChildren } from 'react'
 import { twMerge } from 'tailwind-merge'
 
-import { Modal } from '@components'
+import { Modal } from '@components/utility'
+
 import type { BackdropProps } from './Backdrop.types'
 
 export const Backdrop: FC<PropsWithChildren<BackdropProps>> = memo(
