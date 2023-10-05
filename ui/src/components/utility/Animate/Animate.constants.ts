@@ -1,4 +1,7 @@
-import type { AnimateDuration, AnimateType } from '@components/utility/Animate/Animate.types'
+import type {
+  AnimateDuration,
+  AnimateType,
+} from '@components/utility/Animate/Animate.types'
 
 export const durationMap: Record<AnimateDuration, string> = {
   75: 'duration-75',

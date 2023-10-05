@@ -48,7 +48,6 @@ export const ChatMessageAreaContainer: FC = memo(() => {
           })
       }
 
-
       sendMessage({
         content: trimmedText,
         userId: user.id,

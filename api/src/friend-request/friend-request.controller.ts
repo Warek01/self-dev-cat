@@ -20,6 +20,7 @@ import type { RequestWithUser } from '@/types/request-with-user'
 import { FriendRequestService } from './friend-request.service'
 import { GetFriendRequestsResponseDto } from './dto/get-friend-requests-response.dto'
 import { GetFriendRequestsRequestDto } from './dto/get-friend-requests-request.dto'
+import { ActionResponseDto } from '@/dto/action-response.dto'
 
 @ApiTags('Friend requests')
 @Controller('friend-request')
@@ -29,12 +30,11 @@ export class FriendRequestController {
   @ApiBearerAuth()
   @Post('send/:userId')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async addFriend(
+  addFriend(
     @Req() req: RequestWithUser,
     @Param('userId', ParseUUIDPipe) toUserId: string,
-  ): Promise<void> {
-    await this.friendRequestService.addFriend(req.user.id, toUserId)
+  ): Promise<ActionResponseDto> {
+    return this.friendRequestService.addFriend(req.user.id, toUserId)
   }
 
   @ApiBearerAuth()

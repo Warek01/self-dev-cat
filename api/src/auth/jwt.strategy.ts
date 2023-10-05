@@ -18,7 +18,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     userId: number
     email: string
   }> {
-    console.log(payload)
     return { ...payload.user }
   }
 }

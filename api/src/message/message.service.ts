@@ -11,10 +11,12 @@ import { Message } from '@/entities/message.entity'
 import { User } from '@/entities/user.entity'
 import { MessageGroup } from '@/entities/message-group.entity'
 
-import { CreateMessageDto } from './dto/create-message.dto'
-import { RequestMessagesDto } from './dto/request-messages.dto'
-import { MessageDto } from './dto/message.dto'
-import { ResponseMessagesDto } from './dto/response-messages.dto'
+import {
+  CreateMessageDto,
+  RequestMessagesDto,
+  MessageDto,
+  ResponseMessagesDto,
+} from './dto'
 
 @Injectable()
 export class MessageService {

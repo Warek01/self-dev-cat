@@ -7,10 +7,6 @@ import { pagesConfig } from '@constants/pages-config'
 import { store } from '@/redux/store'
 import '@styles/index.sass'
 
-if (store.getState().layout.theme === 'dark') {
-  document.body.classList.add('dark')
-}
-
 const router = createBrowserRouter(pagesConfig)
 const rootElement: HTMLElement = document.getElementById('root')!
 const appRoot: Root = createRoot(rootElement)

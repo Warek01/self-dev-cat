@@ -5,4 +5,3 @@ export * from './LoadingScreen/LoadingScreen'
 export * from './LoadingSpinner/LoadingSpinner'
 export * from './Modal/Modal'
 export * from './ModalWindow/ModalWindow'
-

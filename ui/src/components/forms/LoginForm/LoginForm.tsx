@@ -10,8 +10,8 @@ import { loginSchema } from '@constants/validation-schemas'
 import { useAppDispatch } from '@hooks'
 import { FormTextField } from '@components/forms'
 import { Button } from '@components/input'
-import { setUser } from "@redux/auth.slice";
-import { localStorageHelper } from "@helpers";
+import { setUser } from '@redux/auth.slice'
+import { localStorageHelper } from '@helpers'
 
 const initialValues = { email: '', password: '' }
 

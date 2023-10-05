@@ -20,12 +20,16 @@ import type { RequestWithUser } from '@/types/request-with-user'
 import { JwtAuthGuard } from '@/auth/jwt.guard'
 import { User } from '@/entities/user.entity'
 
-import { GetUsersRequestDto } from './dto/get-users-request.dto'
-import { GetUsersResponseDto } from './dto/get-users-response.dto'
+import {
+  GetUsersRequestDto,
+  GetUsersResponseDto,
+  UserDto,
+  UpdateUserDto,
+  GetFriendsResponseDto,
+  GetFriendStatusRequestDto,
+  GetFriendStatusResponseDto,
+} from './dto'
 import { UserService } from './user.service'
-import { UserDto } from './dto/user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { GetFriendsResponseDto } from './dto/get-friends-response.dto'
 
 @ApiTags('User')
 @Controller('user')
@@ -88,5 +92,22 @@ export class UserController {
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<GetFriendsResponseDto> {
     return this.userService.getFriends(userId)
+  }
+
+  @Get('friend-status')
+  getFriendStatus(
+    @Query() dto: GetFriendStatusRequestDto,
+  ): Promise<GetFriendStatusResponseDto> {
+    return this.userService.getFriendStatus(dto)
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('non-friends')
+  getNonFriends(
+    @Query() dto: GetUsersRequestDto,
+    @Req() req: RequestWithUser,
+  ): Promise<GetUsersResponseDto> {
+    return this.userService.getNonFriends(dto, req.user.id)
   }
 }

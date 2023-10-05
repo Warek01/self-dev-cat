@@ -2,8 +2,8 @@ const BASE: string = import.meta.env.VITE_API_URL
 
 export const apiUrl = {
   auth: {
-    login: ()=> `${BASE}/auth/login`,
-    register: ()=> `${BASE}/auth/register`,
+    login: () => `${BASE}/auth/login`,
+    register: () => `${BASE}/auth/register`,
   },
 
   user: {

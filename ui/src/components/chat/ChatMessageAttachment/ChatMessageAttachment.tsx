@@ -9,7 +9,7 @@ import { attachmentIconMap } from './ChatMessageAttachment.constants'
 
 export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(
   ({ attachment }) => {
-    const ref = useRef<HTMLAnchorElement>({} as HTMLAnchorElement)
+    const ref = useRef<HTMLAnchorElement>(null!)
 
     const Icon =
       attachmentIconMap[
@@ -19,7 +19,7 @@ export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(
       ]
 
     const requestAttachment = useCallback(async () => {
-      const req = await fetch(
+      const req: Response = await fetch(
         `${import.meta.env.VITE_API_URL}/attachment/get/${attachment.id}`,
         {
           headers: {
@@ -34,8 +34,8 @@ export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(
         return
       }
 
-      const blob = await req.blob()
-      const url = URL.createObjectURL(blob)
+      const blob: Blob = await req.blob()
+      const url: string = URL.createObjectURL(blob)
 
       ref.current.href = url
       ref.current.click()
@@ -45,8 +45,8 @@ export const ChatMessageAttachment: FC<ChatMessageAttachmentProps> = memo(
 
     return (
       <div
-        className="custom w-full flex justify-between rounded-lg bg-black/10 hover:bg-black/20 dark:bg-dark-black/10 hover:dark:bg-dark-black/20
-        text-white items-center px-2 py-1 gap-1.5 lg:gap-3"
+        className="custom w-full flex justify-between rounded-lg bg-black/10 hover:bg-black/20 dark:bg-dark-black/10
+        hover:dark:bg-dark-black/20 text-white items-center px-2 py-1 gap-1.5 lg:gap-3"
       >
         <div className="flex flex-col gap-0.5 items-start">
           <Icon width={24} height={24} className="" />

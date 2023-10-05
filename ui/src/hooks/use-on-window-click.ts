@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react'
 
 export const useOnWindowClick = (func: (event: MouseEvent) => void): void => {
   const ref = useRef(func)
@@ -9,5 +9,5 @@ export const useOnWindowClick = (func: (event: MouseEvent) => void): void => {
     return () => {
       window.removeEventListener('click', ref.current)
     }
-  }, []);
+  }, [])
 }

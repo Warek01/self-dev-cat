@@ -1,7 +1,7 @@
 import type { ChangeEventHandler } from 'react'
 
 export interface TextInputProps {
-  name: string
+  name?: string
   password?: boolean
   placeholder?: string
   autoComplete?: boolean

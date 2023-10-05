@@ -1,4 +1,4 @@
-import { FC, memo, PropsWithChildren, useEffect } from 'react'
+import { FC, memo, PropsWithChildren } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import 'tippy.js/dist/tippy.css'
@@ -13,12 +13,6 @@ export const DefaultLayout: FC<PropsWithChildren> = memo(({ children }) => {
   const dispatch = useAppDispatch()
   const theme: Theme = useAppSelector(selectTheme)
 
-  useEffect(() => {
-    theme === 'dark'
-      ? document.body.classList.add('dark')
-      : document.body.classList.remove('dark')
-  }, [theme])
-
   useBreakpointCallback({
     Lg: {
       callback: ({ matches }) => dispatch(setIsMobile(matches)),
@@ -27,16 +21,18 @@ export const DefaultLayout: FC<PropsWithChildren> = memo(({ children }) => {
   })
 
   return (
-    <div
-      id="layout"
-      className="overflow-x-hidden text-black dark:text-dark-white bg-white dark:bg-dark-black"
-    >
-      <main className="relative w-screen max-h-screen min-h-screen max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 xl:px-36 flex flex-col">
-        <ToastContainer {...toastProps} theme={theme} />
-        <Header />
-        {children}
-        <SideMenu />
-      </main>
+    <div className={theme}>
+      <div className=" overflow-x-hiddenbg-white dark:bg-dark-black">
+        <main
+          className="relative w-screen max-h-screen min-h-screen max-w-[1920px] mx-auto xs:px-6 sm:px-12 md:px-24 
+          xl:px-36 flex flex-col text-black dark:text-dark-white"
+        >
+          <ToastContainer {...toastProps} theme={theme} />
+          <Header />
+          {children}
+          <SideMenu />
+        </main>
+      </div>
     </div>
   )
 })

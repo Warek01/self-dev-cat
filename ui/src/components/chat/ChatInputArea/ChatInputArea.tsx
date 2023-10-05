@@ -15,8 +15,6 @@ import type { ChatInputAreaProps } from './ChatInputArea.types'
 
 export const ChatInputArea: FC<ChatInputAreaProps> = memo(
   ({ onSendMessage }) => {
-    const fileInputId = useId()
-    const messageInputId = useId()
     const messageTextInputRef = useRef({} as HTMLInputElement)
     const fileInputRef = useRef({} as HTMLInputElement)
     const formRef = useRef({} as HTMLFormElement)
@@ -67,7 +65,6 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
         </section>
         <section className="flex items-center justify-between gap-3">
           <TextInput
-            name={messageInputId}
             ref={messageTextInputRef}
             placeholder="Mesasge text"
             className="w-full"
@@ -85,8 +82,6 @@ export const ChatInputArea: FC<ChatInputAreaProps> = memo(
 
         <input
           type="file"
-          name={fileInputId}
-          id={fileInputId}
           ref={fileInputRef}
           onChange={handleSelectFiles}
           multiple

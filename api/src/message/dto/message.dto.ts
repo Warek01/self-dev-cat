@@ -1,13 +1,13 @@
-import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 
 import { UserDto } from '@/user/dto/user.dto'
 import { MessageGroupDto } from '@/message-group/dto/message-group.dto'
+import { AttachmentDto } from '@/attachment/dto/attachment.dto'
 
 @Exclude()
 export class MessageDto {
-  @ApiProperty({ type: 'uuid' })
+  @ApiProperty({ type: String })
   @Expose()
   id: string
 
@@ -19,19 +19,28 @@ export class MessageDto {
   @Expose()
   fileNames?: string[]
 
+  @ApiProperty({ type: UserDto })
   @Type(() => UserDto)
   @Expose()
   user: UserDto
 
+  @ApiProperty({ type: MessageGroupDto })
   @Type(() => MessageGroupDto)
   @Expose()
   group: MessageGroupDto
 
+  @ApiProperty({ type: AttachmentDto, isArray: true })
+  @Type(() => AttachmentDto)
+  @Expose()
+  attachments: AttachmentDto
+
+  @ApiProperty({ type: MessageDto })
   @Type(() => MessageDto)
   @Expose()
   repliesTo: MessageDto
 
-  @Expose()
+  @ApiProperty({ type: MessageDto })
   @Type(() => MessageDto)
+  @Expose()
   replies: MessageDto[]
 }

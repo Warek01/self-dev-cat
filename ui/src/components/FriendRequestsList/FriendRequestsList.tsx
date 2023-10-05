@@ -2,7 +2,7 @@ import { FC, memo } from 'react'
 
 import icons from '@icons'
 import { FriendRequest } from '@components/FriendRequest/FriendRequest'
-import { useGetFriendRequestsQuery } from "@redux/user.api";
+import { useGetFriendRequestsQuery } from '@redux/user.api'
 
 export const FriendRequestsList: FC = memo(() => {
   const friendRequests = useGetFriendRequestsQuery({

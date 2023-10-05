@@ -12,9 +12,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from '@/auth/jwt.guard'
 import type { RequestWithUser } from '@/types/request-with-user'
 
-import { ResponseMessagesDto } from './dto/response-messages.dto'
-import { RequestMessagesDto } from './dto/request-messages.dto'
-import { MessageDto } from './dto/message.dto'
+import { ResponseMessagesDto, RequestMessagesDto, MessageDto } from './dto'
 import { MessageService } from './message.service'
 
 @ApiTags('Message')

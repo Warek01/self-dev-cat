@@ -1,8 +1,8 @@
 import { FC, memo, PropsWithChildren } from 'react'
 
 import icons from '@icons'
-import { Backdrop, Modal } from "@components/utility";
-import { Button } from "@components/input";
+import { Backdrop, Modal } from '@components/utility'
+import { Button } from '@components/input'
 
 import type { ModalWindowProps } from './ModalWindow.types'
 

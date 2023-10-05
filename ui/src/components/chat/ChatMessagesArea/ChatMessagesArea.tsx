@@ -13,7 +13,7 @@ import icons from '@icons'
 import { ChatWsEvent } from '@constants/ws/enums/ChatWsEvent'
 import { chatSocket } from '@constants/ws/sockets/chatSocket'
 import { ChatMessage } from '@components/chat'
-import { useAppSelector, useDragScroll } from '@hooks'
+import { useAppSelector, useDragScroll, useOnWindowClick } from '@hooks'
 import { useGetMessagesQuery } from '@redux/chat.api'
 import type { User } from '@/types/User'
 import { selectAuthenticatedUser } from '@redux/auth.slice'
@@ -43,19 +43,25 @@ export const ChatMessagesArea: FC<ChatMessagesAreaProps> = memo(
       })
     }, [messages])
 
+    useOnWindowClick(() => {
+      setPopoverOverMessageId(null)
+    })
+
     const memorizedMessages: ReactElement[] = useMemo(
       () =>
-        (messages.data?.items || []).map((message) => (
-          <ChatMessage
-            onDelete={handleDeleteMessage}
-            openPopover={() => setPopoverOverMessageId(message.id)}
-            closePopover={() => setPopoverOverMessageId(null)}
-            isPopoverOpen={popoverOverMessageId === message.id}
-            key={message.id}
-            message={message}
-            fromCurrentUser={message.user.id === user?.id}
-          />
-        )),
+        (messages.data?.items || [])
+          .filter((message) => message.content || message.attachments?.length)
+          .map((message) => (
+            <ChatMessage
+              onDelete={handleDeleteMessage}
+              openPopover={() => setPopoverOverMessageId(message.id)}
+              closePopover={() => setPopoverOverMessageId(null)}
+              isPopoverOpen={popoverOverMessageId === message.id}
+              key={message.id}
+              message={message}
+              fromCurrentUser={message.user.id === user?.id}
+            />
+          )),
       [messages, user, popoverOverMessageId],
     )
     const dragRef = useDragScroll<HTMLElement>({

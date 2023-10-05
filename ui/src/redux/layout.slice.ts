@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import type { RootState } from '@/redux/store'
 import { localStorageHelper } from '@helpers/localStorageHelper'
-import { Theme } from "@/types/Theme";
+import { Theme } from '@/types/Theme'
 
 export interface LayoutSliceProps {
   theme: Theme

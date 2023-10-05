@@ -20,67 +20,61 @@ import { GetFriendRequestsRequestDto } from './dto/get-friend-requests-request.d
 export class FriendRequestService {
   constructor(
     @InjectRepository(User)
-    private readonly _userRepo: Repository<User>,
+    private readonly userRepo: Repository<User>,
     @InjectRepository(FriendRequest)
-    private readonly _friendRequestRepo: Repository<FriendRequest>,
+    private readonly friendRequestRepo: Repository<FriendRequest>,
   ) {}
 
   public async addFriend(
     fromUserId: string,
     toUserId: string,
   ): Promise<ActionResponseDto> {
-    const user = await this._userRepo.findOneBy({ id: fromUserId })
-    const friend = await this._userRepo.findOneBy({ id: toUserId })
-
-    if (!user) {
-      throw new NotFoundException(`User ${user} not found`)
+    if (fromUserId === toUserId) {
+      throw new BadRequestException()
     }
 
-    if (!friend) {
-      throw new NotFoundException(`User ${friend} not found`)
+    const user: User | null = await this.userRepo.findOneBy({ id: fromUserId })
+    const friend: User | null = await this.userRepo.findOneBy({ id: toUserId })
+
+    if (!user || !friend) {
+      throw new NotFoundException()
     }
 
-    // Does not work (always null)
-
-    // const existingRequest = await this._friendRequestRepo.findOne({
-    //   where: {
-    //     to: friend,
-    //     from: user,
-    //     status: In([FriendRequestStatus.ACCEPTED, FriendRequestStatus.PENDING]),
-    //   },
-    //   relations: {
-    //     to: true,
-    //     from: true
-    //   }
-    // })
-
-    const existingRequest = await this._friendRequestRepo
+    const requestExists: boolean = await this.friendRequestRepo
       .createQueryBuilder('req')
-      .where('req.from_id = :userId', { userId: fromUserId })
-      .andWhere('req.to_id = :friendId', { friendId: toUserId })
-      .andWhere("req.status IN ('0', '1')")
-      .getOne()
+      .where('req.from_id = :fromUserId AND req.to_id = :toUserId', {
+        fromUserId,
+        toUserId,
+      })
+      .orWhere('req.to_id = :fromUserId AND req.from_id = :toUserId', {
+        fromUserId,
+        toUserId,
+      })
+      .andWhere('req.status IN (:...statuses)', {
+        statuses: [FriendRequestStatus.PENDING, FriendRequestStatus.ACCEPTED],
+      })
+      .getExists()
 
-    if (existingRequest) {
-      throw new ConflictException('Friend request already sent')
+    if (requestExists) {
+      throw new ConflictException()
     }
 
-    const request = this._friendRequestRepo.create()
-    request.from = plainToInstance(User, user)
-    request.to = plainToInstance(User, friend)
+    const request: FriendRequest = this.friendRequestRepo.create()
+    request.from = user
+    request.to = friend
 
-    await this._friendRequestRepo.save(request)
+    await this.friendRequestRepo.save(request)
 
     return plainToInstance(ActionResponseDto, {
       message: 'success',
-    } as ActionResponseDto)
+    })
   }
 
   public async acceptFriendRequest(
     userId: string,
     requestId: string,
   ): Promise<void> {
-    const request = await this._friendRequestRepo.findOne({
+    const request = await this.friendRequestRepo.findOne({
       where: { id: requestId },
       relations: {
         from: true,
@@ -92,7 +86,7 @@ export class FriendRequestService {
       throw new BadRequestException()
     }
 
-    const user = await this._userRepo.findOne({
+    const user = await this.userRepo.findOne({
       where: {
         id: request.from.id,
       },
@@ -100,7 +94,7 @@ export class FriendRequestService {
         friends: true,
       },
     })
-    const friend = await this._userRepo.findOne({
+    const friend = await this.userRepo.findOne({
       where: {
         id: request.to.id,
       },
@@ -114,16 +108,16 @@ export class FriendRequestService {
 
     request.status = FriendRequestStatus.ACCEPTED
 
-    this._friendRequestRepo.save(request)
-    this._userRepo.save(user!)
-    this._userRepo.save(friend!)
+    this.friendRequestRepo.save(request)
+    this.userRepo.save(user!)
+    this.userRepo.save(friend!)
   }
 
   public async denyFriendRequest(
     userId: string,
     requestId: string,
   ): Promise<void> {
-    const request = await this._friendRequestRepo.findOne({
+    const request = await this.friendRequestRepo.findOne({
       where: { id: requestId },
       relations: {
         from: true,
@@ -136,14 +130,14 @@ export class FriendRequestService {
     }
 
     request.status = FriendRequestStatus.REJECTED
-    await this._friendRequestRepo.save(request)
+    await this.friendRequestRepo.save(request)
   }
 
   public async getFriendRequests(
     currentUserId: string,
     query: GetFriendRequestsRequestDto,
   ): Promise<GetFriendRequestsResponseDto> {
-    const [requests, count] = await this._friendRequestRepo.findAndCount({
+    const [requests, count] = await this.friendRequestRepo.findAndCount({
       where: {
         status: FriendRequestStatus.PENDING,
         to: query.outgoing

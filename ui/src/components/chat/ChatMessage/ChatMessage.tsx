@@ -9,13 +9,14 @@ import {
   useRole,
   FloatingFocusManager,
 } from '@floating-ui/react'
+import YouTube from 'react-youtube'
 
 import { ChatMessageAttachment } from '@components/chat'
 import icons from '@icons'
 import { Button } from '@components/input'
 
 import type { ChatMessageProps } from './ChatMessage.types'
-import { useOnClickOutside } from '@hooks'
+import classNames from 'classnames'
 
 export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
   const {
@@ -27,6 +28,12 @@ export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
     openPopover,
   } = props
   const hasAttachments: boolean = !!message.attachments?.length
+  const isYoutubeLink: boolean =
+    !!message.content &&
+    !hasAttachments &&
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/.test(
+      message.content,
+    )
 
   // Popover logic
   const [popoverDisabled, setPopoverDisabled] = useState<boolean>(false)
@@ -44,8 +51,6 @@ export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
     dismiss,
     role,
   ])
-
-  const clickOutSideRef = useOnClickOutside(() => closePopover())
 
   const observer: IntersectionObserver = useMemo(
     () =>
@@ -80,14 +85,28 @@ export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
             openPopover()
           },
         })}
-        className={twMerge(
-          'relative py-1.5 px-4 rounded-3xl flex flex-col w-fit max-w-[66.666%] lg:max-w-[40%]',
+        className={classNames(
+          'relative rounded-3xl flex flex-col w-fit',
           fromCurrentUser
             ? 'bg-heading-green rounded-br-none'
             : 'bg-black/10 dark:bg-dark-white/10 rounded-bl-none',
+          isYoutubeLink ? 'p-6' : 'py-1.5 px-4 max-w-[66.666%] lg:max-w-[40%]',
         )}
       >
-        {message.content && (
+        {isYoutubeLink && (
+          <div className="min-w-[480px]">
+            <YouTube
+              videoId={
+                message.content!.match(/(?<=\?v=)([A-Za-z0-9_-]{11})/)![0]
+              }
+              opts={{
+                height: '270',
+                width: '480',
+              }}
+            />
+          </div>
+        )}
+        {message.content && !isYoutubeLink && (
           <span className="whitespace-pre-wrap break-words">
             {message.content}
           </span>
@@ -109,7 +128,6 @@ export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
         <FloatingFocusManager context={context}>
           <div
             ref={(instance) => {
-              clickOutSideRef.current = instance!
               refs.setFloating(instance)
             }}
             style={floatingStyles}
@@ -117,6 +135,7 @@ export const ChatMessage: FC<ChatMessageProps> = memo((props) => {
             {...getFloatingProps({
               // Don't drag the message area
               onMouseMoveCapture: (e) => e.stopPropagation(),
+              onClick: (e) => e.stopPropagation(),
             })}
           >
             <div className="dark:bg-dark-white/10 bg-black/10 p-2.5 lg:p-1.5 shadow-xl rounded-full flex gap-6 md:gap-3 lg:gap-1.5">

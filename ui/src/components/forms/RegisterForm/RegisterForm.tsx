@@ -11,7 +11,7 @@ import { useRegisterUserMutation } from '@/redux/user.api'
 import { registerSchema } from '@constants/validation-schemas'
 import { useAppDispatch } from '@hooks'
 import { setUser } from '@/redux/auth.slice'
-import { localStorageHelper } from "@helpers";
+import { localStorageHelper } from '@helpers'
 
 const initialValues = {
   password: '',

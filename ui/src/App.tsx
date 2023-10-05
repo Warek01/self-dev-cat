@@ -1,10 +1,10 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { DefaultLayout } from '@components'
-import { localStorageHelper } from "@helpers";
-import { useAppDispatch } from "@hooks";
-import { setUser } from "@redux/auth.slice";
+import { localStorageHelper } from '@helpers'
+import { useAppDispatch } from '@hooks'
+import { setUser } from '@redux/auth.slice'
 
 const App: FC = () => {
   const dispatch = useAppDispatch()
@@ -17,7 +17,7 @@ const App: FC = () => {
     }
 
     dispatch(setUser(token))
-  }, []);
+  }, [])
 
   return (
     <DefaultLayout>

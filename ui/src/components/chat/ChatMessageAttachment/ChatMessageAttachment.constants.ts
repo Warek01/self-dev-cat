@@ -8,7 +8,8 @@ export const attachmentIconMap: Record<string, IconComponent> = {
   'video/': icons.FileVideo,
   'audio/': icons.FileMusic,
   'application/vnd.ms-excel': icons.FileExcel,
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': icons.FileExcel,
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    icons.FileExcel,
   'application/zip': icons.Archive,
   'application/vnd.rar': icons.Archive,
   'application/x-tar': icons.Archive,
@@ -16,8 +17,10 @@ export const attachmentIconMap: Record<string, IconComponent> = {
   'application/vnd.ms-fontobject': icons.Font,
   'font/': icons.Font,
   'application/msword': icons.FileWord,
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': icons.FileWord,
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    icons.FileWord,
   'application/vnd.ms-powerpoint': icons.FilePpt,
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation': icons.FilePpt,
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    icons.FilePpt,
   'unknown': icons.File,
 }

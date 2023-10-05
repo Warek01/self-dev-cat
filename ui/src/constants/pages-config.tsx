@@ -14,7 +14,7 @@ import { ChatMessageAreaEmpty } from '@components/chat'
 import { ChatMessageAreaContainer } from '@containers'
 import FriendsPage from '@pages/Users/:username/Friends/FriendsPage'
 import UsersPage from '@pages/Users/UsersPage'
-import { AuthPrivateRoute } from "@components";
+import { AuthPrivateRoute } from '@components'
 
 export const pagesConfig: RouteObject[] = [
   {

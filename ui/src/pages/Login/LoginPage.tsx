@@ -1,6 +1,6 @@
 import { FC, memo } from 'react'
 
-import { LoginForm } from "@components/forms";
+import { LoginForm } from '@components/forms'
 
 const LoginPage: FC = () => {
   return (

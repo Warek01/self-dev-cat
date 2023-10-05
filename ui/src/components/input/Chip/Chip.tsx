@@ -2,7 +2,7 @@ import { FC, memo } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 import icons from '@icons'
-import { Button } from "@components/input";
+import { Button } from '@components/input'
 
 import type { ChipProps } from './Chip.types'
 
