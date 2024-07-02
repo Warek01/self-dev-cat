@@ -10,14 +10,14 @@ import {
   usePostAttachmentsMutation,
   useSendMessageMutation,
 } from '@redux/chat.api'
-import type { User } from '@/types/User'
 import { useAppSelector } from '@hooks'
 import { selectAuthenticatedUser } from '@redux/auth.slice'
+import type { AuthenticatedUser } from "@/types/Auth";
 
 export const ChatMessageAreaContainer: FC = memo(() => {
   const params = useParams()
   const groupId: string = params['groupId']!
-  const user: User | null = useAppSelector(selectAuthenticatedUser)
+  const user: AuthenticatedUser | null = useAppSelector(selectAuthenticatedUser)
   const currentGroup = useGetOneMessageGroupQuery(groupId)
   const [sendMessage] = useSendMessageMutation()
   const [postAttachments] = usePostAttachmentsMutation()

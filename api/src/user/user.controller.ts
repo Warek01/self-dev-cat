@@ -25,9 +25,6 @@ import {
   GetUsersResponseDto,
   UserDto,
   UpdateUserDto,
-  GetFriendsResponseDto,
-  GetFriendStatusRequestDto,
-  GetFriendStatusResponseDto,
 } from './dto'
 import { UserService } from './user.service'
 
@@ -55,9 +52,10 @@ export class UserController {
   @Get('get')
   @UseGuards(JwtAuthGuard)
   public async getUsers(
+    @Req() req: RequestWithUser,
     @Query() query: GetUsersRequestDto,
   ): Promise<GetUsersResponseDto> {
-    return this.userService.getAll(query)
+    return this.userService.getAll(req.user.id, query)
   }
 
   @ApiBearerAuth()
@@ -90,15 +88,8 @@ export class UserController {
   @Get(':userId/friends')
   getFriends(
     @Param('userId', ParseUUIDPipe) userId: string,
-  ): Promise<GetFriendsResponseDto> {
+  ): Promise<GetUsersResponseDto> {
     return this.userService.getFriends(userId)
-  }
-
-  @Get('friend-status')
-  getFriendStatus(
-    @Query() dto: GetFriendStatusRequestDto,
-  ): Promise<GetFriendStatusResponseDto> {
-    return this.userService.getFriendStatus(dto)
   }
 
   @ApiBearerAuth()

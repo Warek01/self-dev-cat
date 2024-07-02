@@ -1,3 +1,3 @@
-export * from './AppRoute'
-export * from './Color'
-export * from './FetchStatus'
+export * from './app-route'
+export * from './color'
+export * from './fetch-status'

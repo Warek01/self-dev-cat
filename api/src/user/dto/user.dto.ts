@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Exclude, Expose, Type } from 'class-transformer'
 
 import { UsefulResourceDto } from '@/useful-resource/dto/useful-resource.dto'
+import { FriendStatus } from '@/user/enums'
 
 @Exclude()
 export class UserDto {
@@ -34,6 +35,10 @@ export class UserDto {
   @Type(() => UserDto)
   @Expose()
   friends: UserDto[]
+
+  @ApiProperty({ type: FriendStatus, enum: FriendStatus })
+  @Expose()
+  friendStatus: FriendStatus
 
   @ApiProperty({ type: String })
   createdAt: string

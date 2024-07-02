@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -18,8 +16,10 @@ import { JwtAuthGuard } from '@/auth/jwt.guard'
 import type { RequestWithUser } from '@/types/request-with-user'
 
 import { FriendRequestService } from './friend-request.service'
-import { GetFriendRequestsResponseDto } from './dto/get-friend-requests-response.dto'
-import { GetFriendRequestsRequestDto } from './dto/get-friend-requests-request.dto'
+import {
+  GetFriendRequestsRequestDto,
+  GetFriendRequestsResponseDto,
+} from './dto'
 import { ActionResponseDto } from '@/dto/action-response.dto'
 
 @ApiTags('Friend requests')
@@ -38,29 +38,21 @@ export class FriendRequestController {
   }
 
   @ApiBearerAuth()
-  @Patch('accept/:friendRequestId')
+  @Patch('accept/:frOrUserId')
   @UseGuards(JwtAuthGuard)
   async acceptFriendRequest(
-    @Req() req: RequestWithUser,
-    @Param('friendRequestId', ParseUUIDPipe) friendRequestId: string,
+    @Param('frOrUserId', ParseUUIDPipe) frOrUserId: string,
   ): Promise<void> {
-    await this.friendRequestService.acceptFriendRequest(
-      req.user.id,
-      friendRequestId,
-    )
+    await this.friendRequestService.acceptFriendRequest(frOrUserId)
   }
 
   @ApiBearerAuth()
-  @Patch('deny/:friendRequestId')
+  @Patch('deny/:frOrUserId')
   @UseGuards(JwtAuthGuard)
   async denyFriendRequest(
-    @Req() req: RequestWithUser,
-    @Param('friendRequestId', ParseUUIDPipe) friendRequestId: string,
+    @Param('frOrUserId', ParseUUIDPipe) frOrUserId: string,
   ): Promise<void> {
-    await this.friendRequestService.denyFriendRequest(
-      req.user.id,
-      friendRequestId,
-    )
+    await this.friendRequestService.denyFriendRequest(frOrUserId)
   }
 
   @ApiBearerAuth()

@@ -1,7 +1,7 @@
 import { FC, memo, useCallback, useState } from 'react'
 
 import icons from '@icons'
-import { AppRoute } from '@enums/AppRoute'
+import { AppRoute } from '@enums/app-route'
 import type { User } from '@/types/User'
 import { useAppSelector } from '@hooks'
 import { selectAuthenticatedUser } from '@redux/auth.slice'

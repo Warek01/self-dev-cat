@@ -1,4 +1,4 @@
-import type { User } from '@/types/User'
+import type { AuthenticatedUser } from "@/types/Auth";
 
 export interface JwtResponse {
   token: string
@@ -7,5 +7,5 @@ export interface JwtResponse {
 export interface JwtPayload {
   iat: number
   exp: number
-  user: User
+  user: AuthenticatedUser
 }

@@ -3,6 +3,7 @@ import { FC, memo } from 'react'
 import icons from '@icons'
 import { FriendRequest } from '@components/FriendRequest/FriendRequest'
 import { useGetFriendRequestsQuery } from '@redux/user.api'
+import { H } from '@/components'
 
 export const FriendRequestsList: FC = memo(() => {
   const friendRequests = useGetFriendRequestsQuery({
@@ -26,7 +27,9 @@ export const FriendRequestsList: FC = memo(() => {
           ))}
         </ul>
       ) : (
-        <h2 className="text-lg">No friend requests</h2>
+        <H type={4} className="py-3">
+          No friend requests
+        </H>
       )}
     </main>
   )

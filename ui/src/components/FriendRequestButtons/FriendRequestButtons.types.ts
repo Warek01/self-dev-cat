@@ -1,3 +1,4 @@
 export interface FriendRequestButtonsProps {
-  requestId: string
+  userId?: string
+  requestId?: string
 }

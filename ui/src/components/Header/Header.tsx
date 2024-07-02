@@ -6,7 +6,6 @@ import icons from '@icons'
 import { unprotectedPages } from '@constants/unprotected-pages'
 import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
-import type { User } from '@/types/User'
 import { selectAuthenticatedUser } from '@redux/auth.slice'
 import {
   selectTheme,
@@ -15,11 +14,12 @@ import {
 } from '@redux/layout.slice'
 import { Button } from '@components/input'
 import { Theme } from '@/types/Theme'
+import type { AuthenticatedUser } from '@/types/Auth'
 
 export const Header: FC = memo(() => {
   const dispatch = useAppDispatch()
   const location: Location = useLocation()
-  const user: User | null = useAppSelector(selectAuthenticatedUser)
+  const user: AuthenticatedUser | null = useAppSelector(selectAuthenticatedUser)
   const isUnprotectedLocation: boolean = unprotectedPages.includes(
     location.pathname,
   )
@@ -49,7 +49,7 @@ export const Header: FC = memo(() => {
       <div className="flex items-center justify-end gap-2 md:gap-6 lg:gap-12">
         <Button
           type="link"
-          to={mapRouteParams(AppRoute.USER, { username: user?.username! })}
+          to={mapRouteParams(AppRoute.USER, { userId: user?.id || '' })}
           Icon={icons.User}
           iconSize={24}
           disabled={isUnprotectedLocation && !user}

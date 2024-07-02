@@ -12,9 +12,10 @@ import { User } from '@/entities/user.entity'
 import { FriendRequest } from '@/entities/friend-request.entity'
 import { ActionResponseDto } from '@/dto/action-response.dto'
 
-import { FriendRequestStatus } from './enums/friend-request-status'
-import { GetFriendRequestsResponseDto } from './dto/get-friend-requests-response.dto'
-import { GetFriendRequestsRequestDto } from './dto/get-friend-requests-request.dto'
+import {
+  GetFriendRequestsRequestDto,
+  GetFriendRequestsResponseDto,
+} from './dto'
 
 @Injectable()
 export class FriendRequestService {
@@ -50,9 +51,6 @@ export class FriendRequestService {
         fromUserId,
         toUserId,
       })
-      .andWhere('req.status IN (:...statuses)', {
-        statuses: [FriendRequestStatus.PENDING, FriendRequestStatus.ACCEPTED],
-      })
       .getExists()
 
     if (requestExists) {
@@ -70,67 +68,73 @@ export class FriendRequestService {
     })
   }
 
-  public async acceptFriendRequest(
-    userId: string,
-    requestId: string,
-  ): Promise<void> {
-    const request = await this.friendRequestRepo.findOne({
-      where: { id: requestId },
-      relations: {
-        from: true,
-        to: true,
-      },
-    })
+  public async acceptFriendRequest(frOrUserId: string): Promise<void> {
+    const request: FriendRequest =
+      (await this.friendRequestRepo.findOne({
+        where: { id: frOrUserId },
+        relations: {
+          from: true,
+          to: true,
+        },
+      })) ??
+      ((await this.friendRequestRepo.findOne({
+        where: {
+          to: {
+            id: frOrUserId,
+          },
+        },
+        relations: {
+          from: true,
+          to: true,
+        },
+      })) as FriendRequest)
 
-    if (request?.to.id !== userId) {
-      throw new BadRequestException()
-    }
-
-    const user = await this.userRepo.findOne({
+    const user: User = (await this.userRepo.findOne({
       where: {
         id: request.from.id,
       },
       relations: {
         friends: true,
       },
-    })
-    const friend = await this.userRepo.findOne({
+    })) as User
+
+    const friend: User = (await this.userRepo.findOne({
       where: {
         id: request.to.id,
       },
       relations: {
         friends: true,
       },
-    })
+    })) as User
 
-    user!.friends.push(friend!)
-    friend!.friends.push(user!)
+    user.friends.push(friend)
+    // friend.friends.push(user)
 
-    request.status = FriendRequestStatus.ACCEPTED
-
-    this.friendRequestRepo.save(request)
-    this.userRepo.save(user!)
-    this.userRepo.save(friend!)
+    await this.userRepo.save(user)
+    await this.friendRequestRepo.remove(request)
+    // await this.userRepo.save(friend)
   }
 
-  public async denyFriendRequest(
-    userId: string,
-    requestId: string,
-  ): Promise<void> {
-    const request = await this.friendRequestRepo.findOne({
-      where: { id: requestId },
-      relations: {
-        from: true,
-        to: true,
-      },
-    })
+  public async denyFriendRequest(frOrUserId: string): Promise<void> {
+    const request: FriendRequest | null =
+      (await this.friendRequestRepo.findOne({
+        where: { id: frOrUserId },
+        relations: {
+          from: true,
+        },
+      })) ??
+      ((await this.friendRequestRepo.findOne({
+        where: {
+          from: {
+            id: frOrUserId,
+          },
+        },
+        relations: {
+          from: true,
+        },
+      })) as FriendRequest)
 
-    if (request?.to.id !== userId) {
-      throw new BadRequestException()
-    }
-
-    request.status = FriendRequestStatus.REJECTED
-    await this.friendRequestRepo.save(request)
+    await this.friendRequestRepo.remove(request)
   }
 
   public async getFriendRequests(
@@ -139,7 +143,6 @@ export class FriendRequestService {
   ): Promise<GetFriendRequestsResponseDto> {
     const [requests, count] = await this.friendRequestRepo.findAndCount({
       where: {
-        status: FriendRequestStatus.PENDING,
         to: query.outgoing
           ? undefined
           : {
@@ -158,7 +161,6 @@ export class FriendRequestService {
         to: true,
       },
       select: {
-        status: true,
         id: true,
         createdAt: true,
         from: {

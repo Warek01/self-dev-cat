@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import jwtDecode from 'jwt-decode'
-import { toast } from 'react-toastify'
 
 import type { RootState } from '@/redux/store'
-import type { User } from '@/types/User'
-import { localStorageHelper } from '@helpers/localStorageHelper'
 import type { JwtPayload } from '@/types/JwtResponse'
+import type { AuthenticatedUser } from "@/types/Auth";
 
 export interface AuthSliceProps {
-  user: User | null
+  user: AuthenticatedUser | null
 }
 
 const initialState: AuthSliceProps = {

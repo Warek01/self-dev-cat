@@ -13,11 +13,8 @@ import bcrypt from 'bcrypt'
 import { User } from '@/entities/user.entity'
 
 import type { OnlineStatusIdMap } from './user.types'
-import { UserWsEvent, FriendStatus } from './enums'
+import { FriendStatus, UserWsEvent } from './enums'
 import {
-  GetFriendsResponseDto,
-  GetFriendStatusRequestDto,
-  GetFriendStatusResponseDto,
   GetUsersRequestDto,
   GetUsersResponseDto,
   PingUsersStatusRequestDto,
@@ -47,10 +44,9 @@ export class UserService {
 
     user.realName = dto.realName ?? user.realName
     user.username = dto.username ?? user.username
-
-    if (dto.password) {
-      user.password = await bcrypt.hash(dto.password, 10)
-    }
+    user.password = dto.password
+      ? await bcrypt.hash(dto.password, 10)
+      : user.password
 
     await this.usersRepo.save(user)
 
@@ -93,127 +89,163 @@ export class UserService {
     }
   }
 
-  public async getFriends(id: string): Promise<GetFriendsResponseDto> {
-    const user: User | null = await this.usersRepo.findOne({
-      where: {
-        id,
-      },
-      relations: {
-        friends: true,
-      },
-      select: {
-        friends: {
-          username: true,
-          id: true,
-          email: true,
-          realName: true,
-        },
-      },
+  public async getFriends(userId: string): Promise<GetUsersResponseDto> {
+    const users: User[] = await this.usersRepo
+      .createQueryBuilder('u')
+      .where(
+        `SELECT u.*
+         FROM users u
+                INNER JOIN users_friends_users ufu ON (ufu.users_id_1 = :userId AND ufu.users_id_2 = u.id)
+           OR (ufu.users_id_1 = u.id AND ufu.users_id_2 = :userId)`,
+        { userId },
+      )
+      .getMany()
+
+    // const user: User | null = await this.usersRepo.findOne({
+    //   where: { id: userId },
+    //   relations: { friends: true },
+    // })
+    //
+    // if (!user) {
+    //   throw new NotFoundException()
+    // }
+
+    const dto: GetUsersResponseDto = plainToInstance(GetUsersResponseDto, {
+      items: users,
+      count: users.length,
     })
 
-    if (!user) {
-      throw new NotFoundException('user not found')
+    for (const user of dto.items) {
+      user.friendStatus = FriendStatus.FRIEND
     }
 
-    return plainToInstance(GetFriendsResponseDto, {
-      items: user.friends,
-      count: user.friends.length,
-    } as GetFriendsResponseDto)
+    return dto
   }
 
-  public async getAll(query: GetUsersRequestDto): Promise<GetUsersResponseDto> {
+  public async getAll(
+    userId: string,
+    query: GetUsersRequestDto,
+  ): Promise<GetUsersResponseDto> {
     const [items, count] = await this.usersRepo.findAndCount({
       skip: query.skip ?? 0,
       take: query.limit ?? 10,
     })
 
-    return plainToInstance(GetUsersResponseDto, {
-      items,
+    const dto: GetUsersResponseDto = plainToInstance(GetUsersResponseDto, {
       count,
+      items,
     })
-  }
 
-  private _setIsOnline(id: string): void {
-    clearTimeout(this.onlineUserIds[id])
+    for (const user of dto.items) {
+      user.friendStatus = await this.getFriendStatus(userId, user.id)
+    }
 
-    this.onlineUserIds[id] = setTimeout(() => {
-      delete this.onlineUserIds[id]
-    }, 30_000)
+    return dto
   }
 
   public async getFriendStatus(
-    dto: GetFriendStatusRequestDto,
-  ): Promise<GetFriendStatusResponseDto> {
-    const user: User | null = await this.usersRepo.findOne({
-      where: { id: dto.userId1 },
+    userId1: string,
+    userId2: string,
+  ): Promise<FriendStatus> {
+    const isFriend: boolean = await this.usersRepo.exist({
+      where: {
+        id: userId1,
+        friends: {
+          id: userId2,
+        },
+      },
       relations: {
         friends: true,
+      },
+    })
+
+    if (isFriend) {
+      return FriendStatus.FRIEND
+    }
+
+    const isSentTo: boolean = await this.usersRepo.exist({
+      where: {
+        id: userId1,
         friendRequests: {
-          from: true,
+          to: {
+            id: userId2,
+          },
+        },
+      },
+      relations: {
+        friendRequests: {
           to: true,
         },
       },
     })
 
-    if (!user) {
-      throw new NotFoundException()
+    if (isSentTo) {
+      return FriendStatus.SENT_TO
     }
 
-    let status: FriendStatus = FriendStatus.NONE
-
-    if (user.friends.find((u) => u.id == dto.userId2)) {
-      status = FriendStatus.FRIEND
-    } else if (user.friendRequests.find((r) => r.from.id === dto.userId1)) {
-      status = FriendStatus.SENT_TO
-    } else if (user.friendRequests.find((r) => r.to.id === dto.userId1)) {
-      status = FriendStatus.SENT_FROM
-    }
-
-    return plainToInstance(GetFriendStatusResponseDto, {
-      status,
+    const isSentFrom: boolean = await this.usersRepo.exist({
+      where: {
+        id: userId1,
+        friendRequests: {
+          from: {
+            id: userId2,
+          },
+        },
+      },
+      relations: {
+        friendRequests: {
+          from: true,
+        },
+      },
     })
+
+    if (isSentFrom) {
+      return FriendStatus.SENT_TO
+    }
+
+    return FriendStatus.NONE
   }
 
   public async getNonFriends(
-    dto: GetUsersRequestDto,
+    requestDto: GetUsersRequestDto,
     userId: string,
   ): Promise<GetUsersResponseDto> {
-    const { skip = 0, limit = 10 } = dto
-
-    // const data: any[] = await this.dataSource.query<any>(`
-    //   SELECT u.*, COUNT(*) OVER () AS __count
-    //   FROM users u
-    //   WHERE u.id <> '${userId}'
-    //     AND NOT EXISTS (SELECT *
-    //                     FROM users_friends_users f
-    //                     WHERE (f.users_id_1 = '${userId}'
-    //                       AND f.users_id_2 = u.id)
-    //                        OR (f.users_id_1 = u.id
-    //                       AND f.users_id_2 = '${userId}'))
-    //   OFFSET ${skip}
-    //   LIMIT ${limit};
-    // `)
-
-    const subQuery: SelectQueryBuilder<User> = this.usersRepo
-      .createQueryBuilder('subQuery')
-      .leftJoin('subQuery.friends', 'friend')
-      .select('friend.id')
-      .where('friend.id = :userId', { userId })
+    const { skip = 0, limit = 10 } = requestDto
 
     const query: SelectQueryBuilder<User> = this.usersRepo
-      .createQueryBuilder('user')
-      .where('user.id != :userId', { userId })
-      .andWhere(`user.id NOT IN (${subQuery.getQuery()})`)
-      .setParameters(subQuery.getParameters())
+      .createQueryBuilder('u')
+      .where(
+        `u.id <> :userId AND NOT EXISTS (SELECT *
+                  FROM users_friends_users f
+                  WHERE (f.users_id_1 = :userId
+                    AND f.users_id_2 = u.id)
+                     OR (f.users_id_1 = u.id
+                    AND f.users_id_2 = :userId))`,
+        { userId },
+      )
       .limit(skip ?? 0)
       .take(limit ?? 10)
 
     const items: User[] = await query.getMany()
     const count: number = await query.getCount()
 
-    return plainToInstance(GetUsersResponseDto, {
+    const dto: GetUsersResponseDto = plainToInstance(GetUsersResponseDto, {
       count,
       items,
     })
+
+    for (const user of dto.items) {
+      user.friendStatus = await this.getFriendStatus(userId, user.id)
+    }
+
+    return dto
   }
+
+  // private _setIsOnline(id: string): void {
+  //   clearTimeout(this.onlineUserIds[id])
+  //
+  //   this.onlineUserIds[id] = setTimeout(() => {
+  //     delete this.onlineUserIds[id]
+  //   }, 30_000)
+  // }
 }

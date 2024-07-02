@@ -10,6 +10,7 @@ export const apiUrl = {
     get: (userId: string) => `${BASE}/user/get/${userId}`,
     removeFriend: () => `${BASE}/user/remove-friend`,
     friends: (userId: string) => `${BASE}/user/${userId}/friends`,
+    nonFriends: () => `${BASE}/user/non-friends`,
     getAll: () => `${BASE}/user/get`,
   },
 

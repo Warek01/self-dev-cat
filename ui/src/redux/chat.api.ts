@@ -8,13 +8,13 @@ import type { CreateMessageGroup, MessageGroup } from '@/types/MessageGroup'
 import { localStorageHelper } from '@helpers/localStorageHelper'
 import { apiUrl } from '@constants/api-url'
 
-enum Tag {
+export enum ChatApiTag {
   MESSAGE = 'message',
   MESSAGE_GROUP = 'message-group',
 }
 
 export const chatApi = createApi({
-  tagTypes: Object.values(Tag),
+  tagTypes: Object.values(ChatApiTag),
   reducerPath: 'chat',
   refetchOnReconnect: true,
   refetchOnFocus: true,
@@ -34,7 +34,7 @@ export const chatApi = createApi({
       ApiFindResponse<Message>,
       ApiPaginationRequest<{ groupId: string }>
     >({
-      providesTags: [Tag.MESSAGE],
+      providesTags: [ChatApiTag.MESSAGE],
       query: (dto) => ({
         url: apiUrl.message.all(),
         params: dto,
@@ -67,7 +67,7 @@ export const chatApi = createApi({
     }),
 
     sendMessage: builder.mutation<SendMessage, SendMessage>({
-      invalidatesTags: [Tag.MESSAGE],
+      invalidatesTags: [ChatApiTag.MESSAGE],
       queryFn: (dto) => {
         return new Promise((resolve) => {
           chatSocket.emit(ChatWsEvent.SEND_MESSAGE, dto)
@@ -77,7 +77,7 @@ export const chatApi = createApi({
     }),
 
     deleteAllMessages: builder.mutation<DeleteAllMessages, DeleteAllMessages>({
-      invalidatesTags: [Tag.MESSAGE],
+      invalidatesTags: [ChatApiTag.MESSAGE],
       queryFn: (dto) => {
         return new Promise((resolve) => {
           chatSocket.emit(ChatWsEvent.DELETE_ALL_MESSAGES, dto)
@@ -90,7 +90,7 @@ export const chatApi = createApi({
       ApiFindResponse<MessageGroup>,
       ApiPaginationRequest<{}>
     >({
-      providesTags: [Tag.MESSAGE_GROUP],
+      providesTags: [ChatApiTag.MESSAGE_GROUP],
       query: (dto) => ({
         url: apiUrl.messageGroup.all(),
         params: dto,
@@ -98,14 +98,14 @@ export const chatApi = createApi({
     }),
 
     getOneMessageGroup: builder.query<MessageGroup, string>({
-      providesTags: [Tag.MESSAGE_GROUP],
+      providesTags: [ChatApiTag.MESSAGE_GROUP],
       query: (messageGroupId) => ({
         url: apiUrl.messageGroup.getOne(messageGroupId),
       }),
     }),
 
     createMessageGroup: builder.mutation<MessageGroup, CreateMessageGroup>({
-      invalidatesTags: [Tag.MESSAGE_GROUP],
+      invalidatesTags: [ChatApiTag.MESSAGE_GROUP],
       query: (dto) => ({
         url: apiUrl.messageGroup.post(),
         body: dto,
@@ -114,7 +114,7 @@ export const chatApi = createApi({
     }),
 
     postAttachments: builder.mutation<void, FormData>({
-      invalidatesTags: [Tag.MESSAGE],
+      invalidatesTags: [ChatApiTag.MESSAGE],
       query: (formData) => ({
         url: apiUrl.attachment.fromMessage(),
         body: formData,

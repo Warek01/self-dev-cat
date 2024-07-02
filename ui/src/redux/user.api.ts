@@ -9,14 +9,15 @@ import type { ApiFindResponse, ApiPaginationRequest } from '@/types/Api'
 import { localStorageHelper } from '@helpers/localStorageHelper'
 import { apiUrl } from '@constants/api-url'
 
-enum Tag {
+export enum UserApiTag {
   FRIEND_REQUEST = 'friend-request',
   USER = 'user',
+  USERS = 'users',
 }
 
 export const userApi = createApi({
   reducerPath: 'user',
-  tagTypes: Object.values(Tag),
+  tagTypes: Object.values(UserApiTag),
   refetchOnReconnect: true,
   refetchOnFocus: false,
   refetchOnMountOrArgChange: false,
@@ -59,12 +60,12 @@ export const userApi = createApi({
       ApiFindResponse<FriendRequest>,
       ApiPaginationRequest<FriendRequestsRequest>
     >({
-      providesTags: [Tag.FRIEND_REQUEST],
+      providesTags: [UserApiTag.FRIEND_REQUEST],
       query: (query) => ({ url: apiUrl.friendRequest.user(), params: query }),
     }),
 
     acceptFriendRequest: builder.mutation<void, string>({
-      invalidatesTags: [Tag.FRIEND_REQUEST],
+      invalidatesTags: [UserApiTag.FRIEND_REQUEST],
       query: (friendRequestId: string) => ({
         url: apiUrl.friendRequest.accept(friendRequestId),
         method: 'PATCH',
@@ -72,7 +73,7 @@ export const userApi = createApi({
     }),
 
     denyFriendRequest: builder.mutation<void, string>({
-      invalidatesTags: [Tag.FRIEND_REQUEST],
+      invalidatesTags: [UserApiTag.FRIEND_REQUEST],
       query: (friendRequestId: string) => ({
         url: apiUrl.friendRequest.deny(friendRequestId),
         method: 'PATCH',
@@ -80,7 +81,7 @@ export const userApi = createApi({
     }),
 
     sendFriendRequest: builder.mutation<void, string>({
-      invalidatesTags: [Tag.FRIEND_REQUEST],
+      invalidatesTags: [UserApiTag.FRIEND_REQUEST],
       query: (userId: string) => ({
         url: apiUrl.friendRequest.send(userId),
         method: 'POST',
@@ -92,8 +93,17 @@ export const userApi = createApi({
     }),
 
     getUsers: builder.query<ApiFindResponse<User>, ApiPaginationRequest>({
+      providesTags: [UserApiTag.USERS],
       query: (query) => ({
         url: apiUrl.user.getAll(),
+        params: query,
+      }),
+    }),
+
+    getNonFriends: builder.query<ApiFindResponse<User>, ApiPaginationRequest>({
+      providesTags: [UserApiTag.USERS],
+      query: (query) => ({
+        url: apiUrl.user.nonFriends(),
         params: query,
       }),
     }),
@@ -118,4 +128,6 @@ export const {
   useDenyFriendRequestMutation,
   useLazyGetUsersQuery,
   useGetUsersQuery,
+  useGetNonFriendsQuery,
+  useLazyGetNonFriendsQuery,
 } = userApi

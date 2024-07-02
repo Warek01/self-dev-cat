@@ -4,7 +4,7 @@ import { Form, Formik, FormikHelpers } from 'formik'
 import { toast } from 'react-toastify'
 
 import icons from '@icons'
-import { AppRoute } from '@enums/AppRoute'
+import { AppRoute } from '@enums/app-route'
 import { useLoginMutation } from '@/redux/user.api'
 import { loginSchema } from '@constants/validation-schemas'
 import { useAppDispatch } from '@hooks'

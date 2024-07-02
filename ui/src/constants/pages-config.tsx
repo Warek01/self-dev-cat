@@ -6,13 +6,13 @@ import HomePage from '@pages/Home/HomePage'
 import LoginPage from '@pages/Login/LoginPage'
 import NotFoundPage from '@pages/NotFound/NotFoundPage'
 import RegisterPage from '@pages/Register/RegisterPage'
-import FriendRequestsPage from '@pages/Users/:username/FriendRequests/FriendRequestsPage'
-import UserPage from '@pages/Users/:username/UserPage'
+import FriendRequestsPage from '@pages/Users/:userId/FriendRequests/FriendRequestsPage'
+import UserPage from '@pages/Users/:userId/UserPage'
 import { AppRoute } from '@enums'
 import ChatPage from '@pages/Chat/ChatPage'
 import { ChatMessageAreaEmpty } from '@components/chat'
 import { ChatMessageAreaContainer } from '@containers'
-import FriendsPage from '@pages/Users/:username/Friends/FriendsPage'
+import FriendsPage from '@pages/Users/:userId/Friends/FriendsPage'
 import UsersPage from '@pages/Users/UsersPage'
 import { AuthPrivateRoute } from '@components'
 
@@ -34,10 +34,10 @@ export const pagesConfig: RouteObject[] = [
       // User section
       {
         path: AppRoute.USER,
-        element: <AuthPrivateRoute component={Outlet} />,
+        element: <AuthPrivateRoute component={() => <Outlet />} />,
         children: [
           {
-            path: AppRoute.USER_PROFILE,
+            index: true,
             element: <AuthPrivateRoute component={UserPage} />,
           },
           {

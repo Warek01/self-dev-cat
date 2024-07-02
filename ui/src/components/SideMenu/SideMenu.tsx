@@ -14,11 +14,11 @@ import { AppRoute } from '@enums'
 import { useAppDispatch, useAppSelector } from '@hooks'
 import { localStorageHelper } from '@helpers/localStorageHelper'
 import { mapRouteParams } from '@helpers'
-import type { User } from '@/types/User'
 import { selectAuthenticatedUser } from '@redux/auth.slice'
 import { setSideMenuOpened } from '@redux/layout.slice'
 import { userApi } from '@redux/user.api'
 import { Button, IconLink } from '@components/input'
+import type { AuthenticatedUser } from "@/types/Auth";
 
 import { disabledForPaths } from './SideMenu.constants'
 
@@ -26,7 +26,7 @@ export const SideMenu: FC = memo(() => {
   const location: Location = useLocation()
   const navigate: NavigateFunction = useNavigate()
   const dispatch = useAppDispatch()
-  const user: User | null = useAppSelector(selectAuthenticatedUser)
+  const user: AuthenticatedUser | null = useAppSelector(selectAuthenticatedUser)
 
   const { isSideMenuOpened } = useAppSelector((state) => state.layout)
 
@@ -61,14 +61,14 @@ export const SideMenu: FC = memo(() => {
       <div className="flex flex-col items-center gap-8 text-2xl">
         <Link
           to={mapRouteParams(AppRoute.USER_FRIENDS, {
-            username: user?.username || '',
+            userId: user?.id || '',
           })}
         >
           Friends
         </Link>
         <Link
           to={mapRouteParams(AppRoute.USER_FRIEND_REQUESTS, {
-            username: user?.username || '',
+            userId: user?.id || '',
           })}
         >
           Friend requests

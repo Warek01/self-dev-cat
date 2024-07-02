@@ -9,3 +9,11 @@ export interface RegisterCredentials {
   password: string
   realName?: string
 }
+
+export interface AuthenticatedUser {
+  id: string
+  username: string
+  email: string
+  password: string
+  realName?: string
+}

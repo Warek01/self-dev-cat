@@ -3,12 +3,12 @@ export enum AppRoute {
 
   // User & profile
   USERS = '/users',
-  USER = '/users/:username',
-  USER_PROFILE = '/users/:username/profile',
-  USER_BLOGS = '/users/:username/blogs',
-  USER_RESOURCES = '/users/:username/useful-resources',
-  USER_FRIENDS = '/users/:username/friends',
-  USER_FRIEND_REQUESTS = '/users/:username/friend-requests',
+  USER = '/users/:userId',
+  USER_PROFILE = '/users/:userId/profile',
+  USER_BLOGS = '/users/:userId/blogs',
+  USER_RESOURCES = '/users/:userId/useful-resources',
+  USER_FRIENDS = '/users/:userId/friends',
+  USER_FRIEND_REQUESTS = '/users/:userId/friend-requests',
 
   // Utility
   SETTINGS = '/settings',
